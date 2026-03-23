@@ -1,0 +1,59 @@
+# ============================================================
+# ANGULAR (portfolio/)
+# ============================================================
+portfolio/node_modules/
+portfolio/dist/
+portfolio/.angular/
+portfolio/.cache/
+
+# ============================================================
+# .NET / C# (future backend)
+# ============================================================
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
+**/packages/
+**/_ReSharper*/
+*.DotSettings.user
+
+# Environment & secrets
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+*.p12
+*.key
+secrets.json
+
+# ============================================================
+# VS CODE
+# ============================================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ============================================================
+# WINDOWS
+# ============================================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ============================================================
+# GENERAL
+# ============================================================
+.env
+.env.*
+*.log
+*.tmp
+*.temp
+.DS_Store
