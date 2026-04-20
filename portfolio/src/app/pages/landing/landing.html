@@ -2,10 +2,18 @@
 
     <app-bento-navbar title="KILIAN AUDROIN" [navItems]="navItems"></app-bento-navbar>
 
-    <div class="p-2">
-        <div class="bg-primary text-text">bg-primary text-text</div>
-        <div class="bg-secondary text-primary">bg-secondary text-primary</div>
-        <div class="bg-primary text-background">bg-primary text-background</div>
-    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-1 md:gap-6 mt-6 auto-rows-[300px] md:auto-rows-[500px]">
 
+        <app-bento-title-description title="Web developper & freelance"
+            description="J'accompagne les projets webs en tant que développeur full-stack, soit sur une stack Symfony/PHP, soit sur une stack .NET/Angular. Porté par la curiosité et la qualité, je m'engage à livrer un code fiable et évolutif. "></app-bento-title-description>
+
+        <app-bento-profile-picture imageUrl="/images/profile-pic-ki.jpg"
+            altText="My profile picture"></app-bento-profile-picture>
+
+
+        <app-bento-carousel [projects]="projects"></app-bento-carousel>
+
+        <app-bento-social></app-bento-social>
+
+    </div>
 </div>

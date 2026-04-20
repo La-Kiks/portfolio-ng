@@ -1,0 +1,41 @@
+<div
+    class="carousel-wrapper w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden">
+
+    <!-- Image Container -->
+    <div class="flex-1 w-full relative cursor-pointer overflow-hidden group bg-gray-100" (click)="goToProject()"
+        role="button" tabindex="0" (keyup.enter)="goToProject()">
+        <img [src]="currentProject.image" [alt]="currentProject.title"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+
+        <!-- Overlay on hover -->
+        <div
+            class="absolute inset-0 bg-transparent hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+            <span
+                class="text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Click to view project
+            </span>
+        </div>
+    </div>
+
+    <!-- Title Section -->
+    <div class="p-4 bg-primary border-t border-secondary">
+        <h3 class="text-lg font-semibold text-text m-0">{{ currentProject.title }}</h3>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button (click)="previousProject()" class="carousel-arrow carousel-arrow-left" aria-label="Previous project">
+        <span>&#8249;</span>
+    </button>
+
+    <button (click)="nextProject()" class="carousel-arrow carousel-arrow-right" aria-label="Next project">
+        <span>&#8250;</span>
+    </button>
+
+    <!-- Slide Indicators -->
+    <div class="absolute top-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        @for (project of projects; track project.id; let i = $index) {
+        <button (click)="goToSlide(i)" [class.active]="i === currentIndex" class="carousel-indicator"
+            [attr.aria-label]="'Go to project ' + (i + 1)"></button>
+        }
+    </div>
+</div>
