@@ -1,0 +1,9 @@
+.navbar-title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: bold;
+}
+
+.navbar-button {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+}
