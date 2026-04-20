@@ -11,8 +11,7 @@ export class Landing {
 
   // Placeholder Navigation -- TODO : Edit or delete
   navItems = [
-    // { label: 'Work', action: () => this.navigate('Work') },
-    { label: 'About', action: () => this.navigate('About') },
+    { label: 'À PROPOS', action: () => this.navigate('About') },
     // { label: 'Contact', action: () => this.navigate('Contact') }
   ];
 

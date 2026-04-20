@@ -1,8 +1,35 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/portfolio/public/fonts/gilroy/Gilroy-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/portfolio/public/fonts/gilroy/Gilroy-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/portfolio/public/fonts/gilroy/Gilroy-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-display: swap;
+}
+
 @theme {
-  --color-primary: #fff2cc;
-  --color-secondary: #ffd966;
-  --color-background: #ffffff;
-  --color-text: #000000;
+  --color-primary: #ffd966;
+  --color-secondary: #fff9e6;
+  --color-background: #1a1300;
+  --color-text: #1a1300;
+
+  --font-family-primary:
+    'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'Fira Code', monospace;
 }

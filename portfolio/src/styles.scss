@@ -1,1 +1,5 @@
 @use './theme.scss' as *;
+
+body {
+  font-family: var(--font-family-primary);
+}

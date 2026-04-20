@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeToggle } from '../../theme-toggle/theme-toggle';
 
 interface NavItem {
   label: string;
@@ -10,7 +9,7 @@ interface NavItem {
 @Component({
   selector: 'app-bento-navbar',
   standalone: true,
-  imports: [CommonModule, ThemeToggle],
+  imports: [CommonModule],
   templateUrl: './bento-navbar.html',
   styleUrls: ['./bento-navbar.scss']
 })

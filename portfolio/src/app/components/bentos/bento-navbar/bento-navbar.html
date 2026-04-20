@@ -1,17 +1,14 @@
 <div
-    class="w-full rounded-3xl p-4 md:p-6 bg-background border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+    class="w-full rounded-3xl p-4 md:p-6 bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300">
     <div class="flex items-center justify-between">
-        <h1 class="navbar-title text-text">
+        <h1 class="navbar-title text-text font-family-primary">
             {{ title }}
         </h1>
-        <div class="flex gap-3 md:gap-4 items-center">
+        <div class="flex gap-3 md:gap-4 sm:gap-5 items-center">
             <button *ngFor="let item of navItems" (click)="item.action?.()"
-                class="navbar-button bg-text text-background rounded-xl hover:opacity-80 transition-opacity duration-200 font-medium">
+                class="navbar-button bg-text text-secondary rounded-xl hover:opacity-80 transition-opacity duration-200 font-medium">
                 {{ item.label }}
             </button>
-
-            <!-- Theme Toggle -->
-            <app-theme-toggle></app-theme-toggle>
         </div>
     </div>
 </div>
