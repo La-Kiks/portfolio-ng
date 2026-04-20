@@ -1,0 +1,41 @@
+.landing-grid {
+  display: grid;
+  gap: 1rem; /* md:gap-6 will override this */
+  auto-rows: 300px;
+}
+
+/* Mobile layout */
+.landing-grid {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'profile'
+    'title'
+    'carousel'
+    'social';
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .landing-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    auto-rows: 400px;
+    gap: 1.5rem;
+    grid-template-areas:
+      'title profile carousel carousel'
+      'social social carousel carousel';
+  }
+}
+
+.grid-profile {
+  grid-area: profile;
+}
+.grid-title {
+  grid-area: title;
+}
+.grid-carousel {
+  grid-area: carousel;
+}
+.grid-social {
+  grid-area: social;
+}
