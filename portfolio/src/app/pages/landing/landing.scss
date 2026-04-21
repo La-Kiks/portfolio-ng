@@ -1,41 +1,125 @@
 .landing-grid {
+  box-sizing: border-box;
   display: grid;
-  gap: 1rem; /* md:gap-6 will override this */
-  auto-rows: 300px;
+  gap: 1rem;
+  height: fit-content;
 }
 
 /* Mobile layout */
 .landing-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto auto auto auto;
   grid-template-areas:
-    'profile'
-    'title'
-    'carousel'
-    'social';
+    'navbar navbar'
+    'title-only profile'
+    'description-only description-only'
+    'carousel carousel'
+    'social social';
 }
 
-/* Desktop layout */
-@media (min-width: 768px) {
+.title-only,
+.description-only {
+  display: block;
+}
+
+.title-description {
+  display: none;
+}
+
+/* Tablet layout */
+@media (min-width: 600px) {
+  .title-only,
+  .description-only {
+    display: none;
+  }
+
+  .title-description {
+    display: block;
+  }
+
   .landing-grid {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto auto;
-    auto-rows: 400px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto auto auto;
     gap: 1.5rem;
     grid-template-areas:
-      'title profile carousel carousel'
+      'navbar navbar'
+      'title profile'
+      'carousel carousel'
+      'social social';
+  }
+}
+
+/* Desktop layout - max-width 1440px */
+@media (min-width: 1024px) {
+  .title-only,
+  .description-only {
+    display: block;
+  }
+
+  .title-description {
+    display: none;
+  }
+
+  .landing-grid {
+    margin: 0 auto auto auto;
+    justify-content: center;
+    max-width: 1440px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 1.5rem;
+    grid-template-areas:
+      'navbar navbar navbar navbar'
+      'title-only profile carousel carousel'
+      'description-only description-only carousel carousel'
+      'social social social social';
+  }
+}
+
+/* 2K+ resolution height */
+@media (min-height: 1440px) {
+  .title-only,
+  .description-only {
+    display: none;
+  }
+
+  .title-description {
+    display: block;
+  }
+
+  .landing-grid {
+    grid-template-rows: auto 1fr 25% 25%;
+    grid-template-areas:
+      'navbar navbar navbar navbar'
+      'profile profile carousel carousel'
+      'title title carousel carousel'
       'social social carousel carousel';
   }
+}
+
+.grid-navbar {
+  grid-area: navbar;
 }
 
 .grid-profile {
   grid-area: profile;
 }
+
 .grid-title {
   grid-area: title;
 }
+
+.grid-title-only {
+  grid-area: title-only;
+}
+
+.grid-description-only {
+  grid-area: description-only;
+}
+
 .grid-carousel {
   grid-area: carousel;
 }
+
 .grid-social {
   grid-area: social;
 }

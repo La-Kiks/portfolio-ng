@@ -1,25 +1,21 @@
-<div class="bg-background min-h-screen p-4 md:p-6">
-    <!-- Navbar (Header) -->
-    <app-bento-navbar title="KILIAN AUDROIN" [navItems]="navItems"></app-bento-navbar>
+<div class="bg-background min-h-screen md:h-screen flex flex-col">
+    <div class="landing-grid px-4 md:px-6 py-4 md:py-6 m-0">
+        <app-bento-navbar class="grid-navbar" title="KILIAN AUDROIN" [navItems]="navItems"></app-bento-navbar>
 
-    <!-- Main Grid with Grid Areas -->
-    <div class="landing-grid mt-6">
-        <div class="grid-profile">
-            <app-bento-profile-picture imageUrl="/images/profile-pic-ki.jpg"
-                altText="My profile picture"></app-bento-profile-picture>
-        </div>
+        <app-bento-profile-picture class="grid-profile" imageUrl="/images/profile-pic-ki.jpg"
+            altText="My profile picture"></app-bento-profile-picture>
 
-        <div class="grid-title">
-            <app-bento-title-description title="Web developper & freelance"
-                description="J'accompagne les projets webs en tant que développeur full-stack, soit sur une stack Symfony/PHP, soit sur une stack .NET/Angular. Porté par la curiosité et la qualité, je m'engage à livrer un code fiable et évolutif."></app-bento-title-description>
-        </div>
+        <app-bento-title-description class="grid-title title-description" title="Web developper & freelance"
+            description="J'accompagne les projets webs en tant que développeur full-stack, soit sur une stack Symfony/PHP, soit sur une stack .NET/Angular. Porté par la curiosité et la qualité, je m'engage à livrer un code fiable et évolutif."></app-bento-title-description>
 
-        <div class="grid-carousel">
-            <app-bento-carousel [projects]="projects"></app-bento-carousel>
-        </div>
 
-        <div class="grid-social">
-            <app-bento-social></app-bento-social>
-        </div>
+
+        <app-bento-title class="grid-title-only title-only" title="Web developper & freelance"></app-bento-title>
+        <app-bento-description class="grid-description-only description-only"
+            description="J'accompagne les projets webs en tant que développeur full-stack, soit sur une stack Symfony/PHP, soit sur une stack .NET/Angular. Porté par la curiosité et la qualité, je m'engage à livrer un code fiable et évolutif."></app-bento-description>
+
+        <app-bento-carousel class="grid-carousel" [projects]="projects"></app-bento-carousel>
+
+        <app-bento-social class="grid-social"></app-bento-social>
     </div>
 </div>

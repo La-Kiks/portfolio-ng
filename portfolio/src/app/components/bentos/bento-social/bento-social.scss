@@ -1,5 +1,33 @@
 .social-button {
-  min-width: 80px;
+  flex: 1;
+}
+
+.social-button {
+  flex-basis: calc(50% - 0.5rem);
+  max-width: calc(50% - 0.5rem);
+}
+
+@media (min-width: 768px) {
+  .social-button {
+    flex-basis: auto;
+    width: calc(25% - 1.5rem);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .social-button {
+    flex-basis: auto;
+    width: calc(25% - 1.5rem);
+  }
+}
+
+/* 2K+ resolution height */
+@media (min-height: 1440px) {
+  .social-button {
+    flex-basis: calc(50% - 1.5rem);
+    width: auto;
+  }
 }
 
 .social-button:hover {
