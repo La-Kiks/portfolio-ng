@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Loader } from '../../components/loader/loader';
 import { BentoNavbar } from '../../components/bentos/bento-navbar/bento-navbar';
 import { BentoCarousel, CarouselProject } from '../../components/bentos/bento-carousel/bento-carousel';
 import { BentoTitleDescription } from '../../components/bentos/bento-title-description/bento-title-description';
@@ -10,7 +11,7 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, BentoNavbar, BentoCarousel, BentoTitleDescription, BentoTitle, BentoDescription, BentoProfilePicture, BentoSocial],
+  imports: [CommonModule, Loader, BentoNavbar, BentoCarousel, BentoTitleDescription, BentoTitle, BentoDescription, BentoProfilePicture, BentoSocial],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
@@ -22,6 +23,10 @@ export class Landing {
   ];
 
   projects: CarouselProject[] = [];
+
+  onLoadingComplete(): void {
+    console.log('Loading complete, page revealed!');
+  }
 
   // Placeholder Navigation -- TODO : Edit or delete
   navigate(section: string): void {
