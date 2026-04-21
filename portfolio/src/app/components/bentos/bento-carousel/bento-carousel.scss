@@ -70,3 +70,11 @@
   width: 24px;
   border-radius: 4px;
 }
+
+.loading-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(300px, 5vw, 800px);
+  height: clamp(300px, 5vw, 800px);
+}

@@ -1,0 +1,84 @@
+<div class="bg-background min-h-screen p-4 md:p-6">
+    <!-- Loading State -->
+    @if (isLoading) {
+    <div class="flex items-center justify-center min-h-screen">
+        <p class="text-text text-lg">Loading project...</p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error) {
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+            <p class="text-red-500 text-lg mb-4">{{ error }}</p>
+            <a href="/" class="text-primary underline">Back to home</a>
+        </div>
+    </div>
+    }
+
+    <!-- Project Content -->
+    @if (project && !isLoading && !error) {
+    <div class="mx-auto" style="max-width: 1440px;">
+        <!-- Back Button -->
+        <a href="/" class="text-primary hover:underline mb-6 inline-block">← Back to home</a>
+
+        <!-- Project Hero -->
+        <div class="rounded-3xl bg-primary border border-secondary overflow-hidden mb-8">
+            <img [src]="project.images[0]" [alt]="project.title" class="w-full h-96 object-cover" />
+        </div>
+
+        <!-- Project Info -->
+        <div class="mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">
+                {{ project.title }}
+            </h1>
+            <p class="text-lg text-text opacity-80 mb-6">
+                {{ project.description }}
+            </p>
+
+            <!-- Technologies -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-text mb-3">Technologies</h3>
+                <div class="flex flex-wrap gap-2">
+                    @for (tech of project.technologies; track tech) {
+                    <span class="bg-secondary text-text px-4 py-2 rounded-lg text-sm font-medium">
+                        {{ tech }}
+                    </span>
+                    }
+                </div>
+            </div>
+
+            <!-- Long Description -->
+            @if (project.longDescription) {
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold text-text mb-3">About</h3>
+                <p class="text-text opacity-80 leading-relaxed">
+                    {{ project.longDescription }}
+                </p>
+            </div>
+            }
+
+            <!-- Project Link -->
+            @if (project.link) {
+            <a [href]="project.link" target="_blank" rel="noopener noreferrer" class="inline-block px-6 py-3 bg-primary border border-secondary rounded-xl text-text font-medium
+            hover:shadow-md transition-shadow duration-300">
+                View Project →
+            </a>
+            }
+        </div>
+
+        <!-- Additional Images -->
+        @if (project.images.length > 1) {
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-text mb-4">Project Gallery</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @for (image of project.images.slice(1); track image) {
+                <img [src]="image" [alt]="project.title"
+                    class="w-full rounded-3xl border border-secondary object-cover h-64" />
+                }
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>

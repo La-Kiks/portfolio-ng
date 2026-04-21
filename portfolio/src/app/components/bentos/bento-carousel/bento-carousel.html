@@ -1,12 +1,19 @@
+<!-- Loading State -->
+@if (isLoading) {
+<div class="w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm flex items-center justify-center">
+    <p class="loading-text text-text text-lg">Loading projects...</p>
+</div>
+}
+
+<!-- Carousel Content -->
+@if (!isLoading && projects.length > 0) {
 <div
     class="carousel-wrapper w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden">
-
     <!-- Image Container -->
-    <div class="flex-1 w-full relative cursor-pointer overflow-hidden group bg-gray-100" (click)="goToProject()"
+    <div class="flex-1 w-full relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
         role="button" tabindex="0" (keyup.enter)="goToProject()">
-        <img [src]="currentProject.image" [alt]="currentProject.title"
+        <img [src]="currentProject.image" width="800px" height="800px" [alt]="currentProject.title"
             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-
         <!-- Overlay on hover -->
         <div
             class="absolute inset-0 bg-transparent hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
@@ -39,3 +46,4 @@
         }
     </div>
 </div>
+}

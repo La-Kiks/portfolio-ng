@@ -19,29 +19,9 @@ export class Landing {
   // Placeholder Navigation -- TODO : Edit or delete
   navItems = [
     { label: 'À PROPOS', action: () => this.navigate('About') },
-    // { label: 'Contact', action: () => this.navigate('Contact') }
   ];
 
-  projects: CarouselProject[] = [
-    {
-      id: '1',
-      title: 'E-Commerce Platform',
-      image: '/images/profile-pic-ki.jpg',
-      route: '/project/1'
-    },
-    {
-      id: '2',
-      title: 'Dashboard Analytics',
-      image: '/images/paris-stage-wide.jpg',
-      route: '/project/2'
-    },
-    {
-      id: '3',
-      title: 'Mobile App Design',
-      image: '/images/profile-pic-ki-lfl.png',
-      route: '/project/3'
-    }
-  ];
+  projects: CarouselProject[] = [];
 
   // Placeholder Navigation -- TODO : Edit or delete
   navigate(section: string): void {

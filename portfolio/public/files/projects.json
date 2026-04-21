@@ -1,0 +1,52 @@
+[
+    {
+        "id": "1",
+        "slug": "ecommerce-platform",
+        "title": "E-Commerce Platform",
+        "description": "A modern shopping experience",
+        "longDescription": "Full e-commerce platform built with Angular and Node.js. Features include product catalog, shopping cart, and secure checkout.",
+        "images": [
+            "/images/profile-pic-ki.jpg",
+            "/images/ecommerce-2.jpg"
+        ],
+        "technologies": [
+            "Angular",
+            "Node.js",
+            "MongoDB",
+            "Tailwind CSS"
+        ],
+        "link": "https://example.com"
+    },
+    {
+        "id": "2",
+        "slug": "menumaker",
+        "title": "MenuMaker",
+        "description": "Restaurant menu management tool",
+        "longDescription": "A tool to help restaurants create and manage digital menus with real-time updates.",
+        "images": [
+            "/images/menumaker-1.jpg"
+        ],
+        "technologies": [
+            "React",
+            "Firebase",
+            "Tailwind CSS"
+        ],
+        "link": "https://example.com"
+    },
+    {
+        "id": "3",
+        "slug": "dashboard-analytics",
+        "title": "Dashboard Analytics",
+        "description": "Real-time analytics interface",
+        "longDescription": "Comprehensive analytics dashboard for tracking business metrics in real-time.",
+        "images": [
+            "/images/dashboard-1.jpg"
+        ],
+        "technologies": [
+            "Angular",
+            "D3.js",
+            "TypeScript"
+        ],
+        "link": "https://example.com"
+    }
+]

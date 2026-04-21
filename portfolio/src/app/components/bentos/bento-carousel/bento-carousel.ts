@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Project, ProjectService } from '../../../services/projects/project';
 
 export interface CarouselProject {
   id: string;
@@ -14,21 +15,62 @@ export interface CarouselProject {
   imports: [CommonModule],
   templateUrl: './bento-carousel.html',
   styleUrl: './bento-carousel.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BentoCarousel implements OnInit {
   @Input() projects: CarouselProject[] = [];
 
   currentIndex: number = 0;
+  isLoading: boolean = true;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private projectService: ProjectService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
+    console.log('BentoCarousel ngOnInit called');
+    console.log('Projects input:', this.projects);
     if (this.projects.length === 0) {
-      console.warn('BentoCarousel: No projects provided');
+      console.log('No projects input, loading from service...');
+      this.loadProjects();
+    } else {
+      console.log('Projects already provided as input');
+      this.isLoading = false;
+      this.cdr.markForCheck();
     }
   }
 
+  private loadProjects(): void {
+    console.log('loadProjects called');
+    this.projectService.getAllProjects().subscribe({
+      next: (projects: Project[]) => {
+        console.log('Projects loaded from service:', projects);
+        this.projects = projects.map(project => ({
+          id: project.id,
+          title: project.title,
+          image: project.images[0],
+          route: `/projects/${project.slug}`
+        }));
+        console.log('Mapped projects:', this.projects);
+        this.isLoading = false;
+        console.log('isLoading set to:', this.isLoading);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error loading projects:', err);
+        this.isLoading = false;
+        console.log('isLoading set to false (error):', this.isLoading);
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
   get currentProject(): CarouselProject {
+    if (!this.projects || this.projects.length === 0) {
+      return {} as CarouselProject;
+    }
     return this.projects[this.currentIndex];
   }
 
