@@ -109,5 +109,45 @@
         ],
         "link": "https://kilian-audroin.com",
         "github": "https://github.com/yourprofile/portfolio"
+    },
+    {
+        "id": "4",
+        "slug": "debug-optimisation",
+        "title": "Debug & Optimisation",
+        "description": "Website optimization focusing on SEO, accessibility, and performance improvements",
+        "longDescription": "Intervention sur un site existant présentant des lacunes en SEO, accessibilité et stabilité fonctionnelle, avec un impact direct sur sa visibilité et son expérience utilisateur.",
+        "context": "Intervention sur un site existant présentant des lacunes en SEO, accessibilité et stabilité fonctionnelle, avec un impact direct sur sa visibilité et son expérience utilisateur.",
+        "objectives": "Optimiser le référencement naturel, corriger les problèmes d'accessibilité, implémenter des données structurées et débugger les fonctionnalités critiques du site.",
+        "stack": [
+            "HTML5",
+            "CSS3",
+            "JavaScript",
+            "Lighthouse",
+            "Wave",
+            "Rich Results Test",
+            "Schema.org"
+        ],
+        "skills": [
+            "Audit technique",
+            "Optimisation SEO (balises, contenu, référencement local)",
+            "Amélioration de l'accessibilité",
+            "Debugging front-end",
+            "Implémentation de données structurées",
+            "Validation des rich snippets"
+        ],
+        "results": "Amélioration des scores SEO et accessibilité, validation des rich snippets, correction des erreurs détectées par Wave et stabilisation des fonctionnalités clés du site.",
+        "improvements": [
+            "Approfondir l'optimisation des performances (Core Web Vitals)",
+            "Automatiser certains contrôles SEO",
+            "Renforcer la stratégie de contenu et de maillage interne",
+            "Mettre en place un monitoring continu des métriques SEO"
+        ],
+        "images": [
+            "/images/debug-optimisation-hero.jpg",
+            "/images/debug-optimisation-audit.jpg",
+            "/images/debug-optimisation-results.jpg"
+        ],
+        "link": "https://example.com",
+        "github": "https://github.com/yourprofile/debug-optimisation"
     }
 ]
