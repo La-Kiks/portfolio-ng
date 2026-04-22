@@ -50,12 +50,20 @@ export class BentoCarousel implements OnInit {
           route: `/projects/${project.slug}`
         }));
         this.isLoading = false;
+        this.preloadImages();
         this.cdr.markForCheck();
       },
       error: (err) => {
         this.isLoading = false;
         this.cdr.markForCheck();
       }
+    });
+  }
+
+  private preloadImages(): void {
+    this.projects.forEach(project => {
+      const img = new Image();
+      img.src = project.image;
     });
   }
 
