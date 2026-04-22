@@ -1,0 +1,8 @@
+services:
+  frontend:
+    build:
+      context: ./portfolio
+      dockerfile: Dockerfile
+    container_name: kilian-au-front
+    ports:
+      - "${UI_PORT}:80"
