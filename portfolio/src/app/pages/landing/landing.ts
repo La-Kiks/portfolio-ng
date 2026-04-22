@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Loader } from '../../components/loader/loader';
 import { BentoNavbar } from '../../components/bentos/bento-navbar/bento-navbar';
 import { BentoCarousel, CarouselProject } from '../../components/bentos/bento-carousel/bento-carousel';
@@ -17,21 +18,16 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 })
 
 export class Landing {
-  // Placeholder Navigation -- TODO : Edit or delete
   navItems = [
-    { label: 'À PROPOS', action: () => this.navigate('About') },
+    { label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
   ];
+
+  constructor(private router: Router) { }
 
   projects: CarouselProject[] = [];
 
   onLoadingComplete(): void {
     console.log('Loading complete, page revealed!');
   }
-
-  // Placeholder Navigation -- TODO : Edit or delete
-  navigate(section: string): void {
-    console.log('Navigate to', section);
-  }
-
 
 }
