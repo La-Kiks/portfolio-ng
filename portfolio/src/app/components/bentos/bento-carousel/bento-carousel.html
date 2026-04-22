@@ -12,7 +12,7 @@
     <!-- Image Container -->
     <div class="flex-1 w-full relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
         role="button" tabindex="0" (keyup.enter)="goToProject()">
-        <img [src]="currentProject.image" width="800px" height="800px" [alt]="currentProject.title"
+        <img [src]="currentProject.image" width="720px" height="720px" [alt]="currentProject.title"
             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
         <!-- Overlay on hover -->
         <div
@@ -27,6 +27,7 @@
     <!-- Title Section -->
     <div class="p-4 bg-primary border-t border-secondary">
         <h3 class="text-lg font-semibold text-text m-0">{{ currentProject.title }}</h3>
+        <p class="text-text">{{ currentProject.description}}</p>
     </div>
 
     <!-- Navigation Arrows -->

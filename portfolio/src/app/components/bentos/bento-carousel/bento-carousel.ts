@@ -6,6 +6,7 @@ import { Project, ProjectService } from '../../../services/projects/project';
 export interface CarouselProject {
   id: string;
   title: string;
+  description: string;
   image: string;
   route: string;
 }
@@ -30,38 +31,29 @@ export class BentoCarousel implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('BentoCarousel ngOnInit called');
-    console.log('Projects input:', this.projects);
     if (this.projects.length === 0) {
-      console.log('No projects input, loading from service...');
       this.loadProjects();
     } else {
-      console.log('Projects already provided as input');
       this.isLoading = false;
       this.cdr.markForCheck();
     }
   }
 
   private loadProjects(): void {
-    console.log('loadProjects called');
     this.projectService.getAllProjects().subscribe({
       next: (projects: Project[]) => {
-        console.log('Projects loaded from service:', projects);
         this.projects = projects.map(project => ({
           id: project.id,
           title: project.title,
+          description: project.description,
           image: project.images[0],
           route: `/projects/${project.slug}`
         }));
-        console.log('Mapped projects:', this.projects);
         this.isLoading = false;
-        console.log('isLoading set to:', this.isLoading);
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Error loading projects:', err);
         this.isLoading = false;
-        console.log('isLoading set to false (error):', this.isLoading);
         this.cdr.markForCheck();
       }
     });

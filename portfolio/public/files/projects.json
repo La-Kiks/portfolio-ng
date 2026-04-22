@@ -1,46 +1,9 @@
 [
     {
         "id": "1",
-        "slug": "cooldowns",
-        "title": "Cooldowns",
-        "description": "League of Legends cooldowns tracker - 30k monthly users",
-        "longDescription": "Lors de mon expérience en esport sur League of Legends, j'ai identifié le besoin d'accéder rapidement aux cooldowns des champions, un processus jusque-là géré via un Google Sheet difficile à maintenir.",
-        "context": "Lors de mon expérience en esport sur League of Legends, j'ai identifié le besoin d'accéder rapidement aux cooldowns des champions, un processus jusque-là géré via un Google Sheet difficile à maintenir.",
-        "objectives": "Automatiser la mise à jour des données via l'API de Riot Games, créer une interface dynamique et améliorer l'expérience utilisateur pour faciliter la prise de décision stratégique.",
-        "stack": [
-            "JavaScript",
-            "Asset Mapper",
-            "Stimulus",
-            "Mutation Observer",
-            "Riot Games API",
-            "DOM Manipulation"
-        ],
-        "skills": [
-            "Consommation d'API",
-            "Gestion d'événements et du DOM en temps réel",
-            "Mise en place d'une recherche avancée avec auto-complétion",
-            "Optimisation de l'expérience utilisateur"
-        ],
-        "results": "Lancement d'un outil fonctionnel ayant atteint environ 30 000 utilisateurs mensuels, avec une adoption relayée sur Reddit et Twitter, validant la pertinence du besoin et la qualité de la solution.",
-        "improvements": [
-            "Améliorer les performances côté front",
-            "Ajouter des filtres avancés",
-            "Renforcer le responsive design",
-            "Enrichir les fonctionnalités liées aux mises à jour en temps réel"
-        ],
-        "images": [
-            "/images/cooldowns-hero.jpg",
-            "/images/cooldowns-interface.jpg",
-            "/images/cooldowns-search.jpg"
-        ],
-        "link": "",
-        "github": "url"
-    },
-    {
-        "id": "2",
         "slug": "sport-event",
         "title": "Sport Event",
-        "description": "Platform for managing sports competition registrations with secure payment processing",
+        "description": "Plateforme de gestion d'inscriptions à une compétitions avec système de paiement sécurisé",
         "longDescription": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
         "context": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
         "objectives": "Concevoir un système d'inscription en équipe (2 participants), gérer différents formats de compétition et sécuriser le processus de paiement en ligne.",
@@ -65,7 +28,7 @@
             "Enrichir l'expérience utilisateur (notifications, suivi des inscriptions)"
         ],
         "images": [
-            "/images/projects/HyroxPoliceAc.webp",
+            "/images/projects/HyroxPolice-square.webp",
             "/images/projects/HyroxPoliceFormat.webp",
             "/images/projects/HyroxPoliceForms.webp"
         ],
@@ -73,10 +36,10 @@
         "github": "https://github.com/La-Kiks/sven-event-one"
     },
     {
-        "id": "3",
+        "id": "2",
         "slug": "portfolio",
         "title": "Portfolio",
-        "description": "Modern Bento-designed developer portfolio showcasing projects and skills",
+        "description": "Portfolio développeur moderne au design Bento mettant en valeur projets et compétences",
         "longDescription": "Conception de mon portfolio de développeur web avec un design moderne de type Bento, visant à présenter mes projets et compétences de manière claire et interactive.",
         "context": "Conception de mon portfolio de développeur web avec un design moderne de type Bento, visant à présenter mes projets et compétences de manière claire et interactive.",
         "objectives": "Créer une interface fluide et modulable, valoriser mes réalisations et anticiper des évolutions futures comme l'ajout d'un blog, d'un formulaire de contact ou de fonctionnalités liées à une activité freelance.",
@@ -103,18 +66,18 @@
             "Fonctionnalités de paiement pour activité freelance"
         ],
         "images": [
-            "/images/portfolio-hero.jpg",
+            "/images/projects/Portfolio-Landing-square.webp",
             "/images/portfolio-bento.jpg",
             "/images/portfolio-projects.jpg"
         ],
-        "link": "https://kilian-audroin.com",
+        "link": "https://kilian-au.fr",
         "github": "https://github.com/yourprofile/portfolio"
     },
     {
-        "id": "4",
+        "id": "3",
         "slug": "debug-optimisation",
         "title": "Debug & Optimisation",
-        "description": "Website optimization focusing on SEO, accessibility, and performance improvements",
+        "description": "Optimisation de site web axée sur le SEO, l’accessibilité et les performances",
         "longDescription": "Intervention sur un site existant présentant des lacunes en SEO, accessibilité et stabilité fonctionnelle, avec un impact direct sur sa visibilité et son expérience utilisateur.",
         "context": "Intervention sur un site existant présentant des lacunes en SEO, accessibilité et stabilité fonctionnelle, avec un impact direct sur sa visibilité et son expérience utilisateur.",
         "objectives": "Optimiser le référencement naturel, corriger les problèmes d'accessibilité, implémenter des données structurées et débugger les fonctionnalités critiques du site.",
@@ -143,11 +106,46 @@
             "Mettre en place un monitoring continu des métriques SEO"
         ],
         "images": [
-            "/images/debug-optimisation-hero.jpg",
+            "/images/projects/Debug-Lighthouse-square.webp",
             "/images/debug-optimisation-audit.jpg",
             "/images/debug-optimisation-results.jpg"
         ],
         "link": "https://example.com",
         "github": "https://github.com/yourprofile/debug-optimisation"
+    },
+    {
+        "id": "4",
+        "slug": "antibug-solutions",
+        "title": "Antibug Solutions",
+        "description": "Optimisation d’une application métier réduisant les requêtes et la charge de données",
+        "longDescription": "Mission freelance réalisée via Malt pour améliorer les performances et la maintenabilité d'une application métier présentant des lenteurs importantes et une dette technique.",
+        "context": "Mission freelance réalisée via Malt pour améliorer les performances et la maintenabilité d'une application métier présentant des lenteurs importantes et une dette technique.",
+        "objectives": "Réduire drastiquement le temps de chargement, corriger les problèmes de requêtes SQL inefficaces, moderniser le framework et ajouter de nouvelles fonctionnalités utiles.",
+        "stack": [
+            "Symfony 5.4",
+            "SQL",
+            "DataTables (server-side)",
+            "Hostinger"
+        ],
+        "skills": [
+            "Optimisation des performances backend",
+            "Résolution du problème N+1",
+            "Gestion avancée des requêtes SQL",
+            "Refactorisation de code",
+            "Migration de version d'un framework"
+        ],
+        "results": "Passage de plus de 6000 requêtes à 2, réduction de la charge de données de ~400 Mo à ~4 Mo, amélioration significative de la fluidité et ajout d'un système de filtrage mensuel des factures.",
+        "improvements": [
+            "Mettre en place du cache applicatif",
+            "Renforcer les tests automatisés",
+            "Poursuivre l'optimisation globale des performances",
+            "Améliorer l'architecture générale de l'application"
+        ],
+        "images": [
+            "/images/projects/Antibug-square.webp",
+            "/images/projects/Antibug-1280x720.webp"
+        ],
+        "link": "",
+        "github": ""
     }
 ]
