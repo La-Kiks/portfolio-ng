@@ -1,3 +1,7 @@
+@if (showProjectLoader) {
+<app-project-loader (loadingComplete)="onProjectLoaderComplete()"></app-project-loader>
+}
+
 <div class="bg-background min-h-screen flex flex-col">
 
     <!-- Main Content -->

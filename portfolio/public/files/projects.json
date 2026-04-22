@@ -29,6 +29,7 @@
         ],
         "images": [
             "/images/projects/HyroxPolice-square.webp",
+            "/images/projects/HyroxPoliceAc.webp",
             "/images/projects/HyroxPoliceFormat.webp",
             "/images/projects/HyroxPoliceForms.webp"
         ],
@@ -67,11 +68,12 @@
         ],
         "images": [
             "/images/projects/Portfolio-Landing-square.webp",
-            "/images/portfolio-bento.jpg",
-            "/images/portfolio-projects.jpg"
+            "/images/projects/Portfolio-Landing.webp",
+            "/images/projects/Portfolio-Loader.webp",
+            "/images/projects/Portfolio-About.webp"
         ],
         "link": "https://kilian-au.fr",
-        "github": "https://github.com/yourprofile/portfolio"
+        "github": "https://github.com/La-Kiks/portfolio-ng"
     },
     {
         "id": "3",
@@ -107,11 +109,12 @@
         ],
         "images": [
             "/images/projects/Debug-Lighthouse-square.webp",
-            "/images/debug-optimisation-audit.jpg",
-            "/images/debug-optimisation-results.jpg"
+            "/images/projects/Debug-Landing.webp",
+            "/images/projects/Debug-Lighthouse.webp",
+            "/images/projects/Debug-Wave.webp"
         ],
-        "link": "https://example.com",
-        "github": "https://github.com/yourprofile/debug-optimisation"
+        "link": "https://la-kiks.github.io/debug-and-optimize-photograph-website/",
+        "github": "https://github.com/La-Kiks/debug-and-optimize-photograph-website"
     },
     {
         "id": "4",

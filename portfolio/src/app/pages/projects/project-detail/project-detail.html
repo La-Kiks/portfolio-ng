@@ -1,3 +1,7 @@
+@if (showProjectLoader) {
+<app-project-loader (loadingComplete)="onProjectLoaderComplete()"></app-project-loader>
+}
+
 <div class="bg-background min-h-screen p-4 md:p-6">
     <ng-container *ngIf="projectState$ | async as state">
 
@@ -24,7 +28,7 @@
 
             <!-- Project Hero -->
             <div class="rounded-3xl bg-primary border border-secondary overflow-hidden mb-8">
-                <img [src]="state.project.images[0]" [alt]="state.project.title" class="w-full h-96 object-cover" />
+                <img [src]="state.project.images[1]" [alt]="state.project.title" class="w-full h-96 object-cover" />
             </div>
 
             <!-- Project Info -->
