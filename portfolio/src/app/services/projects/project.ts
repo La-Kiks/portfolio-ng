@@ -9,9 +9,15 @@ export interface Project {
   title: string;
   description: string;
   longDescription?: string;
+  context?: string;
+  objectives?: string;
+  stack?: string[];
+  skills?: string[];
+  results?: string;
+  improvements?: string[];
   images: string[];
-  technologies: string[];
   link?: string;
+  github?: string;
 }
 
 @Injectable({

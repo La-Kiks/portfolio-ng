@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProjectService, Project } from '../../../services/projects/project';
+import { Observable, switchMap, map, startWith, catchError, of } from 'rxjs';
+
+interface ProjectState {
+  project: Project | null;
+  isLoading: boolean;
+  error: string | null;
+}
 
 @Component({
   selector: 'app-project-detail',
@@ -11,39 +18,31 @@ import { ProjectService, Project } from '../../../services/projects/project';
 })
 
 export class ProjectDetail implements OnInit {
-  project: Project | undefined;
-  isLoading: boolean = true;
-  error: string | null = null;
+  projectState$: Observable<ProjectState>;
 
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ) { }
-
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const slug = params['slug'];
-      this.loadProject(slug);
-    });
+  ) {
+    this.projectState$ = this.route.params.pipe(
+      switchMap(params => {
+        const slug = params['slug'];
+        return this.projectService.getProjectBySlug(slug).pipe(
+          map(project => ({
+            project: project || null,
+            isLoading: false,
+            error: project ? null : 'Project not found'
+          })),
+          startWith({ project: null, isLoading: true, error: null }),
+          catchError(err => of({
+            project: null,
+            isLoading: false,
+            error: 'Error loading project'
+          }))
+        );
+      })
+    );
   }
 
-  private loadProject(slug: string): void {
-    this.isLoading = true;
-    this.error = null;
-
-    this.projectService.getProjectBySlug(slug).subscribe({
-      next: (project) => {
-        if (project) {
-          this.project = project;
-        } else {
-          this.error = 'Project not found';
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = 'Error loading project';
-        this.isLoading = false;
-      }
-    });
-  }
+  ngOnInit(): void { }
 }

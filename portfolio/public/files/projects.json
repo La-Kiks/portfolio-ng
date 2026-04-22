@@ -1,52 +1,113 @@
 [
     {
         "id": "1",
-        "slug": "ecommerce-platform",
-        "title": "E-Commerce Platform",
-        "description": "A modern shopping experience",
-        "longDescription": "Full e-commerce platform built with Angular and Node.js. Features include product catalog, shopping cart, and secure checkout.",
+        "slug": "cooldowns",
+        "title": "Cooldowns",
+        "description": "League of Legends cooldowns tracker - 30k monthly users",
+        "longDescription": "Lors de mon expérience en esport sur League of Legends, j'ai identifié le besoin d'accéder rapidement aux cooldowns des champions, un processus jusque-là géré via un Google Sheet difficile à maintenir.",
+        "context": "Lors de mon expérience en esport sur League of Legends, j'ai identifié le besoin d'accéder rapidement aux cooldowns des champions, un processus jusque-là géré via un Google Sheet difficile à maintenir.",
+        "objectives": "Automatiser la mise à jour des données via l'API de Riot Games, créer une interface dynamique et améliorer l'expérience utilisateur pour faciliter la prise de décision stratégique.",
+        "stack": [
+            "JavaScript",
+            "Asset Mapper",
+            "Stimulus",
+            "Mutation Observer",
+            "Riot Games API",
+            "DOM Manipulation"
+        ],
+        "skills": [
+            "Consommation d'API",
+            "Gestion d'événements et du DOM en temps réel",
+            "Mise en place d'une recherche avancée avec auto-complétion",
+            "Optimisation de l'expérience utilisateur"
+        ],
+        "results": "Lancement d'un outil fonctionnel ayant atteint environ 30 000 utilisateurs mensuels, avec une adoption relayée sur Reddit et Twitter, validant la pertinence du besoin et la qualité de la solution.",
+        "improvements": [
+            "Améliorer les performances côté front",
+            "Ajouter des filtres avancés",
+            "Renforcer le responsive design",
+            "Enrichir les fonctionnalités liées aux mises à jour en temps réel"
+        ],
         "images": [
-            "/images/profile-pic-ki.jpg",
-            "/images/ecommerce-2.jpg"
+            "/images/cooldowns-hero.jpg",
+            "/images/cooldowns-interface.jpg",
+            "/images/cooldowns-search.jpg"
         ],
-        "technologies": [
-            "Angular",
-            "Node.js",
-            "MongoDB",
-            "Tailwind CSS"
-        ],
-        "link": "https://example.com"
+        "link": "",
+        "github": "url"
     },
     {
         "id": "2",
-        "slug": "menumaker",
-        "title": "MenuMaker",
-        "description": "Restaurant menu management tool",
-        "longDescription": "A tool to help restaurants create and manage digital menus with real-time updates.",
+        "slug": "sport-event",
+        "title": "Sport Event",
+        "description": "Platform for managing sports competition registrations with secure payment processing",
+        "longDescription": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
+        "context": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
+        "objectives": "Concevoir un système d'inscription en équipe (2 participants), gérer différents formats de compétition et sécuriser le processus de paiement en ligne.",
+        "stack": [
+            "Angular",
+            ".NET",
+            "Stripe API",
+            "Webhooks",
+            "REST API"
+        ],
+        "skills": [
+            "Création d'API REST",
+            "Gestion de formulaires complexes",
+            "Intégration de paiement sécurisé",
+            "Communication front-back",
+            "Gestion des événements asynchrones (webhooks)"
+        ],
+        "results": "Mise en place d'un parcours utilisateur fluide de l'inscription au paiement, avec création dynamique d'équipes et validation automatique des transactions.",
+        "improvements": [
+            "Ajouter un tableau de bord administrateur",
+            "Améliorer la gestion des erreurs de paiement",
+            "Enrichir l'expérience utilisateur (notifications, suivi des inscriptions)"
+        ],
         "images": [
-            "/images/menumaker-1.jpg"
+            "/images/projects/HyroxPoliceAc.webp",
+            "/images/projects/HyroxPoliceFormat.webp",
+            "/images/projects/HyroxPoliceForms.webp"
         ],
-        "technologies": [
-            "React",
-            "Firebase",
-            "Tailwind CSS"
-        ],
-        "link": "https://example.com"
+        "link": "https://sport-challenge-police-54.fr/",
+        "github": "https://github.com/La-Kiks/sven-event-one"
     },
     {
         "id": "3",
-        "slug": "dashboard-analytics",
-        "title": "Dashboard Analytics",
-        "description": "Real-time analytics interface",
-        "longDescription": "Comprehensive analytics dashboard for tracking business metrics in real-time.",
-        "images": [
-            "/images/dashboard-1.jpg"
-        ],
-        "technologies": [
+        "slug": "portfolio",
+        "title": "Portfolio",
+        "description": "Modern Bento-designed developer portfolio showcasing projects and skills",
+        "longDescription": "Conception de mon portfolio de développeur web avec un design moderne de type Bento, visant à présenter mes projets et compétences de manière claire et interactive.",
+        "context": "Conception de mon portfolio de développeur web avec un design moderne de type Bento, visant à présenter mes projets et compétences de manière claire et interactive.",
+        "objectives": "Créer une interface fluide et modulable, valoriser mes réalisations et anticiper des évolutions futures comme l'ajout d'un blog, d'un formulaire de contact ou de fonctionnalités liées à une activité freelance.",
+        "stack": [
             "Angular",
-            "D3.js",
-            "TypeScript"
+            "Tailwind CSS",
+            "TypeScript",
+            "Routing",
+            "JSON"
         ],
-        "link": "https://example.com"
+        "skills": [
+            "Structuration d'une application front-end",
+            "Gestion du routing",
+            "Création de composants modulaires",
+            "Génération dynamique de contenu",
+            "Design Bento"
+        ],
+        "results": "Mise en ligne d'un portfolio évolutif, facilement maintenable, permettant d'ajouter ou modifier des projets sans refonte complète du site.",
+        "improvements": [
+            "Intégration d'un backend en .NET",
+            "Connexion à une API pour dynamiser les contenus",
+            "Ajout d'un formulaire de contact",
+            "Intégration d'un blog",
+            "Fonctionnalités de paiement pour activité freelance"
+        ],
+        "images": [
+            "/images/portfolio-hero.jpg",
+            "/images/portfolio-bento.jpg",
+            "/images/portfolio-projects.jpg"
+        ],
+        "link": "https://kilian-audroin.com",
+        "github": "https://github.com/yourprofile/portfolio"
     }
 ]
