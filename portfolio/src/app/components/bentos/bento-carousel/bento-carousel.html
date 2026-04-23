@@ -8,7 +8,7 @@
 <!-- Carousel Content -->
 @if (!isLoading && projects.length > 0) {
 <div
-    class="carousel-wrapper w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden">
+    class="carousel-wrapper w-full h-full min-h-90 rounded-3xl bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden">
     <!-- Image Container -->
     <div class="flex-1 w-full relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
         role="button" tabindex="0" (keyup.enter)="goToProject()">

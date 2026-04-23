@@ -75,7 +75,7 @@
 }
 
 /* 2K+ resolution height */
-@media (min-height: 1440px) {
+@media (min-height: 1440px) and (min-width: 1024px) {
   .title-only,
   .description-only {
     display: none;
