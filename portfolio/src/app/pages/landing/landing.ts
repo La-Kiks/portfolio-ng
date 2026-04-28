@@ -19,7 +19,7 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 
 export class Landing {
   navItems = [
-    { label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
+    { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
   ];
 
   constructor(private router: Router) { }
