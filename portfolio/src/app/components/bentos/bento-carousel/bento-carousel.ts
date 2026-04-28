@@ -61,8 +61,13 @@ export class BentoCarousel implements OnInit {
   }
 
   private preloadImages(): void {
-    this.projects.forEach(project => {
+    const firstImg = new Image();
+    firstImg.fetchPriority = 'high';
+    firstImg.src = this.projects[0].image;
+
+    this.projects.slice(1).forEach(project => {
       const img = new Image();
+      img.fetchPriority = 'low';
       img.src = project.image;
     });
   }

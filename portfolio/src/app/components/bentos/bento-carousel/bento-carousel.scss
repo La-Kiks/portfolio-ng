@@ -7,13 +7,13 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  width: clamp(40px, 5vw, 50px);
+  height: clamp(40px, 5vw, 50px);
+  background-color: color-mix(in srgb, var(--color-background) 80%, transparent);
+  color: var(--color-primary);
   border: none;
   border-radius: 50%;
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 5vw, 1.75rem);
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -52,11 +52,11 @@
 
 /* Slide Indicators */
 .carousel-indicator {
-  width: 8px;
-  height: 8px;
+  width: clamp(8px, 3vw, 10px);
+  height: clamp(8px, 3vw, 10px);
   border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  background-color: color-mix(in srgb, var(--color-primary) 80%, transparent);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -66,9 +66,9 @@
 }
 
 .carousel-indicator.active {
-  background-color: white;
-  width: 24px;
-  border-radius: 4px;
+  background-color: var(--color-primary);
+  width: clamp(18px, 3vw, 24px);
+  border-radius: clamp(2px, 3vw, 4px);
 }
 
 .loading-text {
