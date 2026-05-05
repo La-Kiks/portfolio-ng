@@ -27,7 +27,7 @@
             "Enrichir l'expérience utilisateur (notifications, suivi des inscriptions)"
         ],
         "images": [
-            "/images/projects/HyroxPolice-square.webp",
+            "/images/projects/HyroxPolice-square1.webp",
             "/images/projects/HyroxPoliceAc.webp",
             "/images/projects/HyroxPoliceFormat.webp",
             "/images/projects/HyroxPoliceForms.webp"
@@ -179,12 +179,12 @@
             "Implémenter un système de templates prédéfinis"
         ],
         "images": [
-            "/images/projects/MenuBuilder-square.webp",
-            "/images/projects/MenuBuilder-Dashboard.webp",
-            "/images/projects/MenuBuilder-Editor.webp",
-            "/images/projects/MenuBuilder-Export.webp"
+            "/images/projects/MenuMakerLandingSquare.webp",
+            "/images/projects/MenuMakerLanding.webp",
+            "/images/projects/MenuMakerDashboard.webp",
+            "/images/projects/MenuMakerMenu.webp"
         ],
-        "link": "",
+        "link": "https://www.figma.com/design/Q6NEUPqwz1U3HFaCaVoF7N/Maquette-desktop---Menu-Maker-by-Qwenta?node-id=0-1&p=f&t=JeTH6o1WReoBwQWV-0",
         "github": ""
     }
 ]
