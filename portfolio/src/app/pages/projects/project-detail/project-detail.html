@@ -24,7 +24,8 @@
         <div class="mx-auto" style="max-width: 1440px;">
 
             <!-- Back Button -->
-            <a href="/" class="text-primary hover:underline mb-6 inline-block">← Back to home</a>
+            <a href="/" class="text-primary hover:underline mb-6 md:text-xl cursor-pointer inline-block">← Retour page
+                d'accueil</a>
 
             <!-- Project Hero -->
             <div class="rounded-3xl bg-primary border border-secondary overflow-hidden mb-8">
@@ -112,7 +113,7 @@
                 <!-- Project Link -->
                 @if (state.project.link) {
                 <a [href]="state.project.link" target="_blank" rel="noopener noreferrer"
-                    class="inline-block px-6 py-3 bg-primary border border-secondary rounded-xl text-text font-medium hover:shadow-md transition-shadow duration-300">
+                    class="inline-block px-6 py-3 bg-primary border border-secondary rounded-xl text-text font-medium transition-all duration-300 hover:bg-text hover:text-primary hover:scale-110 focus:outline-none focus:ring-2 focus:ring-text focus:ring-offset-2 cursor-pointer">
                     Voir le projet →
                 </a>
                 }
@@ -120,7 +121,7 @@
                 <!-- Github Link -->
                 @if (state.project.github) {
                 <a [href]="state.project.github" target="_blank" rel="noopener noreferrer"
-                    class="inline-block px-6 py-3 mx-6   bg-primary border border-secondary rounded-xl text-text font-medium hover:shadow-md transition-shadow duration-300">
+                    class="inline-block px-6 py-3 mx-6   bg-primary border border-secondary rounded-xl text-text font-medium hover:shadow-md transition-all duration-300 hover:bg-text hover:text-primary hover:scale-110 focus:outline-none focus:ring-2 focus:ring-text focus:ring-offset-2 cursor-pointer">
                     Voir le code →
                 </a>
                 }

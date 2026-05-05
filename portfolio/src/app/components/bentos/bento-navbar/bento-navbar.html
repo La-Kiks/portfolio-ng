@@ -1,5 +1,4 @@
-<nav
-    class="w-full rounded-3xl p-4 md:p-6 bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300">
+<nav class="w-full rounded-3xl p-4 md:p-6 bg-primary border border-secondary">
     <div class="flex items-center justify-between">
         <h1 class="navbar-title text-text font-family-primary">
             {{ title }}
@@ -7,7 +6,7 @@
         <div class="flex gap-3 md:gap-4 sm:gap-5 items-center">
             @for (item of navItems; track item.id) {
             <button (click)="item.action?.()"
-                class="navbar-button bg-text text-secondary rounded-xl hover:opacity-80 transition-opacity duration-200 font-medium">
+                class="navbar-button bg-text text-secondary rounded-xl  hover:scale-110 hover:text-text hover:bg-secondary transition-all duration-300 font-medium cursor-pointer">
                 {{ item.label }}
             </button>
             }
