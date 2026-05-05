@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Inject, DOCUMENT } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Project, ProjectService } from '../../../services/projects/project';
@@ -27,7 +27,8 @@ export class BentoCarousel implements OnInit {
   constructor(
     private router: Router,
     private projectService: ProjectService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +36,7 @@ export class BentoCarousel implements OnInit {
       this.loadProjects();
     } else {
       this.isLoading = false;
+      this.preloadFirstImage();
       this.cdr.markForCheck();
     }
   }
@@ -61,15 +63,30 @@ export class BentoCarousel implements OnInit {
   }
 
   private preloadImages(): void {
-    const firstImg = new Image();
-    firstImg.fetchPriority = 'high';
-    firstImg.src = this.projects[0].image;
+    this.preloadFirstImage();
 
     this.projects.slice(1).forEach(project => {
       const img = new Image();
       img.fetchPriority = 'low';
       img.src = project.image;
     });
+  }
+
+  private preloadFirstImage(): void {
+    if (this.projects.length === 0) return;
+
+    const firstImage = this.projects[0].image;
+
+    const link = this.document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = firstImage;
+    link.fetchPriority = 'high';
+    this.document.head.appendChild(link);
+
+    const img = new Image();
+    img.fetchPriority = 'high';
+    img.src = firstImage;
   }
 
   get currentProject(): CarouselProject {
