@@ -20,7 +20,7 @@
 
 ### 1.1 Fonts never load (`format('ttf')` is invalid)
 
-- Convert `Lato-Regular.ttf` and `Lato-Bold.ttf` to WOFF2 (one-off local conversion). Keep `OFL.txt`.
+- Convert `Lato-Regular.ttf` and `Lato-Bold.ttf` to WOFF2 with a one-off local run of `npx ttf2woff2` (fallback: Python `fonttools` if the npm tool misbehaves). Keep `OFL.txt`.
 - Delete `public/fonts/Inter/`, `public/fonts/Raleway/`, `public/fonts/gilroy/`, and all unused Lato weights (~25 MB → ~50 KB).
 - Rewrite `@font-face` in `src/styles.scss`: `format('woff2')`, explicit `font-weight: 400` and `700` rules, `font-display: swap`. Remove the unused Inter rule.
 - Add `<link rel="preload" as="font" type="font/woff2" crossorigin>` for Lato Regular in `src/index.html`.
@@ -64,7 +64,7 @@
 
 ### 2.2 Per-route SEO
 
-- `app.routes.ts`: add `title:` to each route — Landing: "Kilian Audroin — Web Developer"; About: "À propos — Kilian Audroin"; ProjectDetail: generic fallback; NotFound: "404 — Kilian Audroin".
+- `app.routes.ts`: add `title:` to each route — Landing: "Kilian Audroin — Web Developer"; About: "À propos — Kilian Audroin"; ProjectDetail: "Projet — Kilian Audroin" (fallback until data loads); NotFound: "404 — Kilian Audroin".
 - `ProjectDetail`: on successful load, set document title to "{project.title} — Kilian Audroin" and meta description from `project.description` via Angular `Title`/`Meta` services.
 
 ### 2.3 Social links become real anchors
@@ -123,6 +123,7 @@
 - After each theme: `npm run build` and `npm test` green before committing.
 - After Themes 1 and 4: browser check on the dev server — fonts in Network tab, route titles in the tab bar, social links, carousel navigation.
 - At the end: `docker compose up` once — image builds, serves, healthcheck reports **healthy**.
+- Update `CLAUDE.md` to reflect the changes (fonts, lint command, flattened about folder, service caching).
 - Merge `chore/senior-review-fixes` → `main` when CI is green.
 
 ## Out of scope
