@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Inject, DOCUMENT } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  DOCUMENT,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Project, ProjectService } from '../../../services/projects/project';
@@ -16,20 +24,18 @@ export interface CarouselProject {
   imports: [CommonModule],
   templateUrl: './bento-carousel.html',
   styleUrl: './bento-carousel.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoCarousel implements OnInit {
+  private router = inject(Router);
+  private projectService = inject(ProjectService);
+  private cdr = inject(ChangeDetectorRef);
+  private document = inject<Document>(DOCUMENT);
+
   @Input() projects: CarouselProject[] = [];
 
-  currentIndex: number = 0;
-  isLoading: boolean = true;
-
-  constructor(
-    private router: Router,
-    private projectService: ProjectService,
-    private cdr: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document
-  ) { }
+  currentIndex = 0;
+  isLoading = true;
 
   ngOnInit(): void {
     if (this.projects.length === 0) {
@@ -44,28 +50,28 @@ export class BentoCarousel implements OnInit {
   private loadProjects(): void {
     this.projectService.getAllProjects().subscribe({
       next: (projects: Project[]) => {
-        this.projects = projects.map(project => ({
+        this.projects = projects.map((project) => ({
           id: project.id,
           title: project.title,
           description: project.description,
           image: project.images[0],
-          route: `/projects/${project.slug}`
+          route: `/projects/${project.slug}`,
         }));
         this.isLoading = false;
         this.preloadImages();
         this.cdr.markForCheck();
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
   private preloadImages(): void {
     this.preloadFirstImage();
 
-    this.projects.slice(1).forEach(project => {
+    this.projects.slice(1).forEach((project) => {
       const img = new Image();
       img.fetchPriority = 'low';
       img.src = project.image;

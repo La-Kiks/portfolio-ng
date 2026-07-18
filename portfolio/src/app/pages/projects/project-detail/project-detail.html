@@ -3,7 +3,7 @@
 }
 
 <div class="bg-background min-h-screen p-4 md:p-6">
-    <ng-container *ngIf="projectState$ | async as state">
+    @if (projectState$ | async; as state) {
 
         <!-- Loading State -->
         @if (state.isLoading) {
@@ -141,5 +141,5 @@
             }
         </div>
         }
-    </ng-container>
+    }
 </div>

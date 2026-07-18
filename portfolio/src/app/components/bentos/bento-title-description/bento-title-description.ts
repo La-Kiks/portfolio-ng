@@ -8,6 +8,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './bento-title-description.scss',
 })
 export class BentoTitleDescription {
-  @Input() title: string = 'Title';
-  @Input() description: string = 'Add your description here';
+  @Input() title = 'Title';
+  @Input() description = 'Add your description here';
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
@@ -16,29 +16,28 @@ interface ProjectState {
   selector: 'app-project-detail',
   imports: [CommonModule, RouterLink, ProjectLoader],
   templateUrl: './project-detail.html',
-  styleUrls: ['./project-detail.scss']
+  styleUrls: ['./project-detail.scss'],
 })
+export class ProjectDetail {
+  private route = inject(ActivatedRoute);
+  private projectService = inject(ProjectService);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
-export class ProjectDetail implements OnInit {
   projectState$: Observable<ProjectState>;
-  showProjectLoader: boolean = true;
+  showProjectLoader = true;
 
-  constructor(
-    private route: ActivatedRoute,
-    private projectService: ProjectService,
-    private titleService: Title,
-    private metaService: Meta
-  ) {
+  constructor() {
     this.projectState$ = this.route.params.pipe(
-      switchMap(params => {
+      switchMap((params) => {
         const slug = params['slug'];
         return this.projectService.getProjectBySlug(slug).pipe(
-          map(project => ({
+          map((project) => ({
             project: project || null,
             isLoading: false,
-            error: project ? null : 'Project not found'
+            error: project ? null : 'Project not found',
           })),
-          tap(state => {
+          tap((state) => {
             if (state.project) {
               this.titleService.setTitle(`${state.project.title} — Kilian Audroin`);
               this.metaService.updateTag({
@@ -48,17 +47,17 @@ export class ProjectDetail implements OnInit {
             }
           }),
           startWith({ project: null, isLoading: true, error: null }),
-          catchError(err => of({
-            project: null,
-            isLoading: false,
-            error: 'Error loading project'
-          }))
+          catchError(() =>
+            of({
+              project: null,
+              isLoading: false,
+              error: 'Error loading project',
+            }),
+          ),
         );
-      })
+      }),
     );
   }
-
-  ngOnInit(): void { }
 
   onProjectLoaderComplete(): void {
     this.showProjectLoader = false;

@@ -1,20 +1,27 @@
-import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  inject,
+} from '@angular/core';
 
 @Component({
   selector: 'app-project-loader',
   imports: [],
   templateUrl: './project-loader.html',
   styleUrl: './project-loader.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ProjectLoader implements OnInit {
+  private cdr = inject(ChangeDetectorRef);
+
   @Output() loadingComplete = new EventEmitter<void>();
 
-  showLoader: boolean = true;
-  loadingProgress: number = 0;
-
-  constructor(private cdr: ChangeDetectorRef) { }
+  showLoader = true;
+  loadingProgress = 0;
 
   ngOnInit(): void {
     const duration = 800;
@@ -39,5 +46,4 @@ export class ProjectLoader implements OnInit {
       }
     }, interval);
   }
-
 }

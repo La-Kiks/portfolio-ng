@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './bento-description.scss',
 })
 export class BentoDescription {
-  @Input() description: string = 'Description';
+  @Input() description = 'Description';
 }

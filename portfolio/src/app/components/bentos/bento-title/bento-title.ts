@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './bento-title.scss',
 })
 export class BentoTitle {
-  @Input() title: string = 'Title';
+  @Input() title = 'Title';
 }

@@ -10,7 +10,7 @@ import { ProjectLoader } from '../../../components/project-loader/project-loader
   styleUrl: './about.scss',
 })
 export class About {
-  showProjectLoader: boolean = true;
+  showProjectLoader = true;
 
   onProjectLoaderComplete(): void {
     this.showProjectLoader = false;

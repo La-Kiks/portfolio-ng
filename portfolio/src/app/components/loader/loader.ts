@@ -9,7 +9,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 export class Loader implements OnInit {
   @Output() loadingComplete = new EventEmitter<void>();
 
-  showLoader: boolean = true;
+  showLoader = true;
 
   ngOnInit(): void {
     const loaderTimestamp = sessionStorage.getItem('loaderTimestamp');

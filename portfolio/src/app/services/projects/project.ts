@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,17 +21,15 @@ export interface Project {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjectService {
+  private http = inject(HttpClient);
+
   private projectsJsonUrl = '/files/projects.json';
 
-  constructor(private http: HttpClient) { }
-
   getProjectBySlug(slug: string): Observable<Project | undefined> {
-    return this.loadProjects().pipe(
-      map(projects => projects.find(p => p.slug === slug))
-    );
+    return this.loadProjects().pipe(map((projects) => projects.find((p) => p.slug === slug)));
   }
 
   getAllProjects(): Observable<Project[]> {

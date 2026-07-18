@@ -15,6 +15,6 @@ interface NavItem {
   styleUrls: ['./bento-navbar.scss']
 })
 export class BentoNavbar {
-  @Input() title: string = 'My Portfolio';
+  @Input() title = 'My Portfolio';
   @Input() navItems: NavItem[] = [];
 }
