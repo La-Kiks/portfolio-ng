@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Title, Meta } from '@angular/platform-browser';
-import { ProjectService, Project } from '../../../services/projects/project';
+import { Meta, Title } from '@angular/platform-browser';
+import { catchError, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { Project, ProjectService } from '../../../services/projects/project';
 import { ProjectLoader } from '../../../components/project-loader/project-loader';
-import { Observable, switchMap, map, startWith, catchError, of, tap } from 'rxjs';
 
 interface ProjectState {
   project: Project | null;
@@ -14,52 +14,45 @@ interface ProjectState {
 
 @Component({
   selector: 'app-project-detail',
-  imports: [CommonModule, RouterLink, ProjectLoader],
+  imports: [AsyncPipe, RouterLink, ProjectLoader],
   templateUrl: './project-detail.html',
-  styleUrls: ['./project-detail.scss'],
+  styleUrl: './project-detail.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetail {
-  private route = inject(ActivatedRoute);
-  private projectService = inject(ProjectService);
-  private titleService = inject(Title);
-  private metaService = inject(Meta);
+  private readonly route = inject(ActivatedRoute);
+  private readonly projectService = inject(ProjectService);
+  private readonly titleService = inject(Title);
+  private readonly metaService = inject(Meta);
 
-  projectState$: Observable<ProjectState>;
-  showProjectLoader = true;
+  readonly showProjectLoader = signal(true);
 
-  constructor() {
-    this.projectState$ = this.route.params.pipe(
-      switchMap((params) => {
-        const slug = params['slug'];
-        return this.projectService.getProjectBySlug(slug).pipe(
-          map((project) => ({
-            project: project || null,
-            isLoading: false,
-            error: project ? null : 'Project not found',
-          })),
-          tap((state) => {
-            if (state.project) {
-              this.titleService.setTitle(`${state.project.title} — Kilian Audroin`);
-              this.metaService.updateTag({
-                name: 'description',
-                content: state.project.description,
-              });
-            }
-          }),
-          startWith({ project: null, isLoading: true, error: null }),
-          catchError(() =>
-            of({
-              project: null,
-              isLoading: false,
-              error: 'Error loading project',
-            }),
-          ),
-        );
-      }),
-    );
-  }
+  readonly projectState$: Observable<ProjectState> = this.route.params.pipe(
+    switchMap(params =>
+      this.projectService.getProjectBySlug(params['slug']).pipe(
+        map(project => ({
+          project: project ?? null,
+          isLoading: false,
+          error: project ? null : 'Project not found',
+        })),
+        tap(state => {
+          if (state.project) {
+            this.titleService.setTitle(`${state.project.title} — Kilian Audroin`);
+            this.metaService.updateTag({
+              name: 'description',
+              content: state.project.description,
+            });
+          }
+        }),
+        startWith({ project: null, isLoading: true, error: null }),
+        catchError(() =>
+          of({ project: null, isLoading: false, error: 'Error loading project' }),
+        ),
+      ),
+    ),
+  );
 
   onProjectLoaderComplete(): void {
-    this.showProjectLoader = false;
+    this.showProjectLoader.set(false);
   }
 }
