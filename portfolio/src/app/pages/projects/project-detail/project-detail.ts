@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import { ProjectService, Project } from '../../../services/projects/project';
 import { ProjectLoader } from '../../../components/project-loader/project-loader';
-import { Observable, switchMap, map, startWith, catchError, of } from 'rxjs';
+import { Observable, switchMap, map, startWith, catchError, of, tap } from 'rxjs';
 
 interface ProjectState {
   project: Project | null;
@@ -24,7 +25,9 @@ export class ProjectDetail implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private titleService: Title,
+    private metaService: Meta
   ) {
     this.projectState$ = this.route.params.pipe(
       switchMap(params => {
@@ -35,6 +38,15 @@ export class ProjectDetail implements OnInit {
             isLoading: false,
             error: project ? null : 'Project not found'
           })),
+          tap(state => {
+            if (state.project) {
+              this.titleService.setTitle(`${state.project.title} — Kilian Audroin`);
+              this.metaService.updateTag({
+                name: 'description',
+                content: state.project.description,
+              });
+            }
+          }),
           startWith({ project: null, isLoading: true, error: null }),
           catchError(err => of({
             project: null,
