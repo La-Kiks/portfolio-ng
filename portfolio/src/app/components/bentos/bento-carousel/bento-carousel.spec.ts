@@ -64,6 +64,16 @@ describe('BentoCarousel', () => {
     expect(component.currentProject()?.title).toBe('Two');
   });
 
+  it('navigating slides after init does not throw NG02953 and renders the new slide', () => {
+    flushProjects();
+    component.nextProject();
+    expect(() => fixture.detectChanges()).not.toThrow();
+    component.goToSlide(2);
+    expect(() => fixture.detectChanges()).not.toThrow();
+    const img: HTMLImageElement = fixture.nativeElement.querySelector('img');
+    expect(img.alt).toBe('Three');
+  });
+
   it('shows a visible error message when loading fails', () => {
     httpMock.expectOne('/files/projects.json').error(new ProgressEvent('error'));
     fixture.detectChanges();

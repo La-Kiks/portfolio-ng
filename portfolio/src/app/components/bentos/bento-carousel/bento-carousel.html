@@ -20,9 +20,13 @@
     <!-- Image Container -->
     <div class="flex-1 w-full p-2 relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
         role="button" tabindex="0" (keyup.enter)="goToProject()">
-        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title"
-            [priority]="currentIndex() === 0"
+        @if (currentIndex() === 0) {
+        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title" priority
             class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+        } @else {
+        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title"
+            class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
+        }
         <!-- Overlay on hover -->
         <div
             class="absolute inset-0 bg-transparent hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
