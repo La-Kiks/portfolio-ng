@@ -12,22 +12,24 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, Loader, BentoNavbar, BentoCarousel, BentoTitleDescription, BentoTitle, BentoDescription, BentoProfilePicture, BentoSocial],
+  imports: [
+    CommonModule,
+    Loader,
+    BentoNavbar,
+    BentoCarousel,
+    BentoTitleDescription,
+    BentoTitle,
+    BentoDescription,
+    BentoProfilePicture,
+    BentoSocial,
+  ],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
-
 export class Landing {
-  navItems = [
-    { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
-  ];
+  navItems = [{ id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) }];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   projects: CarouselProject[] = [];
-
-  onLoadingComplete(): void {
-    console.log('Loading complete, page revealed!');
-  }
-
 }

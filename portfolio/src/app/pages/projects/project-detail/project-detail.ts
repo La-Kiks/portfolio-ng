@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { ProjectService, Project } from '../../../services/projects/project';
@@ -14,7 +14,7 @@ interface ProjectState {
 
 @Component({
   selector: 'app-project-detail',
-  imports: [CommonModule, ProjectLoader],
+  imports: [CommonModule, RouterLink, ProjectLoader],
   templateUrl: './project-detail.html',
   styleUrls: ['./project-detail.scss']
 })
