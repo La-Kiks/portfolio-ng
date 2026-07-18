@@ -1,20 +1,19 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-interface NavItem {
-  id: number,
+export interface NavItem {
+  id: number;
   label: string;
   action?: () => void;
 }
 
 @Component({
   selector: 'app-bento-navbar',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './bento-navbar.html',
-  styleUrls: ['./bento-navbar.scss']
+  styleUrl: './bento-navbar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoNavbar {
-  @Input() title = 'My Portfolio';
-  @Input() navItems: NavItem[] = [];
+  readonly title = input('My Portfolio');
+  readonly navItems = input<NavItem[]>([]);
 }

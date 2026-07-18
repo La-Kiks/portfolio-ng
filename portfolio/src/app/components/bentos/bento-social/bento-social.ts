@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export interface SocialLink {
@@ -12,9 +12,10 @@ export interface SocialLink {
   imports: [NgClass],
   templateUrl: './bento-social.html',
   styleUrl: './bento-social.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoSocial {
-  @Input() socialLinks: SocialLink[] = [
+  readonly socialLinks = input<SocialLink[]>([
     {
       label: 'Contact',
       icon: 'fas fa-envelope',
@@ -35,7 +36,7 @@ export class BentoSocial {
       icon: 'fab fa-github',
       url: 'https://github.com/La-Kiks',
     },
-  ];
+  ]);
 
   isExternal(link: SocialLink): boolean {
     return !link.url.startsWith('mailto:');

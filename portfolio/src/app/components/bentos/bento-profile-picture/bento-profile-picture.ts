@@ -1,12 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-bento-profile-picture',
-  imports: [],
+  imports: [NgOptimizedImage],
   templateUrl: './bento-profile-picture.html',
   styleUrl: './bento-profile-picture.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoProfilePicture {
-  @Input() imageUrl = '/images/profile.jpg';
-  @Input() altText = 'Profile picture';
+  readonly imageUrl = input('/images/profile.jpg');
+  readonly altText = input('Profile picture');
 }

@@ -1,13 +1,13 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-bento-title-description',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './bento-title-description.html',
   styleUrl: './bento-title-description.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoTitleDescription {
-  @Input() title = 'Title';
-  @Input() description = 'Add your description here';
+  readonly title = input('Title');
+  readonly description = input('Add your description here');
 }
