@@ -4,5 +4,6 @@ services:
       context: ./portfolio
       dockerfile: Dockerfile
     container_name: kilian-au-front
+    restart: unless-stopped
     ports:
-      - "${UI_PORT}:80"
+      - '${UI_PORT:-4200}:80'
