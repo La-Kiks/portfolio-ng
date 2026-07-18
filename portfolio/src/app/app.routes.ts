@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Landing } from './pages/landing/landing';
 import { NotFound } from './pages/not-found/not-found';
 import { ProjectDetail } from './pages/projects/project-detail/project-detail';
-import { About } from './pages/about/about/about';
+import { About } from './pages/about/about';
 
 export const routes: Routes = [
   { path: '', component: Landing, title: 'Kilian Audroin — Web Developer' },
