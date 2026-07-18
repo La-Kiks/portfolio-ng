@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Loader } from '../../components/loader/loader';
-import { BentoNavbar } from '../../components/bentos/bento-navbar/bento-navbar';
+import { BentoNavbar, NavItem } from '../../components/bentos/bento-navbar/bento-navbar';
 import { BentoCarousel } from '../../components/bentos/bento-carousel/bento-carousel';
 import { BentoTitleDescription } from '../../components/bentos/bento-title-description/bento-title-description';
 import { BentoTitle } from '../../components/bentos/bento-title/bento-title';
@@ -13,7 +12,6 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 @Component({
   selector: 'app-landing',
   imports: [
-    CommonModule,
     Loader,
     BentoNavbar,
     BentoCarousel,
@@ -25,9 +23,12 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
   ],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Landing {
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
-  navItems = [{ id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) }];
+  readonly navItems: NavItem[] = [
+    { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
+  ];
 }

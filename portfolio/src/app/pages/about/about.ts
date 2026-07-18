@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProjectLoader } from '../../components/project-loader/project-loader';
 
 @Component({
   selector: 'app-about',
-  imports: [CommonModule, RouterLink, ProjectLoader],
+  imports: [RouterLink, ProjectLoader],
   templateUrl: './about.html',
   styleUrl: './about.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class About {
-  showProjectLoader = true;
+  readonly showProjectLoader = signal(true);
 
   onProjectLoaderComplete(): void {
-    this.showProjectLoader = false;
+    this.showProjectLoader.set(false);
   }
 }
