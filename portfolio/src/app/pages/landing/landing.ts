@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Loader } from '../../components/loader/loader';
 import { BentoNavbar } from '../../components/bentos/bento-navbar/bento-navbar';
-import {
-  BentoCarousel,
-  CarouselProject,
-} from '../../components/bentos/bento-carousel/bento-carousel';
+import { BentoCarousel } from '../../components/bentos/bento-carousel/bento-carousel';
 import { BentoTitleDescription } from '../../components/bentos/bento-title-description/bento-title-description';
 import { BentoTitle } from '../../components/bentos/bento-title/bento-title';
 import { BentoDescription } from '../../components/bentos/bento-description/bento-description';
@@ -33,6 +30,4 @@ export class Landing {
   private router = inject(Router);
 
   navItems = [{ id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) }];
-
-  projects: CarouselProject[] = [];
 }
