@@ -1,7 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable, shareReplay } from 'rxjs';
 
 export interface Project {
   id: string;
@@ -24,19 +23,17 @@ export interface Project {
   providedIn: 'root',
 })
 export class ProjectService {
-  private http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-  private projectsJsonUrl = '/files/projects.json';
-
-  getProjectBySlug(slug: string): Observable<Project | undefined> {
-    return this.loadProjects().pipe(map((projects) => projects.find((p) => p.slug === slug)));
-  }
+  private readonly projects$: Observable<Project[]> = this.http
+    .get<Project[]>('/files/projects.json')
+    .pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   getAllProjects(): Observable<Project[]> {
-    return this.loadProjects();
+    return this.projects$;
   }
 
-  private loadProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.projectsJsonUrl);
+  getProjectBySlug(slug: string): Observable<Project | undefined> {
+    return this.projects$.pipe(map(projects => projects.find(p => p.slug === slug)));
   }
 }
