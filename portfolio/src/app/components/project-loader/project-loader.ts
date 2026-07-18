@@ -1,12 +1,7 @@
-import {
-  Component,
-  OnInit,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, output, signal } from '@angular/core';
+
+const DURATION_MS = 800;
+const TICK_MS = 20;
 
 @Component({
   selector: 'app-project-loader',
@@ -16,34 +11,23 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectLoader implements OnInit {
-  private cdr = inject(ChangeDetectorRef);
-
-  @Output() loadingComplete = new EventEmitter<void>();
-
-  showLoader = true;
-  loadingProgress = 0;
+  readonly loadingComplete = output<void>();
+  readonly showLoader = signal(true);
+  readonly loadingProgress = signal(0);
 
   ngOnInit(): void {
-    const duration = 800;
-    const interval = 20;
-    const steps = duration / interval;
-    const step = 100 / steps;
-    let currentStep = 0;
+    const step = 100 / (DURATION_MS / TICK_MS);
 
     const progressInterval = setInterval(() => {
-      currentStep++;
-      this.loadingProgress = Math.min(currentStep * step, 100);
-      this.cdr.markForCheck();
+      this.loadingProgress.update(progress => Math.min(progress + step, 100));
 
-      if (this.loadingProgress >= 100) {
+      if (this.loadingProgress() >= 100) {
         clearInterval(progressInterval);
-
         setTimeout(() => {
-          this.showLoader = false;
-          this.cdr.markForCheck();
+          this.showLoader.set(false);
           this.loadingComplete.emit();
         }, 100);
       }
-    }, interval);
+    }, TICK_MS);
   }
 }
