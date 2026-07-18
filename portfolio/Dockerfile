@@ -3,9 +3,6 @@ FROM node:lts-slim AS build
 
 WORKDIR /app
 
-# Install Angular CLI
-RUN npm install -g @angular/cli
-
 # Copy package files
 COPY package*.json ./
 
@@ -16,7 +13,7 @@ RUN npm ci
 COPY . ./
 
 # Build the application
-RUN ng build --configuration=production
+RUN npm run build
 
 # Final stage
 FROM nginx:stable-alpine AS final
