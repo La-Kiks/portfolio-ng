@@ -184,7 +184,7 @@
 
       .grid-title {
         --enter-x: -40px;
-        --enter-delay: 200ms;
+        --enter-delay: 270ms;
       }
 
       .grid-profile {
@@ -227,7 +227,20 @@
       .grid-description-only,
       .grid-profile {
         --enter-x: -100vw;
+      }
+
+      /* Left group: picture → title → description, 80ms apart */
+      .grid-profile {
         --enter-delay: 260ms;
+      }
+
+      .grid-title,
+      .grid-title-only {
+        --enter-delay: 340ms;
+      }
+
+      .grid-description-only {
+        --enter-delay: 420ms;
       }
 
       .grid-carousel {
