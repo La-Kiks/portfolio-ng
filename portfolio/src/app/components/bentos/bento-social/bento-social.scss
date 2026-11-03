@@ -22,14 +22,6 @@
   }
 }
 
-/* 2K+ resolution height */
-@media (min-height: 1440px) {
-  .social-button {
-    flex-basis: calc(50% - 1.5rem);
-    width: auto;
-  }
-}
-
 .social-button:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

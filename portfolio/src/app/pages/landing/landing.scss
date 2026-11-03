@@ -80,7 +80,8 @@
     flex: 1;
     min-height: 0;
     width: 100%;
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+    /* title/picture row gets more room than the description row */
+    grid-template-rows: auto minmax(0, 1.7fr) minmax(0, 1fr) auto;
   }
 }
 
