@@ -122,3 +122,101 @@
 .grid-social {
   grid-area: social;
 }
+
+/* ============================================================
+   Entrance animation (tablet + desktop, first landing view only)
+   Totals must match DESKTOP_ENTRANCE_MS / TABLET_ENTRANCE_MS in landing.ts
+   ============================================================ */
+@keyframes bento-enter {
+  from {
+    transform: translate(var(--enter-x, 0), var(--enter-y, 0));
+    opacity: var(--enter-opacity, 1);
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-root.entering {
+    overflow: clip;
+  }
+
+  /* Tablet: short slides with fade */
+  @media (min-width: 600px) and (max-width: 1023px) {
+    .landing-root.entrance {
+      .grid-navbar,
+      .grid-title,
+      .grid-profile,
+      .grid-carousel,
+      .grid-social {
+        --enter-opacity: 0;
+        animation: bento-enter 550ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
+      }
+
+      .grid-navbar {
+        --enter-y: -40px;
+        --enter-delay: 0ms;
+      }
+
+      .grid-title {
+        --enter-x: -40px;
+        --enter-delay: 140ms;
+      }
+
+      .grid-profile {
+        --enter-x: 40px;
+        --enter-delay: 140ms;
+      }
+
+      .grid-carousel {
+        --enter-y: 40px;
+        --enter-delay: 280ms;
+      }
+
+      .grid-social {
+        --enter-y: 40px;
+        --enter-delay: 420ms;
+      }
+    }
+  }
+
+  /* Desktop (incl. tall-screen variant): slides from off-screen, no fade */
+  @media (min-width: 1024px) {
+    .landing-root.entrance {
+      .grid-navbar,
+      .grid-title,
+      .grid-title-only,
+      .grid-description-only,
+      .grid-profile,
+      .grid-carousel,
+      .grid-social {
+        animation: bento-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
+      }
+
+      .grid-navbar {
+        --enter-y: -100vh;
+        --enter-delay: 0ms;
+      }
+
+      .grid-title,
+      .grid-title-only,
+      .grid-description-only,
+      .grid-profile {
+        --enter-x: -100vw;
+        --enter-delay: 180ms;
+      }
+
+      .grid-carousel {
+        --enter-x: 100vw;
+        --enter-delay: 360ms;
+      }
+
+      .grid-social {
+        --enter-y: 100vh;
+        --enter-delay: 540ms;
+      }
+    }
+  }
+}
