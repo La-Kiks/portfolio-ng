@@ -1,11 +1,11 @@
 .carousel-wrapper {
   position: relative;
-  min-height: 500px;
+  min-height: 31.25rem;
   aspect-ratio: 1/1;
 }
 
 /* Desktop that fits the viewport: fill the grid area instead of forcing a square */
-@media (min-width: 1024px) and (min-height: 720px) {
+@media (min-width: 1024px) and (min-height: 650px) {
   .carousel-wrapper {
     min-height: 0;
     aspect-ratio: auto;
@@ -17,8 +17,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: clamp(40px, 5vw, 50px);
-  height: clamp(40px, 5vw, 50px);
+  width: clamp(2.5rem, 5vw, 3.125rem);
+  height: clamp(2.5rem, 5vw, 3.125rem);
   background-color: color-mix(in srgb, var(--color-background) 80%, transparent);
   color: var(--color-primary);
   border: none;
@@ -40,7 +40,7 @@
 .carousel-arrow span {
   display: block;
   line-height: 1;
-  margin-top: -5px;
+  margin-top: -0.3125rem;
 }
 
 .carousel-wrapper:hover .carousel-arrow {
@@ -62,8 +62,8 @@
 
 /* Slide Indicators */
 .carousel-indicator {
-  width: clamp(8px, 3vw, 10px);
-  height: clamp(8px, 3vw, 10px);
+  width: clamp(0.5rem, 3vw, 0.625rem);
+  height: clamp(0.5rem, 3vw, 0.625rem);
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.6);
   background-color: color-mix(in srgb, var(--color-primary) 80%, transparent);
@@ -77,14 +77,14 @@
 
 .carousel-indicator.active {
   background-color: var(--color-primary);
-  width: clamp(18px, 3vw, 24px);
-  border-radius: clamp(2px, 3vw, 4px);
+  width: clamp(1.125rem, 3vw, 1.5rem);
+  border-radius: clamp(0.125rem, 3vw, 0.25rem);
 }
 
 .loading-text {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: clamp(300px, 5vw, 800px);
-  height: clamp(300px, 5vw, 800px);
+  width: clamp(18.75rem, 5vw, 50rem);
+  height: clamp(18.75rem, 5vw, 50rem);
 }
