@@ -65,7 +65,8 @@ export class Landing {
   /** Below 600px the landing page is the snap feed instead of the bento grid. */
   readonly isMobile = signal(this.mobileQuery.matches);
 
-  readonly playEntrance = inject(EntranceService).consume();
+  /** Only true when the entrance will actually run (never on mobile), so `.entrance` can't freeze the grid. */
+  readonly playEntrance = inject(EntranceService).consume() && entranceDuration() > 0;
   /** True from creation until the entrance has finished; drives overflow clipping. */
   readonly entering = signal(false);
   /** False while bentos are held at their start positions waiting for hero images. */

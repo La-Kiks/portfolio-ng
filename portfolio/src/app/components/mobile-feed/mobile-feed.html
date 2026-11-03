@@ -16,7 +16,7 @@
     } @else {
     @for (project of projects(); track project.slug; let i = $index) {
     <section #screen class="screen" [attr.data-screen]="i + 1">
-        <img [ngSrc]="project.image" fill [alt]="project.title" class="screen-image" />
+        <img [ngSrc]="project.image" fill loading="eager" [alt]="project.title" class="screen-image" />
         <div class="screen-text">
             <h2 class="screen-title">{{ project.title }}</h2>
             <p class="screen-description">{{ project.description }}</p>

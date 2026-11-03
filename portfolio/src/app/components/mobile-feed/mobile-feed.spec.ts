@@ -4,6 +4,7 @@ import { Subject, of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { MobileFeed } from './mobile-feed';
 import { Project, ProjectService } from '../../services/projects/project';
+import { FeedPosition } from '../../services/feed-position/feed-position';
 
 const PROJECTS: Project[] = [
   { id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['/images/a.webp'] },
@@ -34,7 +35,7 @@ function stubReducedMotion(reduce: boolean): void {
   );
 }
 
-async function setup(projects$ = of(PROJECTS)) {
+async function setup(projects$ = of(PROJECTS), savedIndex = 0) {
   TestBed.configureTestingModule({
     imports: [MobileFeed],
     providers: [
@@ -42,6 +43,7 @@ async function setup(projects$ = of(PROJECTS)) {
       { provide: ProjectService, useValue: { getAllProjects: () => projects$ } },
     ],
   });
+  TestBed.inject(FeedPosition).index = savedIndex;
   const fixture = TestBed.createComponent(MobileFeed);
   fixture.detectChanges();
   await fixture.whenStable();
@@ -196,5 +198,41 @@ describe('MobileFeed', () => {
     stubReducedMotion(true);
     fixture.componentInstance.backToTop();
     expect(scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'auto' });
+  });
+
+  it('loads project images eagerly', async () => {
+    const fixture = await setup();
+    const images = el(fixture).querySelectorAll('[data-screen="1"] img, [data-screen="2"] img');
+    expect(images.length).toBe(2);
+    for (const img of Array.from(images)) {
+      expect(img.getAttribute('loading')).toBe('eager');
+    }
+  });
+
+  it('restores the saved screen on first render', async () => {
+    const scrollTo = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollTo', {
+      configurable: true,
+      value: scrollTo,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+      configurable: true,
+      get(this: HTMLElement) {
+        return Number(this.dataset['screen'] ?? 0) * 100;
+      },
+    });
+    const fixture = await setup(of(PROJECTS), 2);
+    expect(scrollTo).toHaveBeenCalledWith({ top: 200, behavior: 'auto' });
+    expect(fixture.componentInstance.activeIndex()).toBe(2);
+    expect(fixture.componentInstance.pastIntro()).toBe(true);
+    delete (HTMLElement.prototype as { offsetTop?: number; scrollTo?: unknown }).offsetTop;
+    delete (HTMLElement.prototype as { scrollTo?: unknown }).scrollTo;
+  });
+
+  it('stores the active screen on destroy', async () => {
+    const fixture = await setup();
+    fixture.componentInstance.activeIndex.set(3);
+    fixture.destroy();
+    expect(TestBed.inject(FeedPosition).index).toBe(3);
   });
 });

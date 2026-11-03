@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  afterNextRender,
   afterRenderEffect,
   computed,
   inject,
@@ -18,6 +19,7 @@ import { catchError, map, of } from 'rxjs';
 import { BentoNavbar, NavItem } from '../bentos/bento-navbar/bento-navbar';
 import { SOCIAL_LINKS, isExternalLink } from '../bentos/bento-social/social-links';
 import { ProjectService } from '../../services/projects/project';
+import { FeedPosition } from '../../services/feed-position/feed-position';
 
 /** Intro photo; swap for a larger portrait version when available. */
 export const INTRO_PHOTO = '/images/profile-pic-ki-small.webp';
@@ -82,6 +84,7 @@ export class MobileFeed {
 
   private readonly feed = viewChild.required<ElementRef<HTMLElement>>('feed');
   private readonly screens = viewChildren<ElementRef<HTMLElement>>('screen');
+  private readonly position = inject(FeedPosition);
   private observer?: IntersectionObserver;
 
   constructor() {
@@ -97,7 +100,23 @@ export class MobileFeed {
         this.observer.observe(screen.nativeElement);
       }
     });
-    inject(DestroyRef).onDestroy(() => this.observer?.disconnect());
+    // Returning from a project page: jump back to the screen the user left.
+    afterNextRender(() => {
+      const index = this.position.index;
+      const target = index > 0 ? this.screens()[index] : undefined;
+      if (target) {
+        this.feed().nativeElement.scrollTo({
+          top: target.nativeElement.offsetTop,
+          behavior: 'auto',
+        });
+        this.activeIndex.set(index);
+        this.pastIntro.set(true);
+      }
+    });
+    inject(DestroyRef).onDestroy(() => {
+      this.observer?.disconnect();
+      this.position.index = this.activeIndex();
+    });
   }
 
   backToTop(): void {

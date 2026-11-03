@@ -3,8 +3,8 @@
 /*
  * Fluid root size on desktop: every rem-based size (Tailwind spacing, text, radii,
  * component styles) scales with the viewport. Follows the smaller of height and width
- * so short laptops and tall portrait screens both fit. ~14px at 1280×715,
- * ~18px at 1920×1080, ~22px at 2560×1440, 30px cap at 3840×2160.
+ * so short laptops and tall portrait screens both fit. ~14px at 1280x715,
+ * ~18px at 1920x1080, ~22px at 2560x1440, 30px cap at 3840x2160.
  * Mobile/tablet keep the browser default.
  */
 @media (min-width: 1024px) {
@@ -16,7 +16,8 @@
 body {
   font-family: var(--font-family-primary);
   background-color: var(--color-background);
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 @font-face {

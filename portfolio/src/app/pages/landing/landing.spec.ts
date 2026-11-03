@@ -5,8 +5,13 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { vi } from 'vitest';
 import { Landing } from './landing';
 
+let changeListeners: ((event: { matches: boolean }) => void)[] = [];
+let removeListener = vi.fn();
+
 /** Stub matchMedia for a viewport width (jsdom has no matchMedia). */
 function stubViewport(width: number): void {
+  changeListeners = [];
+  removeListener = vi.fn();
   vi.stubGlobal(
     'matchMedia',
     vi.fn((query: string) => {
@@ -14,7 +19,14 @@ function stubViewport(width: number): void {
       const max = /max-width:\s*(\d+)px/.exec(query);
       const matches =
         (min ? width >= Number(min[1]) : true) && (max ? width <= Number(max[1]) : true);
-      return { matches, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+      return {
+        matches,
+        media: query,
+        addEventListener: vi.fn((_: string, handler: (event: { matches: boolean }) => void) => {
+          changeListeners.push(handler);
+        }),
+        removeEventListener: removeListener,
+      };
     }),
   );
 }
@@ -149,5 +161,39 @@ describe('Landing', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('app-mobile-feed')).toBeNull();
     expect(fixture.nativeElement.querySelector('.landing-grid')).not.toBeNull();
+  });
+
+  it('shows the grid without a frozen entrance when widening from mobile', () => {
+    stubViewport(390);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.playEntrance).toBe(false);
+
+    for (const listener of changeListeners) {
+      listener({ matches: false });
+    }
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.landing-grid')).not.toBeNull();
+    expect(root(fixture).classList).not.toContain('entrance');
+  });
+
+  it('swaps the grid for the snap feed when narrowing to mobile', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    for (const listener of changeListeners) {
+      listener({ matches: true });
+    }
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-mobile-feed')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.landing-grid')).toBeNull();
+  });
+
+  it('removes the media query listener on destroy', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    fixture.destroy();
+    expect(removeListener).toHaveBeenCalledWith('change', changeListeners[0]);
   });
 });
