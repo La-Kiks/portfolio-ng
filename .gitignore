@@ -62,4 +62,5 @@ $RECYCLE.BIN/
 # ============================================================
 CLAUDE.md
 docs/superpowers/
+.superpowers/
 .claude/
