@@ -215,18 +215,21 @@ describe('MobileFeed', () => {
       configurable: true,
       value: scrollTo,
     });
-    Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
-      configurable: true,
-      get(this: HTMLElement) {
+    // Spy on jsdom's own getter so mockRestore() puts the native one back.
+    const offsetTop = vi
+      .spyOn(HTMLElement.prototype, 'offsetTop', 'get')
+      .mockImplementation(function (this: HTMLElement) {
         return Number(this.dataset['screen'] ?? 0) * 100;
-      },
-    });
-    const fixture = await setup(of(PROJECTS), 2);
-    expect(scrollTo).toHaveBeenCalledWith({ top: 200, behavior: 'auto' });
-    expect(fixture.componentInstance.activeIndex()).toBe(2);
-    expect(fixture.componentInstance.pastIntro()).toBe(true);
-    delete (HTMLElement.prototype as { offsetTop?: number; scrollTo?: unknown }).offsetTop;
-    delete (HTMLElement.prototype as { scrollTo?: unknown }).scrollTo;
+      });
+    try {
+      const fixture = await setup(of(PROJECTS), 2);
+      expect(scrollTo).toHaveBeenCalledWith({ top: 200, behavior: 'auto' });
+      expect(fixture.componentInstance.activeIndex()).toBe(2);
+      expect(fixture.componentInstance.pastIntro()).toBe(true);
+    } finally {
+      offsetTop.mockRestore();
+      delete (HTMLElement.prototype as { scrollTo?: unknown }).scrollTo;
+    }
   });
 
   it('stores the active screen on destroy', async () => {
