@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { MobileFeed } from './mobile-feed';
 import { Project, ProjectService } from '../../services/projects/project';
@@ -11,12 +11,17 @@ const PROJECTS: Project[] = [
 ];
 
 let observerCallback: IntersectionObserverCallback;
+let observers: FakeIntersectionObserver[] = [];
 
 class FakeIntersectionObserver {
+  readonly observed: Element[] = [];
   constructor(callback: IntersectionObserverCallback) {
     observerCallback = callback;
+    observers.push(this);
   }
-  observe = vi.fn();
+  observe = vi.fn((target: Element) => {
+    this.observed.push(target);
+  });
   unobserve = vi.fn();
   disconnect = vi.fn();
   takeRecords = (): IntersectionObserverEntry[] => [];
@@ -51,11 +56,12 @@ function el(fixture: { nativeElement: HTMLElement }): HTMLElement {
 function report(
   fixture: { nativeElement: HTMLElement; detectChanges: () => void },
   index: number,
-  isIntersecting: boolean,
+  intersectionRatio: number,
+  isIntersecting = intersectionRatio > 0,
 ): void {
   const target = el(fixture).querySelector(`[data-screen="${index}"]`);
   observerCallback(
-    [{ target, isIntersecting } as unknown as IntersectionObserverEntry],
+    [{ target, intersectionRatio, isIntersecting } as unknown as IntersectionObserverEntry],
     {} as IntersectionObserver,
   );
   fixture.detectChanges();
@@ -63,6 +69,7 @@ function report(
 
 describe('MobileFeed', () => {
   beforeEach(() => {
+    observers = [];
     vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver);
     stubReducedMotion(false);
   });
@@ -100,10 +107,10 @@ describe('MobileFeed', () => {
     expect(fab().getAttribute('href')).toBe('/about');
     expect(fab().classList).not.toContain('visible');
 
-    report(fixture, 0, false);
+    report(fixture, 0, 0);
     expect(fab().classList).toContain('visible');
 
-    report(fixture, 0, true);
+    report(fixture, 0, 1);
     expect(fab().classList).not.toContain('visible');
   });
 
@@ -112,9 +119,62 @@ describe('MobileFeed', () => {
     const dots = (): NodeListOf<HTMLElement> => el(fixture).querySelectorAll('.indicator span');
     expect(dots()[0].classList).toContain('active');
 
-    report(fixture, 2, true);
+    report(fixture, 2, 1);
     expect(dots()[2].classList).toContain('active');
     expect(dots()[0].classList).not.toContain('active');
+  });
+
+  it('uses the visibility ratio, not mere intersection', async () => {
+    const fixture = await setup();
+    const fab = (): HTMLElement => el(fixture).querySelector('.about-fab') as HTMLElement;
+    const dots = (): NodeListOf<HTMLElement> => el(fixture).querySelectorAll('.indicator span');
+
+    report(fixture, 0, 0.3, true);
+    expect(fab().classList).toContain('visible');
+
+    report(fixture, 1, 0.3, true);
+    expect(dots()[1].classList).not.toContain('active');
+    expect(dots()[0].classList).toContain('active');
+  });
+
+  it('adds screens when projects arrive after the first render', async () => {
+    const subject = new Subject<Project[]>();
+    const fixture = await setup(subject);
+    expect(el(fixture).querySelectorAll('.screen').length).toBe(2);
+    expect(el(fixture).querySelectorAll('.indicator span').length).toBe(2);
+    expect(observers.length).toBe(1);
+    const first = observers[0];
+
+    subject.next(PROJECTS);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(el(fixture).querySelectorAll('.screen').length).toBe(4);
+    expect(el(fixture).querySelectorAll('.indicator span').length).toBe(4);
+    expect(first.disconnect).toHaveBeenCalled();
+    const latest = observers[observers.length - 1];
+    expect(latest).not.toBe(first);
+    expect(latest.observed.length).toBe(4);
+    for (const screen of Array.from(el(fixture).querySelectorAll('.screen'))) {
+      expect(latest.observed).toContain(screen);
+    }
+
+    fixture.destroy();
+    expect(latest.disconnect).toHaveBeenCalled();
+  });
+
+  it('skips projects without an image', async () => {
+    const noImage: Project = {
+      id: '3',
+      slug: 'gamma',
+      title: 'Gamma',
+      description: 'Third',
+      images: [],
+    };
+    const fixture = await setup(of([PROJECTS[0], noImage]));
+    const screens = el(fixture).querySelectorAll('.screen');
+    expect(screens.length).toBe(3);
+    expect(el(fixture).textContent).not.toContain('Gamma');
   });
 
   it('shows a single error screen when projects fail to load', async () => {

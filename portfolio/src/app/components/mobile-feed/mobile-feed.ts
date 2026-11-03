@@ -51,12 +51,19 @@ export class MobileFeed {
       .getAllProjects()
       .pipe(
         map((projects): FeedProject[] =>
-          projects.map((project) => ({
-            slug: project.slug,
-            title: project.title,
-            description: project.description,
-            image: project.images[0],
-          })),
+          projects.flatMap((project) => {
+            const [image] = project.images;
+            return image
+              ? [
+                  {
+                    slug: project.slug,
+                    title: project.title,
+                    description: project.description,
+                    image,
+                  },
+                ]
+              : [];
+          }),
         ),
         catchError(() => {
           this.loadError.set(true);
@@ -67,9 +74,7 @@ export class MobileFeed {
   );
 
   /** Intro + (projects or one error screen) + contact. */
-  readonly screenCount = computed(
-    () => 2 + (this.loadError() ? 1 : this.projects().length),
-  );
+  readonly screenCount = computed(() => 2 + (this.loadError() ? 1 : this.projects().length));
   readonly dots = computed(() => Array.from({ length: this.screenCount() }, (_, i) => i));
   readonly activeIndex = signal(0);
   /** True once the intro screen is less than half visible. */
@@ -103,10 +108,11 @@ export class MobileFeed {
   private onIntersect(entries: IntersectionObserverEntry[]): void {
     for (const entry of entries) {
       const index = Number((entry.target as HTMLElement).dataset['screen']);
+      const visible = entry.intersectionRatio >= 0.5;
       if (index === 0) {
-        this.pastIntro.set(!entry.isIntersecting);
+        this.pastIntro.set(!visible);
       }
-      if (entry.isIntersecting) {
+      if (visible) {
         this.activeIndex.set(index);
       }
     }
