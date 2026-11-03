@@ -55,23 +55,64 @@ describe('Landing', () => {
     expect(second.componentInstance.entering()).toBe(false);
   });
 
-  it('clears entering after 1240ms on desktop', () => {
+  /** Mark the hero images complete and fire a load event (jsdom never loads images). */
+  function loadHeroImages(fixture: { nativeElement: HTMLElement }): void {
+    const host = fixture.nativeElement;
+    let carouselImg = host.querySelector<HTMLImageElement>('.grid-carousel img');
+    if (!carouselImg) {
+      carouselImg = document.createElement('img');
+      host.querySelector('.grid-carousel')!.appendChild(carouselImg);
+    }
+    const profileImg = host.querySelector<HTMLImageElement>('.grid-profile img')!;
+    for (const img of [profileImg, carouselImg]) {
+      Object.defineProperty(img, 'complete', { configurable: true, value: true });
+    }
+    carouselImg.dispatchEvent(new Event('load'));
+  }
+
+  it('holds the bentos until both hero images have loaded', () => {
     stubViewport(1280);
     const fixture = TestBed.createComponent(Landing);
     fixture.detectChanges();
-    expect(fixture.componentInstance.entering()).toBe(true);
+    expect(fixture.componentInstance.ready()).toBe(false);
+    expect(root(fixture).classList).not.toContain('ready');
+
+    loadHeroImages(fixture);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.ready()).toBe(true);
+    expect(root(fixture).classList).toContain('ready');
+  });
+
+  it('starts anyway after 1200ms if the hero images are slow', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    vi.advanceTimersByTime(1199);
+    expect(fixture.componentInstance.ready()).toBe(false);
+    vi.advanceTimersByTime(1);
+    expect(fixture.componentInstance.ready()).toBe(true);
+  });
+
+  it('clears entering 1680ms after the start on desktop', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
     expect(root(fixture).classList).toContain('entering');
 
-    vi.advanceTimersByTime(1239);
+    loadHeroImages(fixture);
+    vi.advanceTimersByTime(1679);
     expect(fixture.componentInstance.entering()).toBe(true);
     vi.advanceTimersByTime(1);
     expect(fixture.componentInstance.entering()).toBe(false);
   });
 
-  it('clears entering after 970ms on tablet', () => {
+  it('clears entering 1300ms after the start on tablet', () => {
     stubViewport(800);
     const fixture = TestBed.createComponent(Landing);
-    vi.advanceTimersByTime(969);
+    fixture.detectChanges();
+
+    loadHeroImages(fixture);
+    vi.advanceTimersByTime(1299);
     expect(fixture.componentInstance.entering()).toBe(true);
     vi.advanceTimersByTime(1);
     expect(fixture.componentInstance.entering()).toBe(false);
@@ -81,5 +122,7 @@ describe('Landing', () => {
     stubViewport(390);
     const fixture = TestBed.createComponent(Landing);
     expect(fixture.componentInstance.entering()).toBe(false);
+    vi.advanceTimersByTime(1200);
+    expect(fixture.componentInstance.ready()).toBe(false);
   });
 });

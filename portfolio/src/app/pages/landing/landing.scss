@@ -74,6 +74,23 @@
   }
 }
 
+/* Desktop with enough height: the grid fills the viewport instead of overflowing it */
+@media (min-width: 1024px) and (min-height: 720px) {
+  .landing-grid {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+}
+
+/* Desktop too short to fit: let the page grow and scroll */
+@media (min-width: 1024px) and (max-height: 719px) {
+  .landing-root {
+    height: auto;
+  }
+}
+
 /* 2K+ resolution height */
 @media (min-height: 1440px) and (min-width: 1024px) {
   .title-only,
@@ -125,7 +142,7 @@
 
 /* ============================================================
    Entrance animation (tablet + desktop, first landing view only)
-   Totals must match DESKTOP_ENTRANCE_MS / TABLET_ENTRANCE_MS in landing.ts
+   Totals must match DESKTOP_ENTRANCE_MS (1680) / TABLET_ENTRANCE_MS (1300) in landing.ts
    ============================================================ */
 @keyframes bento-enter {
   from {
@@ -143,6 +160,11 @@
     overflow: clip;
   }
 
+  /* Hold every bento at its start frame until hero images are loaded (.ready) */
+  .landing-root.entrance:not(.ready) .landing-grid > * {
+    animation-play-state: paused;
+  }
+
   /* Tablet: short slides with fade */
   @media (min-width: 600px) and (max-width: 1023px) {
     .landing-root.entrance {
@@ -152,7 +174,7 @@
       .grid-carousel,
       .grid-social {
         --enter-opacity: 0;
-        animation: bento-enter 550ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
+        animation: bento-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
       }
 
       .grid-navbar {
@@ -162,22 +184,22 @@
 
       .grid-title {
         --enter-x: -40px;
-        --enter-delay: 140ms;
+        --enter-delay: 200ms;
       }
 
       .grid-profile {
         --enter-x: 40px;
-        --enter-delay: 140ms;
+        --enter-delay: 200ms;
       }
 
       .grid-carousel {
         --enter-y: 40px;
-        --enter-delay: 280ms;
+        --enter-delay: 400ms;
       }
 
       .grid-social {
         --enter-y: 40px;
-        --enter-delay: 420ms;
+        --enter-delay: 600ms;
       }
     }
   }
@@ -192,7 +214,7 @@
       .grid-profile,
       .grid-carousel,
       .grid-social {
-        animation: bento-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
+        animation: bento-enter 900ms cubic-bezier(0.22, 1, 0.36, 1) var(--enter-delay, 0ms) both;
       }
 
       .grid-navbar {
@@ -205,17 +227,17 @@
       .grid-description-only,
       .grid-profile {
         --enter-x: -100vw;
-        --enter-delay: 180ms;
+        --enter-delay: 260ms;
       }
 
       .grid-carousel {
         --enter-x: 100vw;
-        --enter-delay: 360ms;
+        --enter-delay: 520ms;
       }
 
       .grid-social {
         --enter-y: 100vh;
-        --enter-delay: 540ms;
+        --enter-delay: 780ms;
       }
     }
   }

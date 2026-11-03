@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Loader } from '../../components/loader/loader';
 import { BentoNavbar, NavItem } from '../../components/bentos/bento-navbar/bento-navbar';
@@ -11,8 +18,12 @@ import { BentoSocial } from '../../components/bentos/bento-social/bento-social';
 import { EntranceService } from '../../services/entrance/entrance';
 
 /** Total entrance length (last delay + duration) — must match landing.scss. */
-const DESKTOP_ENTRANCE_MS = 1240;
-const TABLET_ENTRANCE_MS = 970;
+const DESKTOP_ENTRANCE_MS = 1680; // 3 × 260ms stagger + 900ms slide
+const TABLET_ENTRANCE_MS = 1300; // 3 × 200ms stagger + 700ms slide
+/** Longest we hold the bentos back waiting for the hero images. */
+export const IMAGE_WAIT_MAX_MS = 1200;
+/** Images the entrance waits for, so they don't pop in mid-slide. */
+const HERO_IMAGES = ['.grid-profile img', '.grid-carousel img'];
 
 function entranceDuration(): number {
   if (window.matchMedia('(min-width: 1024px)').matches) {
@@ -42,21 +53,58 @@ function entranceDuration(): number {
 })
 export class Landing {
   private readonly router = inject(Router);
+  private readonly host: HTMLElement = inject(ElementRef).nativeElement;
 
   readonly navItems: NavItem[] = [
     { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
   ];
 
   readonly playEntrance = inject(EntranceService).consume();
-  /** True while bentos are sliding in; drives overflow clipping in landing.scss. */
+  /** True from creation until the entrance has finished; drives overflow clipping. */
   readonly entering = signal(false);
+  /** False while bentos are held at their start positions waiting for hero images. */
+  readonly ready = signal(false);
 
   constructor() {
     const duration = this.playEntrance ? entranceDuration() : 0;
-    if (duration > 0) {
-      this.entering.set(true);
-      const timer = setTimeout(() => this.entering.set(false), duration);
-      inject(DestroyRef).onDestroy(() => clearTimeout(timer));
+    if (duration <= 0) {
+      return;
     }
+
+    this.entering.set(true);
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const onImage = (): void => {
+      if (this.heroImagesLoaded()) {
+        start();
+      }
+    };
+    const stopListening = (): void => {
+      this.host.removeEventListener('load', onImage, true);
+      this.host.removeEventListener('error', onImage, true);
+    };
+    const start = (): void => {
+      if (this.ready()) {
+        return;
+      }
+      stopListening();
+      this.ready.set(true);
+      timers.push(setTimeout(() => this.entering.set(false), duration));
+    };
+
+    // load/error don't bubble, so listen in the capture phase.
+    this.host.addEventListener('load', onImage, true);
+    this.host.addEventListener('error', onImage, true);
+    timers.push(setTimeout(start, IMAGE_WAIT_MAX_MS));
+
+    inject(DestroyRef).onDestroy(() => {
+      stopListening();
+      timers.forEach(clearTimeout);
+    });
+  }
+
+  private heroImagesLoaded(): boolean {
+    return HERO_IMAGES.every(
+      (selector) => this.host.querySelector<HTMLImageElement>(selector)?.complete === true,
+    );
   }
 }

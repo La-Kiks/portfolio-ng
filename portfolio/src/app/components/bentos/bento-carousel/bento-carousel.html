@@ -18,7 +18,7 @@
     <h2 class="w-full p-2 my-2 ml-4 text-2xl text-center font-bold">Projets</h2>
 
     <!-- Image Container -->
-    <div class="flex-1 w-full p-2 relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
+    <div class="flex-1 min-h-0 w-full p-2 relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
         role="button" tabindex="0" (keyup.enter)="goToProject()">
         @if (currentIndex() === 0) {
         <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title" priority

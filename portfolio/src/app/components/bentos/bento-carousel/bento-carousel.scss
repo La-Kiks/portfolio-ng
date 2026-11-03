@@ -4,6 +4,14 @@
   aspect-ratio: 1/1;
 }
 
+/* Desktop that fits the viewport: fill the grid area instead of forcing a square */
+@media (min-width: 1024px) and (min-height: 720px) {
+  .carousel-wrapper {
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+}
+
 /* Navigation Arrows */
 .carousel-arrow {
   position: absolute;
