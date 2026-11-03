@@ -1,5 +1,8 @@
 <app-loader></app-loader>
 
+@if (isMobile()) {
+<app-mobile-feed [navItems]="navItems"></app-mobile-feed>
+} @else {
 <div
     class="landing-root bg-background min-h-screen md:h-screen flex flex-col"
     [class.entrance]="playEntrance"
@@ -25,3 +28,4 @@
         <app-bento-social class="grid-social"></app-bento-social>
     </div>
 </div>
+}

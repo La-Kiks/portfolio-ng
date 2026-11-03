@@ -14,13 +14,22 @@ function stubViewport(width: number): void {
       const max = /max-width:\s*(\d+)px/.exec(query);
       const matches =
         (min ? width >= Number(min[1]) : true) && (max ? width <= Number(max[1]) : true);
-      return { matches, media: query };
+      return { matches, media: query, addEventListener: vi.fn(), removeEventListener: vi.fn() };
     }),
   );
 }
 
 describe('Landing', () => {
   beforeEach(async () => {
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe = vi.fn();
+        unobserve = vi.fn();
+        disconnect = vi.fn();
+        takeRecords = (): IntersectionObserverEntry[] => [];
+      },
+    );
     vi.useFakeTimers();
     await TestBed.configureTestingModule({
       imports: [Landing],
@@ -124,5 +133,21 @@ describe('Landing', () => {
     expect(fixture.componentInstance.entering()).toBe(false);
     vi.advanceTimersByTime(1200);
     expect(fixture.componentInstance.ready()).toBe(false);
+  });
+
+  it('renders the snap feed instead of the grid on mobile', () => {
+    stubViewport(390);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-mobile-feed')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.landing-grid')).toBeNull();
+  });
+
+  it('renders the grid instead of the snap feed on desktop', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-mobile-feed')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.landing-grid')).not.toBeNull();
   });
 });

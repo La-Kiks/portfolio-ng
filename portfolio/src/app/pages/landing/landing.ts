@@ -7,7 +7,8 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Loader } from '../../components/loader/loader';
+import { Loader, MOBILE_QUERY } from '../../components/loader/loader';
+import { MobileFeed } from '../../components/mobile-feed/mobile-feed';
 import { BentoNavbar, NavItem } from '../../components/bentos/bento-navbar/bento-navbar';
 import { BentoCarousel } from '../../components/bentos/bento-carousel/bento-carousel';
 import { BentoTitleDescription } from '../../components/bentos/bento-title-description/bento-title-description';
@@ -46,6 +47,7 @@ function entranceDuration(): number {
     BentoDescription,
     BentoProfilePicture,
     BentoSocial,
+    MobileFeed,
   ],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
@@ -59,6 +61,10 @@ export class Landing {
     { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
   ];
 
+  private readonly mobileQuery = window.matchMedia(MOBILE_QUERY);
+  /** Below 600px the landing page is the snap feed instead of the bento grid. */
+  readonly isMobile = signal(this.mobileQuery.matches);
+
   readonly playEntrance = inject(EntranceService).consume();
   /** True from creation until the entrance has finished; drives overflow clipping. */
   readonly entering = signal(false);
@@ -66,6 +72,11 @@ export class Landing {
   readonly ready = signal(false);
 
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    const onMobileChange = (event: MediaQueryListEvent): void => this.isMobile.set(event.matches);
+    this.mobileQuery.addEventListener('change', onMobileChange);
+    destroyRef.onDestroy(() => this.mobileQuery.removeEventListener('change', onMobileChange));
+
     const duration = this.playEntrance ? entranceDuration() : 0;
     if (duration <= 0) {
       return;
@@ -96,7 +107,7 @@ export class Landing {
     this.host.addEventListener('error', onImage, true);
     timers.push(setTimeout(start, IMAGE_WAIT_MAX_MS));
 
-    inject(DestroyRef).onDestroy(() => {
+    destroyRef.onDestroy(() => {
       stopListening();
       timers.forEach(clearTimeout);
     });
