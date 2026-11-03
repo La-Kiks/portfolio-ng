@@ -1,0 +1,59 @@
+<main #feed class="feed">
+    <section #screen class="screen" data-screen="0">
+        <img [ngSrc]="introPhoto" fill priority alt="Photo de Kilian Audroin" class="screen-image" />
+        <app-bento-navbar class="intro-nav" title="KILIAN AUDROIN" [navItems]="navItems()"></app-bento-navbar>
+        <div class="screen-text intro-text">
+            <h2 class="screen-title">Web developer</h2>
+            <p class="screen-description">{{ introDescription }}</p>
+        </div>
+        <p class="scroll-hint" aria-hidden="true">⌄ Projets</p>
+    </section>
+
+    @if (loadError()) {
+    <section #screen class="screen screen-message" data-screen="1">
+        <p>Impossible de charger les projets</p>
+    </section>
+    } @else {
+    @for (project of projects(); track project.slug; let i = $index) {
+    <section #screen class="screen" [attr.data-screen]="i + 1">
+        <img [ngSrc]="project.image" fill [alt]="project.title" class="screen-image" />
+        <div class="screen-text">
+            <h2 class="screen-title">{{ project.title }}</h2>
+            <p class="screen-description">{{ project.description }}</p>
+            <a class="project-link" [routerLink]="['/projects', project.slug]">Voir le projet →</a>
+        </div>
+    </section>
+    }
+    }
+
+    <section #screen class="screen screen-contact" [attr.data-screen]="screenCount() - 1">
+        <div class="contact">
+            <h2 class="screen-title">Travaillons ensemble</h2>
+            <p class="contact-sub">Un projet, une question ?</p>
+            @for (link of mailLinks; track link.label) {
+            <a class="contact-cta" [href]="link.url">
+                <i [class]="link.icon" aria-hidden="true"></i> Me contacter
+            </a>
+            }
+            <div class="contact-icons">
+                @for (link of iconLinks; track link.label) {
+                <a class="contact-icon" [href]="link.url" target="_blank" rel="noopener noreferrer"
+                    [attr.aria-label]="link.label">
+                    <i [class]="link.icon" aria-hidden="true"></i>
+                </a>
+                }
+            </div>
+            <button type="button" class="back-to-top" (click)="backToTop()">⌃ Retour en haut</button>
+        </div>
+    </section>
+</main>
+
+<a routerLink="/about" class="about-fab" [class.visible]="pastIntro()" aria-label="À propos">
+    <i class="fa-solid fa-user" aria-hidden="true"></i>
+</a>
+
+<div class="indicator" aria-hidden="true">
+    @for (i of dots(); track i) {
+    <span [class.active]="i === activeIndex()"></span>
+    }
+</div>
