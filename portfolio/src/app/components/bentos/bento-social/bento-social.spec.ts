@@ -19,4 +19,9 @@ describe('BentoSocial', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('renders one link per social link', () => {
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('a').length).toBe(4);
+  });
 });

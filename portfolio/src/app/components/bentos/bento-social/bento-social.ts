@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { SOCIAL_LINKS, SocialLink, isExternalLink } from './social-links';
 
-export interface SocialLink {
-  label: string;
-  icon: string;
-  url: string;
-}
+export type { SocialLink } from './social-links';
 
 @Component({
   selector: 'app-bento-social',
@@ -15,30 +12,9 @@ export interface SocialLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoSocial {
-  readonly socialLinks = input<SocialLink[]>([
-    {
-      label: 'Contact',
-      icon: 'fas fa-envelope',
-      url: 'mailto:kilian.audroin@gmail.com',
-    },
-    {
-      label: 'LinkedIn',
-      icon: 'fab fa-linkedin',
-      url: 'https://www.linkedin.com/in/kilian-audroin/',
-    },
-    {
-      label: 'X',
-      icon: 'fab fa-x-twitter',
-      url: 'https://x.com/Kiki_coaching',
-    },
-    {
-      label: 'GitHub',
-      icon: 'fab fa-github',
-      url: 'https://github.com/La-Kiks',
-    },
-  ]);
+  readonly socialLinks = input<readonly SocialLink[]>(SOCIAL_LINKS);
 
   isExternal(link: SocialLink): boolean {
-    return !link.url.startsWith('mailto:');
+    return isExternalLink(link);
   }
 }
