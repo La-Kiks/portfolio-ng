@@ -29,3 +29,9 @@
   margin: 0;
   letter-spacing: 2px;
 }
+
+@media (min-width: 600px) {
+  .loader {
+    display: none;
+  }
+}

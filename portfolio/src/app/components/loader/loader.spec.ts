@@ -2,6 +2,16 @@ import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { Loader } from './loader';
 
+function stubMatchMedia(isMobile: boolean): void {
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn((query: string) => ({
+      matches: query === '(max-width: 599px)' ? isMobile : false,
+      media: query,
+    })),
+  );
+}
+
 describe('Loader', () => {
   beforeEach(async () => {
     sessionStorage.clear();
@@ -11,42 +21,63 @@ describe('Loader', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
   });
 
-  it('shows the loader for 1s on first visit, then completes and stamps the time', () => {
-    const fixture = TestBed.createComponent(Loader);
-    const component = fixture.componentInstance;
-    let completed = false;
-    component.loadingComplete.subscribe(() => (completed = true));
+  describe('on mobile', () => {
+    beforeEach(() => stubMatchMedia(true));
 
-    fixture.detectChanges(); // triggers ngOnInit
-    expect(component.showLoader()).toBe(true);
-    expect(completed).toBe(false);
+    it('shows the loader for 1s on first visit, then completes and stamps the time', () => {
+      const fixture = TestBed.createComponent(Loader);
+      const component = fixture.componentInstance;
+      let completed = false;
+      component.loadingComplete.subscribe(() => (completed = true));
 
-    vi.advanceTimersByTime(1000);
-    expect(component.showLoader()).toBe(false);
-    expect(completed).toBe(true);
-    expect(sessionStorage.getItem('loaderTimestamp')).not.toBeNull();
+      fixture.detectChanges(); // triggers ngOnInit
+      expect(component.showLoader()).toBe(true);
+      expect(completed).toBe(false);
+
+      vi.advanceTimersByTime(1000);
+      expect(component.showLoader()).toBe(false);
+      expect(completed).toBe(true);
+      expect(sessionStorage.getItem('loaderTimestamp')).not.toBeNull();
+    });
+
+    it('skips the loader when shown within the last 15 minutes', () => {
+      sessionStorage.setItem('loaderTimestamp', Date.now().toString());
+      const fixture = TestBed.createComponent(Loader);
+      const component = fixture.componentInstance;
+      let completed = false;
+      component.loadingComplete.subscribe(() => (completed = true));
+
+      fixture.detectChanges();
+      expect(component.showLoader()).toBe(false);
+      expect(completed).toBe(true);
+    });
+
+    it('shows the loader again when the last visit was over 15 minutes ago', () => {
+      sessionStorage.setItem('loaderTimestamp', (Date.now() - 16 * 60 * 1000).toString());
+      const fixture = TestBed.createComponent(Loader);
+      const component = fixture.componentInstance;
+
+      fixture.detectChanges();
+      expect(component.showLoader()).toBe(true);
+    });
   });
 
-  it('skips the loader when shown within the last 15 minutes', () => {
-    sessionStorage.setItem('loaderTimestamp', Date.now().toString());
-    const fixture = TestBed.createComponent(Loader);
-    const component = fixture.componentInstance;
-    let completed = false;
-    component.loadingComplete.subscribe(() => (completed = true));
+  describe('on tablet/desktop', () => {
+    beforeEach(() => stubMatchMedia(false));
 
-    fixture.detectChanges();
-    expect(component.showLoader()).toBe(false);
-    expect(completed).toBe(true);
-  });
+    it('completes immediately without showing or stamping', () => {
+      const fixture = TestBed.createComponent(Loader);
+      const component = fixture.componentInstance;
+      let completed = false;
+      component.loadingComplete.subscribe(() => (completed = true));
 
-  it('shows the loader again when the last visit was over 15 minutes ago', () => {
-    sessionStorage.setItem('loaderTimestamp', (Date.now() - 16 * 60 * 1000).toString());
-    const fixture = TestBed.createComponent(Loader);
-    const component = fixture.componentInstance;
-
-    fixture.detectChanges();
-    expect(component.showLoader()).toBe(true);
+      fixture.detectChanges();
+      expect(component.showLoader()).toBe(false);
+      expect(completed).toBe(true);
+      expect(sessionStorage.getItem('loaderTimestamp')).toBeNull();
+    });
   });
 });

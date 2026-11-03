@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, output, signal } from '@ang
 
 const LOADER_TTL_MS = 15 * 60 * 1000;
 const LOADER_DURATION_MS = 1000;
+export const MOBILE_QUERY = '(max-width: 599px)';
 
 @Component({
   selector: 'app-loader',
@@ -15,6 +16,13 @@ export class Loader implements OnInit {
   readonly showLoader = signal(true);
 
   ngOnInit(): void {
+    // Tablet/desktop use the bento entrance animation instead of the loader.
+    if (!window.matchMedia(MOBILE_QUERY).matches) {
+      this.showLoader.set(false);
+      this.loadingComplete.emit();
+      return;
+    }
+
     const lastShown = Number(sessionStorage.getItem('loaderTimestamp') ?? 0);
     const now = Date.now();
 
