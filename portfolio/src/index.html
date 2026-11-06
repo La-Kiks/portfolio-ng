@@ -72,7 +72,17 @@
 
   <!-- Preload primary font -->
   <link rel="preload" as="font" type="font/woff2"
-    href="/fonts/BricolageGrotesque/bricolage-grotesque-latin-opsz-normal.woff2" crossorigin>
+    href="fonts/BricolageGrotesque/bricolage-grotesque-latin-opsz-normal.woff2" crossorigin>
+  <!-- Here rather than in styles.scss: a relative URL resolves through the base href -->
+  <style>
+    @font-face {
+      font-family: 'Bricolage Grotesque';
+      src: url('fonts/BricolageGrotesque/bricolage-grotesque-latin-opsz-normal.woff2') format('woff2');
+      font-weight: 200 800;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 
   <!-- Preload Font Awesome CSS (non-blocking) -->
   <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

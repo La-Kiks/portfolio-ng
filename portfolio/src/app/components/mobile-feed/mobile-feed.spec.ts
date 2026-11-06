@@ -7,8 +7,8 @@ import { Project, ProjectService } from '../../services/projects/project';
 import { FeedPosition } from '../../services/feed-position/feed-position';
 
 const PROJECTS: Project[] = [
-  { id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['/images/a.webp'] },
-  { id: '2', slug: 'beta', title: 'Beta', description: 'Second', images: ['/images/b.webp'] },
+  { id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['images/a.webp'] },
+  { id: '2', slug: 'beta', title: 'Beta', description: 'Second', images: ['images/b.webp'] },
 ];
 
 let observerCallback: IntersectionObserverCallback;

@@ -23,7 +23,7 @@ import { ProjectService } from '../../services/projects/project';
 import { FeedPosition } from '../../services/feed-position/feed-position';
 
 /** Intro photo; swap for a larger portrait version when available. */
-export const INTRO_PHOTO = '/images/profile-pic-ki-small.webp';
+export const INTRO_PHOTO = 'images/profile-pic-ki-small.webp';
 
 interface FeedProject {
   slug: string;

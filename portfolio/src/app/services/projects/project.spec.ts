@@ -27,28 +27,28 @@ describe('ProjectService', () => {
   it('returns all projects', () => {
     let result: Project[] | undefined;
     service.getAllProjects().subscribe(p => (result = p));
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     expect(result).toEqual(PROJECTS);
   });
 
   it('finds a project by slug', () => {
     let result: Project | undefined;
     service.getProjectBySlug('menu-maker').subscribe(p => (result = p));
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     expect(result?.title).toBe('Menu Maker');
   });
 
   it('returns undefined for an unknown slug', () => {
     let result: Project | undefined = PROJECTS[0];
     service.getProjectBySlug('nope').subscribe(p => (result = p));
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     expect(result).toBeUndefined();
   });
 
   it('caches: two consumers trigger a single HTTP request', () => {
     service.getAllProjects().subscribe();
     service.getProjectBySlug('sport-event').subscribe();
-    const requests = httpMock.match('/files/projects.json');
+    const requests = httpMock.match('files/projects.json');
     expect(requests.length).toBe(1);
     requests[0].flush(PROJECTS);
   });

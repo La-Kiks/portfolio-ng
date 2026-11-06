@@ -28,7 +28,7 @@ describe('BentoCarousel', () => {
   });
 
   function flushProjects(): void {
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     fixture.detectChanges();
   }
 
@@ -75,7 +75,7 @@ describe('BentoCarousel', () => {
   });
 
   it('shows a visible error message when loading fails', () => {
-    httpMock.expectOne('/files/projects.json').error(new ProgressEvent('error'));
+    httpMock.expectOne('files/projects.json').error(new ProgressEvent('error'));
     fixture.detectChanges();
     expect(component.hasError()).toBe(true);
     expect(fixture.nativeElement.textContent).toContain('Impossible de charger les projets');

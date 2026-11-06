@@ -36,7 +36,7 @@ describe('ProjectDetail', () => {
 
   it('renders the project and sets title and meta description', () => {
     setup('sport-event');
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Sport Event');
@@ -47,7 +47,7 @@ describe('ProjectDetail', () => {
 
   it('shows the French back link to the home page', () => {
     setup('sport-event');
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain("← Retour à l'accueil");
@@ -55,7 +55,7 @@ describe('ProjectDetail', () => {
 
   it('shows the not-found error for an unknown slug', () => {
     setup('does-not-exist');
-    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    httpMock.expectOne('files/projects.json').flush(PROJECTS);
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Projet introuvable');
@@ -63,7 +63,7 @@ describe('ProjectDetail', () => {
 
   it('shows the error state when the request fails', () => {
     setup('sport-event');
-    httpMock.expectOne('/files/projects.json').error(new ProgressEvent('error'));
+    httpMock.expectOne('files/projects.json').error(new ProgressEvent('error'));
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Erreur lors du chargement du projet');

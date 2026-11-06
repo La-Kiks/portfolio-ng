@@ -26,7 +26,7 @@ export class ProjectService {
   private readonly http = inject(HttpClient);
 
   private readonly projects$: Observable<Project[]> = this.http
-    .get<Project[]>('/files/projects.json')
+    .get<Project[]>('files/projects.json')
     .pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   getAllProjects(): Observable<Project[]> {

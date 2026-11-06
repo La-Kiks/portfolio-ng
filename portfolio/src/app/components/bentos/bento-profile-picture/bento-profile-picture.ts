@@ -9,6 +9,6 @@ import { NgOptimizedImage } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoProfilePicture {
-  readonly imageUrl = input('/images/profile.jpg');
+  readonly imageUrl = input('images/profile.jpg');
   readonly altText = input('Profile picture');
 }

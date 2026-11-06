@@ -27,10 +27,10 @@
             "Enrichir l'expérience utilisateur (notifications, suivi des inscriptions)"
         ],
         "images": [
-            "/images/projects/HyroxPolice-square1.webp",
-            "/images/projects/HyroxPoliceAc.webp",
-            "/images/projects/HyroxPoliceFormat.webp",
-            "/images/projects/HyroxPoliceForms.webp"
+            "images/projects/HyroxPolice-square1.webp",
+            "images/projects/HyroxPoliceAc.webp",
+            "images/projects/HyroxPoliceFormat.webp",
+            "images/projects/HyroxPoliceForms.webp"
         ],
         "link": "https://sport-challenge-police-54.fr/",
         "github": "https://github.com/La-Kiks/sven-event-one"
@@ -65,10 +65,10 @@
             "Fonctionnalités de paiement pour activité freelance"
         ],
         "images": [
-            "/images/projects/Portfolio-Landing-square.webp",
-            "/images/projects/Portfolio-Landing.webp",
-            "/images/projects/Portfolio-Loader.webp",
-            "/images/projects/Portfolio-About.webp"
+            "images/projects/Portfolio-Landing-square.webp",
+            "images/projects/Portfolio-Landing.webp",
+            "images/projects/Portfolio-Loader.webp",
+            "images/projects/Portfolio-About.webp"
         ],
         "link": "https://kilian-au.fr",
         "github": "https://github.com/La-Kiks/portfolio-ng"
@@ -105,10 +105,10 @@
             "Mettre en place un monitoring continu des métriques SEO"
         ],
         "images": [
-            "/images/projects/Debug-Lighthouse-square.webp",
-            "/images/projects/Debug-Landing.webp",
-            "/images/projects/Debug-Lighthouse.webp",
-            "/images/projects/Debug-Wave.webp"
+            "images/projects/Debug-Lighthouse-square.webp",
+            "images/projects/Debug-Landing.webp",
+            "images/projects/Debug-Lighthouse.webp",
+            "images/projects/Debug-Wave.webp"
         ],
         "link": "https://la-kiks.github.io/debug-and-optimize-photograph-website/",
         "github": "https://github.com/La-Kiks/debug-and-optimize-photograph-website"
@@ -141,8 +141,8 @@
             "Améliorer l'architecture générale de l'application"
         ],
         "images": [
-            "/images/projects/Antibug-square.webp",
-            "/images/projects/Antibug-1280x720.webp"
+            "images/projects/Antibug-square.webp",
+            "images/projects/Antibug-1280x720.webp"
         ],
         "link": "",
         "github": ""
@@ -179,10 +179,10 @@
             "Implémenter un système de templates prédéfinis"
         ],
         "images": [
-            "/images/projects/MenuMakerLandingSquare.webp",
-            "/images/projects/MenuMakerLanding.webp",
-            "/images/projects/MenuMakerDashboard.webp",
-            "/images/projects/MenuMakerMenu.webp"
+            "images/projects/MenuMakerLandingSquare.webp",
+            "images/projects/MenuMakerLanding.webp",
+            "images/projects/MenuMakerDashboard.webp",
+            "images/projects/MenuMakerMenu.webp"
         ],
         "link": "https://www.figma.com/design/Q6NEUPqwz1U3HFaCaVoF7N/Maquette-desktop---Menu-Maker-by-Qwenta?node-id=0-1&p=f&t=JeTH6o1WReoBwQWV-0",
         "github": ""
