@@ -91,13 +91,6 @@ describe('BentoCarousel', () => {
     expect(cta().getAttribute('href')).toBe('/projects/two');
   });
 
-  it('links to the full projects page', () => {
-    flushProjects();
-    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.carousel-all');
-    expect(link.getAttribute('href')).toBe('/projects');
-    expect(link.textContent).toContain('Tous les projets');
-  });
-
   it('keeps the image link out of the tab order', () => {
     flushProjects();
     const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.carousel-media');

@@ -9,16 +9,6 @@
   letter-spacing: -0.03em;
 }
 
-.carousel-all {
-  font-weight: 500;
-  color: var(--color-ink);
-  text-decoration: none;
-}
-
-.carousel-all:hover {
-  text-decoration: underline;
-}
-
 .carousel-arrow {
   display: flex;
   align-items: center;
@@ -79,6 +69,42 @@
   margin: 0;
   line-height: 1.45;
   color: var(--color-ink-soft);
+}
+
+/* Subtle hover: controls lift onto a hard shadow, the picture zooms inside its frame */
+.carousel-arrow,
+.carousel-cta {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.carousel-arrow:hover,
+.carousel-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--color-ink);
+}
+
+.carousel-media img {
+  transition: transform 300ms ease;
+}
+
+.carousel-media:hover img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-arrow,
+  .carousel-cta,
+  .carousel-media img {
+    transition: none;
+  }
+
+  .carousel-arrow:hover,
+  .carousel-cta:hover,
+  .carousel-media:hover img {
+    transform: none;
+  }
 }
 
 /* Desktop that fits the viewport: fill the grid area */
