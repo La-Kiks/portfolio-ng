@@ -96,5 +96,6 @@ describe('BentoCarousel', () => {
     const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.carousel-media');
     expect(link.getAttribute('href')).toBe('/projects/one');
     expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-hidden')).toBe('true');
   });
 });

@@ -25,11 +25,9 @@
     <!-- Mouse shortcut only: the "Voir le projet" link below is the accessible route -->
     <a [routerLink]="project.route" class="carousel-media bento-frame" tabindex="-1" aria-hidden="true">
         @if (currentIndex() === 0) {
-        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title" priority
-            class="absolute inset-0 w-full h-full object-cover" />
+        <img [ngSrc]="project.image" fill [alt]="project.title" priority class="object-cover" />
         } @else {
-        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title"
-            class="absolute inset-0 w-full h-full object-cover" />
+        <img [ngSrc]="project.image" fill [alt]="project.title" class="object-cover" />
         }
     </a>
 

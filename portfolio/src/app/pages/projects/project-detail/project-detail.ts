@@ -33,7 +33,7 @@ export class ProjectDetail {
         map(project => ({
           project: project ?? null,
           isLoading: false,
-          error: project ? null : 'Project not found',
+          error: project ? null : 'Projet introuvable',
         })),
         tap(state => {
           if (state.project) {
@@ -46,7 +46,7 @@ export class ProjectDetail {
         }),
         startWith({ project: null, isLoading: true, error: null }),
         catchError(() =>
-          of({ project: null, isLoading: false, error: 'Error loading project' }),
+          of({ project: null, isLoading: false, error: 'Erreur lors du chargement du projet' }),
         ),
       ),
     ),

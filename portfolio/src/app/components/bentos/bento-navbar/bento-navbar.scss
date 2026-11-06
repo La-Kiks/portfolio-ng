@@ -24,3 +24,14 @@
   color: var(--color-accent);
   font-weight: 700;
 }
+
+@media (max-width: 599px) {
+  .navbar-title {
+    font-size: 1.25rem;
+  }
+
+  .navbar-button-primary,
+  .navbar-button-primary:hover {
+    padding: 0.625rem 0.875rem;
+  }
+}

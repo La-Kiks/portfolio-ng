@@ -58,7 +58,7 @@ describe('ProjectDetail', () => {
     httpMock.expectOne('/files/projects.json').flush(PROJECTS);
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Project not found');
+    expect(fixture.nativeElement.textContent).toContain('Projet introuvable');
   });
 
   it('shows the error state when the request fails', () => {
@@ -66,6 +66,6 @@ describe('ProjectDetail', () => {
     httpMock.expectOne('/files/projects.json').error(new ProgressEvent('error'));
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.textContent).toContain('Error loading project');
+    expect(fixture.nativeElement.textContent).toContain('Erreur lors du chargement du projet');
   });
 });

@@ -76,6 +76,10 @@
   color: var(--color-surface);
 }
 
+.screen-description-light:focus-visible {
+  outline-color: var(--color-accent);
+}
+
 .screen-description.open {
   overflow: visible;
   white-space: normal;
