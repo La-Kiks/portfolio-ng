@@ -6,17 +6,18 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
 
 - Order matters: reload Caddy BEFORE swapping the container. The other way round, the new `index.html` is served at `/` by the old Caddy, its `/portfolio/` requests get 404s with a 1-year immutable header, and those browsers stay blank long after the deploy.
 - Run the steps on the VPS, from the repo checkout, on the merged code.
+- `/etc/caddy/Caddyfile` only holds the global options and `import sites-enabled/*`. Never copy `deploy/Caddyfile` over it, or every other site on the server goes down. `deploy/Caddyfile` replaces the site file `/etc/caddy/sites-available/kilian-au`.
 
 ## Steps
 
-1. Back up the live config. The Caddyfile path may differ on your server.
+1. Back up the live site file. Only `sites-enabled/*` is imported, so the backup in `sites-available/` stays inactive.
 
    ```bash
-   sudo cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.pre-subpath
-   diff /etc/caddy/Caddyfile deploy/Caddyfile
+   cp -p /etc/caddy/sites-available/kilian-au /etc/caddy/sites-available/kilian-au.pre-subpath
+   diff /etc/caddy/sites-available/kilian-au deploy/Caddyfile
    ```
 
-   Review the diff. Merge any other sites or hostnames from the live file into `deploy/Caddyfile` before validating (step 5), or they will be dropped.
+   Review the diff. Merge anything still needed from the live file into `deploy/Caddyfile` before going on.
 
 2. Confirm the container publishes port 4200. The Caddyfile hardcodes 4200, so check `UI_PORT` in `.env`.
 
@@ -25,8 +26,6 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    ```
 
    If the container isn't on 4200, fix `UI_PORT` in `.env` or the Caddyfile before going further.
-
-   Check the access logs for external callers of `/wlangage_2024_full.json`.
 
 3. Tag the running image for rollback. Find its name first and note it, because rollback needs it.
 
@@ -41,16 +40,17 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    docker compose build
    ```
 
-5. Validate the new config.
+5. Validate the new site file on its own.
 
    ```bash
    caddy validate --config deploy/Caddyfile
    ```
 
-6. Copy it over the live one and reload.
+6. Copy it over the live site file, validate the full config with every site, and reload.
 
    ```bash
-   sudo cp deploy/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy
+   cp deploy/Caddyfile /etc/caddy/sites-available/kilian-au
+   caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy
    ```
 
    Check that the reload worked before going on:
@@ -59,7 +59,7 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    curl -sI https://kilian-au.fr/about
    ```
 
-   It must show a `302` to `/portfolio/about`. If it doesn't, stop here and do not run the next step. The old container is still running behind Caddy, so fix the reload or restore the backup.
+   It must show a `302` to `/portfolio/about`, and the other sites on the server must still respond. If not, stop here and do not run the next step. The old container is still running behind Caddy, so fix the reload or restore the backup.
 
 7. Straight away, swap the container.
 
@@ -81,12 +81,12 @@ This is the reverse of the going-live order, because the old Caddy must never si
 ```bash
 docker tag portfolio:pre-subpath <image>
 docker compose up -d --no-build
-sudo cp /etc/caddy/Caddyfile.pre-subpath /etc/caddy/Caddyfile && sudo systemctl reload caddy
+cp /etc/caddy/sites-available/kilian-au.pre-subpath /etc/caddy/sites-available/kilian-au && sudo systemctl reload caddy
 ```
 
 ## After a few stable days
 
-Change `@moved` from 302 to 301 in `deploy/Caddyfile` and on the server, then reload Caddy.
+Change `@moved` from 302 to 301 in `deploy/Caddyfile` and in `/etc/caddy/sites-available/kilian-au`, then reload Caddy.
 
 ## SaaS launch
 
