@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Project, ProjectService } from '../../../services/projects/project';
 
 export interface CarouselProject {
@@ -13,13 +13,12 @@ export interface CarouselProject {
 
 @Component({
   selector: 'app-bento-carousel',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, RouterLink],
   templateUrl: './bento-carousel.html',
   styleUrl: './bento-carousel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BentoCarousel implements OnInit {
-  private readonly router = inject(Router);
   private readonly projectService = inject(ProjectService);
 
   readonly projects = signal<CarouselProject[]>([]);
@@ -74,13 +73,6 @@ export class BentoCarousel implements OnInit {
     const count = this.projects().length;
     if (count === 0) return;
     this.currentIndex.update(index => (index + 1) % count);
-  }
-
-  goToProject(): void {
-    const project = this.currentProject();
-    if (project) {
-      this.router.navigate([project.route]);
-    }
   }
 
   goToSlide(index: number): void {

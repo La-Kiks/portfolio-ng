@@ -1,63 +1,53 @@
-<!-- Loading State -->
 @if (isLoading()) {
-<main
-    class="carousel-wrapper w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm flex items-center justify-center">
-    <p class="loading-text text-text text-lg">Chargement...</p>
-</main>
+<section class="carousel-wrapper bento-card w-full h-full flex items-center justify-center">
+    <p class="text-lg">Chargement...</p>
+</section>
 } @else if (hasError()) {
-<!-- Error State -->
-<main
-    class="carousel-wrapper w-full h-full rounded-3xl bg-primary border border-secondary shadow-sm flex items-center justify-center">
-    <p class="text-text text-lg">Impossible de charger les projets</p>
-</main>
+<section class="carousel-wrapper bento-card w-full h-full flex items-center justify-center">
+    <p class="text-lg">Impossible de charger les projets</p>
+</section>
 } @else if (currentProject(); as project) {
-<!-- Carousel Content -->
-<main
-    class="carousel-wrapper w-full h-full min-h-90 rounded-3xl bg-primary border border-secondary shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden">
-    <!-- Projects-->
-    <h2 class="w-full p-2 my-2 ml-4 text-2xl text-center font-bold">Projets</h2>
-
-    <!-- Image Container -->
-    <div class="flex-1 min-h-0 w-full p-2 relative cursor-pointer overflow-hidden group bg-background" (click)="goToProject()"
-        role="button" tabindex="0" (keyup.enter)="goToProject()">
-        @if (currentIndex() === 0) {
-        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title" priority
-            class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
-        } @else {
-        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title"
-            class="w-full h-full object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105" />
-        }
-        <!-- Overlay on hover -->
-        <div
-            class="absolute inset-0 bg-transparent hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
-            <span
-                class="text-primary bg-background px-4 py-2 rounded-xl font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Cliquer pour voir le projet
-            </span>
+<section class="carousel-wrapper bento-card w-full h-full p-5 md:p-6 flex flex-col gap-4">
+    <div class="flex items-center justify-between gap-3">
+        <h2 class="carousel-heading">Projets</h2>
+        <div class="flex gap-2.5">
+            <button type="button" (click)="previousProject()" class="carousel-arrow"
+                aria-label="Projet précédent">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <button type="button" (click)="nextProject()" class="carousel-arrow carousel-arrow-accent"
+                aria-label="Projet suivant">
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 
-    <!-- Title Section -->
-    <div class="p-4 bg-primary border-t border-secondary">
-        <h3 class="text-lg font-semibold text-text m-0">{{ project.title }}</h3>
-        <p class="text-text">{{ project.description }}</p>
-    </div>
+    <!-- Mouse shortcut only: the "Voir le projet" link below is the accessible route -->
+    <a [routerLink]="project.route" class="carousel-media bento-frame" tabindex="-1" aria-hidden="true">
+        @if (currentIndex() === 0) {
+        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title" priority
+            class="absolute inset-0 w-full h-full object-cover" />
+        } @else {
+        <img [ngSrc]="project.image" width="720" height="720" [alt]="project.title"
+            class="absolute inset-0 w-full h-full object-cover" />
+        }
+    </a>
 
-    <!-- Navigation Arrows -->
-    <button (click)="previousProject()" class="carousel-arrow carousel-arrow-left" aria-label="Previous project">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-    </button>
-
-    <button (click)="nextProject()" class="carousel-arrow carousel-arrow-right" aria-label="Next project">
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-    </button>
-
-    <!-- Slide Indicators -->
-    <div class="absolute top-18 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <div class="flex items-center gap-1.5">
         @for (item of projects(); track item.id; let i = $index) {
-        <button (click)="goToSlide(i)" [class.active]="i === currentIndex()" class="carousel-indicator"
-            [attr.aria-label]="'Go to project ' + (i + 1)"></button>
+        <button type="button" (click)="goToSlide(i)" [class.active]="i === currentIndex()"
+            class="carousel-indicator" [attr.aria-label]="'Aller au projet ' + (i + 1)"></button>
         }
     </div>
-</main>
+
+    <div class="carousel-info">
+        <div class="min-w-0">
+            <h3 class="carousel-title">{{ project.title }}</h3>
+            <p class="carousel-description">{{ project.description }}</p>
+        </div>
+        <a [routerLink]="project.route" class="carousel-cta btn-secondary">
+            Voir le projet <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
+        </a>
+    </div>
+</section>
 }

@@ -1,90 +1,80 @@
 .carousel-wrapper {
-  position: relative;
   min-height: 31.25rem;
-  aspect-ratio: 1/1;
 }
 
-/* Desktop that fits the viewport: fill the grid area instead of forcing a square */
-@media (min-width: 1024px) and (min-height: 650px) {
-  .carousel-wrapper {
-    min-height: 0;
-    aspect-ratio: auto;
-  }
+.carousel-heading {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
-/* Navigation Arrows */
 .carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(2.5rem, 5vw, 3.125rem);
-  height: clamp(2.5rem, 5vw, 3.125rem);
-  background-color: color-mix(in srgb, var(--color-background) 80%, transparent);
-  color: var(--color-primary);
-  border: none;
-  border-radius: 50%;
-  font-size: clamp(1.5rem, 5vw, 1.75rem);
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2.875rem;
+  height: 2.875rem;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  border-radius: 0.875rem;
   cursor: pointer;
-  opacity: 1;
-  transition: all 0.3s ease;
-  z-index: 10;
-  line-height: 1;
-  padding: 0;
-  margin: 0;
 }
 
-.carousel-arrow span {
+.carousel-arrow-accent {
+  background-color: var(--color-accent);
+}
+
+.carousel-media {
   display: block;
-  line-height: 1;
-  margin-top: -0.3125rem;
+  flex: 1;
+  min-height: 19.375rem;
+  border-radius: 0.875rem;
+  box-shadow: none;
 }
 
-.carousel-wrapper:hover .carousel-arrow {
-  opacity: 1;
-}
-
-.carousel-arrow:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-arrow-left {
-  left: 1rem;
-}
-
-.carousel-arrow-right {
-  right: 1rem;
-}
-
-/* Slide Indicators */
+/* Clickable, unlike the reference's decorative dots: the ink border carries the contrast */
 .carousel-indicator {
-  width: clamp(0.5rem, 3vw, 0.625rem);
-  height: clamp(0.5rem, 3vw, 0.625rem);
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.6);
-  background-color: color-mix(in srgb, var(--color-primary) 80%, transparent);
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  background-color: var(--color-accent-muted);
+  border: 1px solid var(--color-ink);
+  border-radius: 0.25rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.carousel-indicator:hover {
-  background-color: rgba(255, 255, 255, 0.75);
 }
 
 .carousel-indicator.active {
-  background-color: var(--color-primary);
-  width: clamp(1.125rem, 3vw, 1.5rem);
-  border-radius: clamp(0.125rem, 3vw, 0.25rem);
+  width: 1.75rem;
+  background-color: var(--color-ink);
 }
 
-.loading-text {
+.carousel-info {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: clamp(18.75rem, 5vw, 50rem);
-  height: clamp(18.75rem, 5vw, 50rem);
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.carousel-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.carousel-description {
+  margin: 0;
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+
+/* Desktop that fits the viewport: fill the grid area */
+@media (min-width: 1024px) and (min-height: 650px) {
+  .carousel-wrapper,
+  .carousel-media {
+    min-height: 0;
+  }
 }

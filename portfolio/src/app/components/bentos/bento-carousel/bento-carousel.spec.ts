@@ -80,4 +80,21 @@ describe('BentoCarousel', () => {
     expect(component.hasError()).toBe(true);
     expect(fixture.nativeElement.textContent).toContain('Impossible de charger les projets');
   });
+
+  it('links to the current project and follows the slide', () => {
+    flushProjects();
+    const cta = (): HTMLAnchorElement => fixture.nativeElement.querySelector('.carousel-cta');
+    expect(cta().getAttribute('href')).toBe('/projects/one');
+
+    component.goToSlide(1);
+    fixture.detectChanges();
+    expect(cta().getAttribute('href')).toBe('/projects/two');
+  });
+
+  it('keeps the image link out of the tab order', () => {
+    flushProjects();
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.carousel-media');
+    expect(link.getAttribute('href')).toBe('/projects/one');
+    expect(link.getAttribute('tabindex')).toBe('-1');
+  });
 });
