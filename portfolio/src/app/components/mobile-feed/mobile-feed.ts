@@ -8,6 +8,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   signal,
   viewChild,
   viewChildren,
@@ -17,7 +18,7 @@ import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of } from 'rxjs';
 import { BentoNavbar, NavItem } from '../bentos/bento-navbar/bento-navbar';
-import { SOCIAL_LINKS, isExternalLink } from '../bentos/bento-social/social-links';
+import { SOCIAL_LINKS, SocialLink, isExternalLink } from '../bentos/bento-social/social-links';
 import { ProjectService } from '../../services/projects/project';
 import { FeedPosition } from '../../services/feed-position/feed-position';
 
@@ -44,8 +45,7 @@ export class MobileFeed {
   readonly introPhoto = INTRO_PHOTO;
   readonly introDescription =
     "Développeur full-stack, j'accompagne vos projets web en Symfony/PHP ou .NET/Angular. Curieux et exigeant, je livre un code fiable et évolutif.";
-  readonly mailLinks = SOCIAL_LINKS.filter((link) => !isExternalLink(link));
-  readonly iconLinks = SOCIAL_LINKS.filter(isExternalLink);
+  readonly socialLinks = SOCIAL_LINKS;
 
   readonly loadError = signal(false);
   readonly projects = toSignal(
@@ -79,6 +79,11 @@ export class MobileFeed {
   readonly screenCount = computed(() => 2 + (this.loadError() ? 1 : this.projects().length));
   readonly dots = computed(() => Array.from({ length: this.screenCount() }, (_, i) => i));
   readonly activeIndex = signal(0);
+  /** Screen whose description is unfolded; folds again when the active screen changes. */
+  readonly expandedScreen = linkedSignal<number, number | null>({
+    source: this.activeIndex,
+    computation: () => null,
+  });
   /** True once the intro screen is less than half visible. */
   readonly pastIntro = signal(false);
 
@@ -117,6 +122,14 @@ export class MobileFeed {
       this.observer?.disconnect();
       this.position.index = this.activeIndex();
     });
+  }
+
+  toggleDescription(index: number): void {
+    this.expandedScreen.update((current) => (current === index ? null : index));
+  }
+
+  isExternal(link: SocialLink): boolean {
+    return isExternalLink(link);
   }
 
   backToTop(): void {

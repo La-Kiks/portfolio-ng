@@ -95,12 +95,12 @@ describe('MobileFeed', () => {
     expect(projectLinks[0].getAttribute('href')).toBe('/projects/alpha');
     expect(projectLinks[1].getAttribute('href')).toBe('/projects/beta');
 
-    const cta = el(fixture).querySelector<HTMLAnchorElement>('.contact-cta');
-    expect(cta?.getAttribute('href')).toBe('mailto:kilian.audroin@gmail.com');
-    const icons = el(fixture).querySelectorAll<HTMLAnchorElement>('.contact-icon');
-    expect(icons.length).toBe(3);
-    expect(icons[0].getAttribute('target')).toBe('_blank');
-    expect(icons[0].getAttribute('rel')).toBe('noopener noreferrer');
+    const rows = el(fixture).querySelectorAll<HTMLAnchorElement>('.contact-row');
+    expect(rows.length).toBe(4);
+    expect(rows[0].getAttribute('href')).toBe('mailto:kilian.audroin@gmail.com');
+    expect(rows[0].getAttribute('target')).toBeNull();
+    expect(rows[1].getAttribute('target')).toBe('_blank');
+    expect(rows[1].getAttribute('rel')).toBe('noopener noreferrer');
   });
 
   it('shows the About button only once the intro leaves the screen', async () => {
@@ -237,5 +237,54 @@ describe('MobileFeed', () => {
     fixture.componentInstance.activeIndex.set(3);
     fixture.destroy();
     expect(TestBed.inject(FeedPosition).index).toBe(3);
+  });
+
+  function description(fixture: { nativeElement: HTMLElement }, screen: number): HTMLButtonElement {
+    return el(fixture).querySelector(
+      `[data-screen="${screen}"] .screen-description`,
+    ) as HTMLButtonElement;
+  }
+
+  it('makes the intro title the page heading', async () => {
+    const fixture = await setup();
+    const headings = el(fixture).querySelectorAll('h1');
+    expect(headings.length).toBe(1);
+    expect(headings[0].textContent).toContain('Web developer');
+  });
+
+  it('unfolds a description on click and folds it on a second click', async () => {
+    const fixture = await setup();
+    const button = description(fixture, 1);
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+
+    button.click();
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+    expect(button.classList).toContain('open');
+
+    button.click();
+    fixture.detectChanges();
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(button.classList).not.toContain('open');
+  });
+
+  it('keeps a single description open', async () => {
+    const fixture = await setup();
+    description(fixture, 0).click();
+    description(fixture, 1).click();
+    fixture.detectChanges();
+    expect(description(fixture, 0).getAttribute('aria-expanded')).toBe('false');
+    expect(description(fixture, 1).getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('folds the open description when the active screen changes', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    description(fixture, 1).click();
+    fixture.detectChanges();
+    expect(description(fixture, 1).getAttribute('aria-expanded')).toBe('true');
+
+    report(fixture, 2, 1);
+    expect(description(fixture, 1).getAttribute('aria-expanded')).toBe('false');
   });
 });

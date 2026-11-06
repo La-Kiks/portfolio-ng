@@ -1,12 +1,15 @@
 <main #feed class="feed">
     <section #screen class="screen" data-screen="0">
-        <img [ngSrc]="introPhoto" fill priority alt="Photo de Kilian Audroin" class="screen-image" />
-        <app-bento-navbar class="intro-nav" title="KILIAN AUDROIN" [navItems]="navItems()"></app-bento-navbar>
-        <div class="screen-text intro-text">
-            <h2 class="screen-title">Web developer</h2>
-            <p class="screen-description">{{ introDescription }}</p>
+        <app-bento-navbar class="intro-nav" title="Kilian Audroin" [navItems]="navItems()"></app-bento-navbar>
+        <div class="bento-frame screen-frame">
+            <img [ngSrc]="introPhoto" fill priority alt="Portrait de Kilian Audroin" class="screen-image" />
         </div>
-        <p class="scroll-hint" aria-hidden="true">⌄ Projets</p>
+        <div class="bento-card-ink screen-card">
+            <h1 class="screen-title">Web developer</h1>
+            <button type="button" class="screen-description screen-description-light"
+                [class.open]="expandedScreen() === 0" [attr.aria-expanded]="expandedScreen() === 0"
+                (click)="toggleDescription(0)">{{ introDescription }}</button>
+        </div>
     </section>
 
     @if (loadError()) {
@@ -16,35 +19,34 @@
     } @else {
     @for (project of projects(); track project.slug; let i = $index) {
     <section #screen class="screen" [attr.data-screen]="i + 1">
-        <img [ngSrc]="project.image" fill loading="eager" [alt]="project.title" class="screen-image" />
-        <div class="screen-text">
+        <div class="bento-frame screen-frame">
+            <img [ngSrc]="project.image" fill loading="eager" [alt]="project.title" class="screen-image" />
+        </div>
+        <div class="bento-card screen-card">
             <h2 class="screen-title">{{ project.title }}</h2>
-            <p class="screen-description">{{ project.description }}</p>
-            <a class="project-link" [routerLink]="['/projects', project.slug]">Voir le projet →</a>
+            <button type="button" class="screen-description" [class.open]="expandedScreen() === i + 1"
+                [attr.aria-expanded]="expandedScreen() === i + 1"
+                (click)="toggleDescription(i + 1)">{{ project.description }}</button>
+            <a class="project-link btn-secondary" [routerLink]="['/projects', project.slug]">
+                Voir le projet <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
+            </a>
         </div>
     </section>
     }
     }
 
     <section #screen class="screen screen-contact" [attr.data-screen]="screenCount() - 1">
-        <div class="contact">
-            <h2 class="screen-title">Travaillons ensemble</h2>
-            <p class="contact-sub">Un projet, une question ?</p>
-            @for (link of mailLinks; track link.label) {
-            <a class="contact-cta" [href]="link.url">
-                <i [class]="link.icon" aria-hidden="true"></i> Me contacter
-            </a>
-            }
-            <div class="contact-icons">
-                @for (link of iconLinks; track link.label) {
-                <a class="contact-icon" [href]="link.url" target="_blank" rel="noopener noreferrer"
-                    [attr.aria-label]="link.label">
-                    <i [class]="link.icon" aria-hidden="true"></i>
-                </a>
-                }
-            </div>
-            <button type="button" class="back-to-top" (click)="backToTop()">⌃ Retour en haut</button>
-        </div>
+        <h2 class="screen-title">Travaillons ensemble</h2>
+        <p class="contact-sub">Un projet, une question ?</p>
+        @for (link of socialLinks; track link.label; let first = $first) {
+        <a class="contact-row" [class.bento-card]="!first" [class.bento-card-ink]="first" [href]="link.url"
+            [attr.target]="isExternal(link) ? '_blank' : null"
+            [attr.rel]="isExternal(link) ? 'noopener noreferrer' : null">
+            <span class="contact-label"><i [class]="link.icon" aria-hidden="true"></i> {{ link.label }}</span>
+            <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
+        </a>
+        }
+        <button type="button" class="back-to-top" (click)="backToTop()">⌃ Retour en haut</button>
     </section>
 </main>
 
