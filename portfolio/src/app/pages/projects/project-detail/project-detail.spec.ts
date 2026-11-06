@@ -45,6 +45,14 @@ describe('ProjectDetail', () => {
     expect(description?.getAttribute('content')).toBe('Une plateforme sportive');
   });
 
+  it('shows the French back link to the home page', () => {
+    setup('sport-event');
+    httpMock.expectOne('/files/projects.json').flush(PROJECTS);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain("← Retour à l'accueil");
+  });
+
   it('shows the not-found error for an unknown slug', () => {
     setup('does-not-exist');
     httpMock.expectOne('/files/projects.json').flush(PROJECTS);

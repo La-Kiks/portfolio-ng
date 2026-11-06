@@ -3,7 +3,7 @@
         "id": "1",
         "slug": "sport-event",
         "title": "Sport Event",
-        "description": "Plateforme de gestion d'inscriptions à une compétitions avec système de paiement sécurisé",
+        "description": "Plateforme de gestion d'inscriptions à une compétition avec système de paiement sécurisé",
         "context": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
         "objectives": "Concevoir un système d'inscription en équipe (2 participants), gérer différents formats de compétition et sécuriser le processus de paiement en ligne.",
         "stack": [

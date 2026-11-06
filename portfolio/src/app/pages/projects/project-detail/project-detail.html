@@ -2,20 +2,20 @@
 <app-project-loader (loadingComplete)="onProjectLoaderComplete()"></app-project-loader>
 }
 
-<div class="bg-background min-h-screen p-4 md:p-6">
+<div class="bg-page min-h-screen p-4 md:p-6">
     @if (projectState$ | async; as state) {
 
         <!-- Loading State -->
         @if (state.isLoading) {
         <div class="flex items-center justify-center min-h-screen">
-            <p class="text-text text-lg">Loading project...</p>
+            <p class="text-ink text-lg">Chargement du projet...</p>
         </div>
         }
 
         <!-- Error State -->
         @if (state.error && !state.isLoading) {
         <div class="flex items-center justify-center min-h-screen">
-            <p class="text-red-500 text-lg">{{ state.error }}</p>
+            <p class="text-ink font-bold text-lg">{{ state.error }}</p>
         </div>
         }
 
@@ -24,29 +24,30 @@
         <div class="mx-auto" style="max-width: 1440px;">
 
             <!-- Back Button -->
-            <a routerLink="/" class="text-primary hover:underline mb-6 md:text-xl cursor-pointer inline-block">← Retour page
-                d'accueil</a>
+            <a routerLink="/" class="text-ink font-medium hover:underline mb-6 md:text-xl cursor-pointer inline-block">← Retour à l'accueil</a>
 
             <!-- Project Hero -->
-            <div class="rounded-3xl bg-primary border border-secondary overflow-hidden mb-8">
+            <div class="bento-frame mb-8">
                 <img [src]="state.project.images[1]" [alt]="state.project.title" class="w-full h-96 object-cover" />
             </div>
 
             <!-- Project Info -->
             <div class="mb-8">
-                <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">
-                    {{ state.project.title }}
-                </h1>
+                <div class="bento-card-ink p-6 md:p-8 mb-6">
+                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                        {{ state.project.title }}
+                    </h1>
 
-                <p class="text-lg text-primary opacity-80 mb-6">
-                    {{ state.project.description }}
-                </p>
+                    <p class="text-lg text-surface">
+                        {{ state.project.description }}
+                    </p>
+                </div>
 
                 <!-- Context Section -->
                 @if (state.project.context) {
-                <div class="mb-6 p-6 bg-primary border border-secondary rounded-2xl">
-                    <h3 class="text-xl font-semibold text-text mb-3">Contexte</h3>
-                    <p class="text-text opacity-80 leading-relaxed">
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Contexte</h3>
+                    <p class="text-ink-soft leading-relaxed">
                         {{ state.project.context }}
                     </p>
                 </div>
@@ -54,9 +55,9 @@
 
                 <!-- Objectives Section -->
                 @if (state.project.objectives) {
-                <div class="mb-6 p-6 bg-primary border border-secondary rounded-2xl">
-                    <h3 class="text-xl font-semibold text-text mb-3">Objectifs</h3>
-                    <p class="text-text opacity-80 leading-relaxed">
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Objectifs</h3>
+                    <p class="text-ink-soft leading-relaxed">
                         {{ state.project.objectives }}
                     </p>
                 </div>
@@ -64,11 +65,11 @@
 
                 <!-- Technologies Stack -->
                 @if (state.project.stack && state.project.stack.length > 0) {
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-primary  mb-3">Stack Technique</h3>
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Stack Technique</h3>
                     <div class="flex flex-wrap gap-2">
                         @for (tech of state.project.stack; track tech) {
-                        <span class="bg-secondary text-text px-4 py-2 rounded-lg text-sm font-medium">
+                        <span class="bg-accent-pale border-2 border-ink px-4 py-2 rounded-lg text-sm font-medium">
                             {{ tech }}
                         </span>
                         }
@@ -78,9 +79,9 @@
 
                 <!-- Skills Developed -->
                 @if (state.project.skills && state.project.skills.length > 0) {
-                <div class="mb-6">
-                    <h3 class="text-xl font-semibold text-primary mb-3">Compétences Développées</h3>
-                    <ul class="list-disc list-inside text-primary opacity-80 space-y-2">
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Compétences Développées</h3>
+                    <ul class="list-disc list-inside text-ink-soft space-y-2">
                         @for (skill of state.project.skills; track skill) {
                         <li>{{ skill }}</li>
                         }
@@ -90,9 +91,9 @@
 
                 <!-- Results Section -->
                 @if (state.project.results) {
-                <div class="mb-6 p-6 bg-primary border border-secondary rounded-2xl">
-                    <h3 class="text-xl font-semibold text-text mb-3">Résultats et Impact</h3>
-                    <p class="text-text opacity-80 leading-relaxed">
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Résultats et Impact</h3>
+                    <p class="text-ink-soft leading-relaxed">
                         {{ state.project.results }}
                     </p>
                 </div>
@@ -100,9 +101,9 @@
 
                 <!-- Improvements Section -->
                 @if (state.project.improvements && state.project.improvements.length > 0) {
-                <div class="mb-6 p-6 bg-primary border border-secondary rounded-2xl">
-                    <h3 class="text-xl font-semibold text-text mb-3">Perspectives d'Amélioration</h3>
-                    <ul class="list-disc list-inside text-text opacity-80 space-y-2">
+                <div class="bento-card mb-6 p-6">
+                    <h3 class="text-xl font-semibold mb-3">Perspectives d'Amélioration</h3>
+                    <ul class="list-disc list-inside text-ink-soft space-y-2">
                         @for (improvement of state.project.improvements; track improvement) {
                         <li>{{ improvement }}</li>
                         }
@@ -110,31 +111,32 @@
                 </div>
                 }
 
-                <!-- Project Link -->
-                @if (state.project.link) {
-                <a [href]="state.project.link" target="_blank" rel="noopener noreferrer"
-                    class="inline-block px-6 py-3 bg-primary border border-secondary rounded-xl text-text font-medium transition-all duration-300 hover:bg-text hover:text-primary hover:scale-110 focus:outline-none focus:ring-2 focus:ring-text focus:ring-offset-2 cursor-pointer">
-                    Voir le projet →
-                </a>
-                }
+                <div class="flex flex-wrap gap-4">
+                    <!-- Project Link -->
+                    @if (state.project.link) {
+                    <a [href]="state.project.link" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                        Voir le projet <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
+                    </a>
+                    }
 
-                <!-- Github Link -->
-                @if (state.project.github) {
-                <a [href]="state.project.github" target="_blank" rel="noopener noreferrer"
-                    class="inline-block px-6 py-3 mx-6   bg-primary border border-secondary rounded-xl text-text font-medium hover:shadow-md transition-all duration-300 hover:bg-text hover:text-primary hover:scale-110 focus:outline-none focus:ring-2 focus:ring-text focus:ring-offset-2 cursor-pointer">
-                    Voir le code →
-                </a>
-                }
+                    <!-- Github Link -->
+                    @if (state.project.github) {
+                    <a [href]="state.project.github" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                        Voir le code <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
+                    </a>
+                    }
+                </div>
             </div>
 
             <!-- Additional Images Gallery -->
             @if (state.project.images.length > 1) {
             <div class="mb-8">
-                <h3 class="text-xl font-semibold text-primary mb-4">Galerie du Projet</h3>
+                <h3 class="text-xl font-semibold text-ink mb-4">Galerie du Projet</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     @for (image of state.project.images.slice(1); track image) {
-                    <img [src]="image" [alt]="state.project.title"
-                        class="w-full rounded-3xl border border-secondary object-cover h-64" />
+                    <div class="bento-frame">
+                        <img [src]="image" [alt]="state.project.title" class="w-full object-cover h-64" />
+                    </div>
                     }
                 </div>
             </div>
