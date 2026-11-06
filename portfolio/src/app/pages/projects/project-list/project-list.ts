@@ -32,6 +32,7 @@ export class ProjectList {
   private readonly router = inject(Router);
 
   readonly navItems: NavItem[] = [
+    { id: 3, label: 'Accueil', action: () => this.router.navigate(['/']) },
     { id: 1, label: 'Projets', current: true },
     {
       id: 2,

@@ -63,6 +63,7 @@ export class Landing {
   };
 
   readonly navItems: NavItem[] = [
+    { id: 3, label: 'Accueil', current: true },
     { id: 1, label: 'Projets', action: () => this.router.navigate(['/projects']) },
     this.aboutItem,
   ];

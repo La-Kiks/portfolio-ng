@@ -214,6 +214,14 @@ describe('Landing', () => {
     expect(navigate).toHaveBeenCalledWith(['/projects']);
   });
 
+  it('marks Accueil as the current page on the grid', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    const current = fixture.nativeElement.querySelector('.grid-navbar [aria-current="page"]');
+    expect(current.textContent).toContain('Accueil');
+  });
+
   it('gives the feed the About item only', () => {
     stubViewport(390);
     const fixture = TestBed.createComponent(Landing);

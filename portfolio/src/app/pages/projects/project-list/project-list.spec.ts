@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
+import { vi } from 'vitest';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { ProjectList } from './project-list';
 import { Project, ProjectService } from '../../../services/projects/project';
@@ -73,6 +74,15 @@ describe('ProjectList', () => {
     const current = fixture.nativeElement.querySelector('[aria-current="page"]');
     expect(current.textContent).toContain('Projets');
     expect(fixture.nativeElement.querySelectorAll('h1').length).toBe(1);
+  });
+
+  it('goes home from the Accueil item', () => {
+    const fixture = setup();
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+    fixture.componentInstance.navItems.find((item) => item.label === 'Accueil')?.action?.();
+
+    expect(navigate).toHaveBeenCalledWith(['/']);
   });
 
   it('shows a loading message until the projects arrive', () => {

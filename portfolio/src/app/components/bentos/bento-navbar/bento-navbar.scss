@@ -7,6 +7,13 @@
   text-decoration: none;
 }
 
+.navbar-title:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 0.2em;
+  text-underline-offset: 0.15em;
+}
+
 .navbar-button {
   padding: 0.75rem 1.125rem;
   border-radius: 0.875rem;
@@ -30,12 +37,16 @@
   text-underline-offset: 0.25em;
 }
 
-.navbar-button-primary,
-.navbar-button-primary:hover {
+.navbar-button-primary {
   padding: 0.75rem 1.25rem;
   background-color: var(--color-ink);
   color: var(--color-accent);
   font-weight: 700;
+}
+
+.navbar-button-primary:hover {
+  background-color: var(--color-accent);
+  color: var(--color-ink);
 }
 
 @media (max-width: 599px) {
