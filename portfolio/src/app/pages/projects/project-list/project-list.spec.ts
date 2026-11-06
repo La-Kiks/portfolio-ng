@@ -47,6 +47,21 @@ describe('ProjectList', () => {
     expect(images[1].getAttribute('src')).toContain('b.webp');
   });
 
+  it('gives the card beside the wide first card its square image', () => {
+    const twoImages = (id: string): Project => ({
+      id,
+      slug: id,
+      title: id,
+      description: id,
+      images: [`images/${id}-square.webp`, `images/${id}-wide.webp`],
+    });
+    const fixture = setup(of([twoImages('a'), twoImages('b'), twoImages('c')]));
+    const images = fixture.nativeElement.querySelectorAll('a.project-card img');
+    expect(images[0].getAttribute('src')).toContain('a-wide.webp');
+    expect(images[1].getAttribute('src')).toContain('b-square.webp');
+    expect(images[2].getAttribute('src')).toContain('c-wide.webp');
+  });
+
   it('shows at most three stack tags', () => {
     const fixture = setup();
     const card = fixture.nativeElement.querySelector('a.project-card');
@@ -80,26 +95,6 @@ describe('ProjectList', () => {
     const cards = fixture.nativeElement.querySelectorAll('a.project-card');
     expect(cards[0].classList).toContain('project-card-featured');
     expect(cards[1].classList).not.toContain('project-card-featured');
-  });
-
-  it('uses the fit layout only up to five projects', () => {
-    const make = (n: number): Project[] =>
-      Array.from({ length: n }, (_, i) => ({
-        id: `${i}`,
-        slug: `p${i}`,
-        title: `P${i}`,
-        description: 'd',
-        images: ['images/x.webp'],
-      }));
-    const five = setup(of(make(5)));
-    expect(five.nativeElement.querySelector('.project-list-root').classList).toContain(
-      'project-list-fit',
-    );
-    TestBed.resetTestingModule();
-    const six = setup(of(make(6)));
-    expect(six.nativeElement.querySelector('.project-list-root').classList).not.toContain(
-      'project-list-fit',
-    );
   });
 
   it('gives card images an empty alt', () => {

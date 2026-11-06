@@ -106,40 +106,9 @@
     aspect-ratio: 16 / 9;
   }
 
-  .project-image {
+  /* Fills the height of the wide card beside it */
+  .project-card-featured + .project-card .project-image {
     flex: 1 0 auto;
-  }
-}
-
-/* Desktop with enough height and at most five cards: two rows fill the viewport, like the home grid */
-@media (min-width: 1024px) and (min-height: 650px) {
-  .project-list-fit.project-list-root {
-    height: 100vh;
-  }
-
-  .project-list-fit .project-grid {
-    height: 100%;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-  }
-
-  .project-list-fit .project-image,
-  .project-list-fit .project-card-featured .project-image {
-    flex: 1;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-
-  .project-list-fit .project-description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-
-  /* One pill row: a wrapped pill is hidden whole */
-  .project-list-fit .project-tags {
-    max-height: 1.75rem;
-    overflow: hidden;
   }
 }
 

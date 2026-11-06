@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,7 +7,11 @@ import { BentoNavbar, NavItem } from '../../../components/bentos/bento-navbar/be
 import { ProjectService } from '../../../services/projects/project';
 
 const MAX_TAGS = 3;
-const MAX_FIT_CARDS = 5;
+
+/** The card beside the wide first card is almost square, so a wide image would crop badly. */
+function cardImage(images: string[], index: number): string {
+  return index === 1 ? images[0] : (images[1] ?? images[0]);
+}
 
 interface ProjectCard {
   slug: string;
@@ -44,20 +48,15 @@ export class ProjectList {
       .getAllProjects()
       .pipe(
         map((projects): ProjectCard[] =>
-          projects.flatMap((project) => {
-            const image = project.images[1] ?? project.images[0];
-            return image
-              ? [
-                  {
-                    slug: project.slug,
-                    title: project.title,
-                    description: project.description,
-                    image,
-                    tags: (project.stack ?? []).slice(0, MAX_TAGS),
-                  },
-                ]
-              : [];
-          }),
+          projects
+            .filter((project) => project.images.length > 0)
+            .map((project, index) => ({
+              slug: project.slug,
+              title: project.title,
+              description: project.description,
+              image: cardImage(project.images, index),
+              tags: (project.stack ?? []).slice(0, MAX_TAGS),
+            })),
         ),
         catchError(() => {
           this.loadError.set(true);
@@ -65,7 +64,4 @@ export class ProjectList {
         }),
       ),
   );
-
-  /** Five cards fill two rows exactly; more fall back to the scrolling layout. */
-  readonly fitsViewport = computed(() => (this.projects()?.length ?? 0) <= MAX_FIT_CARDS);
 }
