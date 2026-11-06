@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { BentoNavbar } from './bento-navbar';
 
@@ -9,6 +10,7 @@ describe('BentoNavbar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BentoNavbar],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BentoNavbar);
@@ -38,5 +40,22 @@ describe('BentoNavbar', () => {
     const buttons = fixture.nativeElement.querySelectorAll('button');
     expect(buttons[0].classList).not.toContain('navbar-button-primary');
     expect(buttons[1].classList).toContain('navbar-button-primary');
+  });
+
+  it('links the name to the home page', () => {
+    fixture.detectChanges();
+    const title: HTMLAnchorElement = fixture.nativeElement.querySelector('.navbar-title');
+    expect(title.getAttribute('href')).toBe('/');
+  });
+
+  it('marks the current item', () => {
+    fixture.componentRef.setInput('navItems', [
+      { id: 1, label: 'Projets', current: true },
+      { id: 2, label: 'À propos' },
+    ]);
+    fixture.detectChanges();
+    const buttons = fixture.nativeElement.querySelectorAll('button');
+    expect(buttons[0].getAttribute('aria-current')).toBe('page');
+    expect(buttons[1].getAttribute('aria-current')).toBeNull();
   });
 });

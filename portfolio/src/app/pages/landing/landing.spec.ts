@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { vi } from 'vitest';
@@ -204,18 +204,14 @@ describe('Landing', () => {
     expect(fixture.nativeElement.querySelectorAll('h1').length).toBe(1);
   });
 
-  it('scrolls to the carousel from the Projets item', () => {
+  it('goes to the projects page from the Projets item', () => {
     stubViewport(1280);
     const fixture = TestBed.createComponent(Landing);
-    fixture.detectChanges();
-    const carousel = fixture.nativeElement.querySelector('.grid-carousel') as HTMLElement;
-    const scrollIntoView = vi.fn();
-    carousel.scrollIntoView = scrollIntoView;
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
     fixture.componentInstance.navItems.find((item) => item.label === 'Projets')?.action?.();
 
-    // stubViewport matches any query without a width, so reduced motion is on here.
-    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+    expect(navigate).toHaveBeenCalledWith(['/projects']);
   });
 
   it('gives the feed the About item only', () => {

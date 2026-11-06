@@ -3,6 +3,8 @@
   font-size: 1.625rem;
   font-weight: 800;
   letter-spacing: -0.03em;
+  color: inherit;
+  text-decoration: none;
 }
 
 .navbar-button {
@@ -15,6 +17,12 @@
 
 .navbar-button:hover {
   color: var(--color-ink-hover);
+}
+
+.navbar-button-current {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
 }
 
 .navbar-button-primary,

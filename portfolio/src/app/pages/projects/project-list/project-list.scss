@@ -1,0 +1,129 @@
+.project-list-layout {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  min-height: 0;
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+.project-list-main {
+  flex: 1;
+  min-height: 0;
+}
+
+.project-message {
+  margin: 0;
+  padding: 2rem;
+  font-size: 1.125rem;
+  text-align: center;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+  min-height: 0;
+  padding: 1rem;
+  text-decoration: none;
+  transition: transform 150ms ease;
+}
+
+.project-card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.project-image {
+  flex: none;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.875rem;
+  box-shadow: none;
+}
+
+.project-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.project-description {
+  margin: 0;
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.project-tag {
+  padding: 0.125rem 0.5rem;
+  background-color: var(--color-accent-pale);
+  border: 2px solid var(--color-ink);
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card-featured {
+    grid-column: span 2;
+  }
+
+  .project-card-featured .project-image {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .project-card-featured .project-image {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Desktop with enough height: two rows fill the viewport, like the home grid */
+@media (min-width: 1024px) and (min-height: 650px) {
+  .project-list-root {
+    height: 100vh;
+  }
+
+  .project-grid {
+    height: 100%;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-image,
+  .project-card-featured .project-image {
+    flex: 1;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    transition: none;
+  }
+}

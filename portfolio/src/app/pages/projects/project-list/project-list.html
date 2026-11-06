@@ -1,0 +1,35 @@
+<div class="project-list-root bg-page min-h-screen flex flex-col">
+    <div class="project-list-layout px-4 md:px-6 py-4 md:py-6">
+        <app-bento-navbar title="Kilian Audroin" [navItems]="navItems"></app-bento-navbar>
+
+        <main class="project-list-main">
+            <h1 class="sr-only">Projets</h1>
+
+            @if (loadError()) {
+            <p class="bento-card project-message">Impossible de charger les projets</p>
+            } @else if (projects(); as cards) {
+            <div class="project-grid">
+                @for (card of cards; track card.slug; let first = $first) {
+                <a [routerLink]="['/projects', card.slug]" class="project-card bento-card"
+                    [class.project-card-featured]="first">
+                    <div class="project-image bento-frame">
+                        <img [ngSrc]="card.image" fill [priority]="first" [alt]="card.title" class="object-cover" />
+                    </div>
+                    <h2 class="project-title">{{ card.title }}</h2>
+                    <p class="project-description">{{ card.description }}</p>
+                    @if (card.tags.length > 0) {
+                    <div class="project-tags">
+                        @for (tag of card.tags; track tag) {
+                        <span class="project-tag">{{ tag }}</span>
+                        }
+                    </div>
+                    }
+                </a>
+                }
+            </div>
+            } @else {
+            <p class="bento-card project-message">Chargement...</p>
+            }
+        </main>
+    </div>
+</div>

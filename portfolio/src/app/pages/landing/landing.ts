@@ -63,7 +63,7 @@ export class Landing {
   };
 
   readonly navItems: NavItem[] = [
-    { id: 1, label: 'Projets', action: () => this.scrollToProjects() },
+    { id: 1, label: 'Projets', action: () => this.router.navigate(['/projects']) },
     this.aboutItem,
   ];
   /** The feed has no carousel to scroll to. */
@@ -120,13 +120,6 @@ export class Landing {
       stopListening();
       timers.forEach(clearTimeout);
     });
-  }
-
-  private scrollToProjects(): void {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.host
-      .querySelector('.grid-carousel')
-      ?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
   private heroImagesLoaded(): boolean {
