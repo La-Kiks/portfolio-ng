@@ -11,12 +11,6 @@
   --color-accent-muted: #e3c766;
   --color-photo: #dce6f2;
 
-  /* Legacy tokens: removed once every template has migrated */
-  --color-primary: #ffd966;
-  --color-secondary: #fff9e6;
-  --color-background: #1a1300;
-  --color-text: #1a1300;
-
   --font-family-primary:
     'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
