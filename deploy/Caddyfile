@@ -1,62 +1,40 @@
 kilian-au.fr, www.kilian-au.fr {
-    encode gzip zstd
+	encode gzip zstd
 
-    # Security Headers
-    header {
-        X-Frame-Options "SAMEORIGIN"
-        X-Content-Type-Options "nosniff"
-        X-XSS-Protection "1; mode=block"
-        Strict-Transport-Security "max-age=31536000; includeSubDomains"
-        Referrer-Policy "strict-origin-when-cross-origin"
-        -Server
-    }
+	# Security Headers
+	header {
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		X-XSS-Protection "1; mode=block"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
 
-    redir /portfolio /portfolio/ 301
+	redir /portfolio /portfolio/ 301
 
-    # Old URLs moved for good
-    @moved path /about /projects/* /images/* /files/*
-    redir @moved /portfolio{uri} 301
+	# Old URLs. 302 until the move is proven, then change to 301 (see deploy/README.md)
+	@moved path /about /projects/* /images/* /files/*
+	redir @moved /portfolio{uri} 302
 
-    # Crawlers only read these at the domain root
-    @rootfiles path /robots.txt /sitemap.xml /favicon.ico
-    handle @rootfiles {
-        reverse_proxy :4200
-    }
+	# Crawlers only read these at the domain root
+	@rootfiles path /robots.txt /sitemap.xml /favicon.ico
+	handle @rootfiles {
+		reverse_proxy :4200
+	}
 
-    handle_path /portfolio/* {
-        # JSON files - shorter cache (carousel data might update)
-        @json path *.json
-        handle @json {
-            header Cache-Control "public, max-age=3600"
-            reverse_proxy :4200
-        }
+	handle_path /portfolio/* {
+		# Cache headers come from nginx in the container. Caddy's `header` would also
+		# apply to 404 and 502 responses, and browsers would keep those for a year.
+		reverse_proxy :4200
+	}
 
-        # Static assets - long cache
-        @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.webp *.map
-        handle @static {
-            header Cache-Control "public, max-age=31536000, immutable"
-            reverse_proxy :4200
-        }
+	# Until the SaaS exists: temporary, so browsers don't cache it
+	handle {
+		redir * /portfolio{uri} 302
+	}
 
-        # HTML - no cache
-        @html path *.html / /index.html
-        handle @html {
-            header Cache-Control "no-cache, no-store, must-revalidate"
-            reverse_proxy :4200
-        }
-
-        # Everything else (deep links fall back to index.html in the container)
-        handle {
-            reverse_proxy :4200
-        }
-    }
-
-    # Until the SaaS exists: temporary, so browsers don't cache it
-    handle {
-        redir * /portfolio{uri} 302
-    }
-
-    handle_errors {
-        respond "{err.status_code} {err.status_text}"
-    }
+	handle_errors {
+		respond "{err.status_code} {err.status_text}"
+	}
 }

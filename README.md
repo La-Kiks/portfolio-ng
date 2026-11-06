@@ -44,6 +44,8 @@ Un site de portfolio moderne et entièrement responsive mettant en avant mes pro
 
 L'application sera disponible à `http://localhost:UI_PORT`
 
+> L'image de production sert l'application sous `/portfolio/` et a besoin de Caddy devant elle (voir `deploy/README.md`). Le conteneur seul n'est donc pas navigable à `/`. `npm start` sert l'application à `/`.
+
 3. **Construire l'image Docker manuellement**
 
 ```bash
