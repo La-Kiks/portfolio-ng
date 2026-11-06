@@ -1,0 +1,62 @@
+kilian-au.fr, www.kilian-au.fr {
+    encode gzip zstd
+
+    # Security Headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    redir /portfolio /portfolio/ 301
+
+    # Old URLs moved for good
+    @moved path /about /projects/* /images/* /files/*
+    redir @moved /portfolio{uri} 301
+
+    # Crawlers only read these at the domain root
+    @rootfiles path /robots.txt /sitemap.xml /favicon.ico
+    handle @rootfiles {
+        reverse_proxy :4200
+    }
+
+    handle_path /portfolio/* {
+        # JSON files - shorter cache (carousel data might update)
+        @json path *.json
+        handle @json {
+            header Cache-Control "public, max-age=3600"
+            reverse_proxy :4200
+        }
+
+        # Static assets - long cache
+        @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.webp *.map
+        handle @static {
+            header Cache-Control "public, max-age=31536000, immutable"
+            reverse_proxy :4200
+        }
+
+        # HTML - no cache
+        @html path *.html / /index.html
+        handle @html {
+            header Cache-Control "no-cache, no-store, must-revalidate"
+            reverse_proxy :4200
+        }
+
+        # Everything else (deep links fall back to index.html in the container)
+        handle {
+            reverse_proxy :4200
+        }
+    }
+
+    # Until the SaaS exists: temporary, so browsers don't cache it
+    handle {
+        redir * /portfolio{uri} 302
+    }
+
+    handle_errors {
+        respond "{err.status_code} {err.status_text}"
+    }
+}
