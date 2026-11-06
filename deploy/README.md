@@ -16,7 +16,7 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    diff /etc/caddy/Caddyfile deploy/Caddyfile
    ```
 
-   Anything else in the live file (other sites, other hostnames) must be merged in, not dropped.
+   Review the diff. Merge any other sites or hostnames from the live file into `deploy/Caddyfile` before validating (step 5), or they will be dropped.
 
 2. Confirm the container publishes port 4200. The Caddyfile hardcodes 4200, so check `UI_PORT` in `.env`.
 
@@ -24,9 +24,11 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    docker compose ps
    ```
 
+   If the container isn't on 4200, fix `UI_PORT` in `.env` or the Caddyfile before going further.
+
    Check the access logs for external callers of `/wlangage_2024_full.json`.
 
-3. Tag the running image for rollback. Find its name first.
+3. Tag the running image for rollback. Find its name first and note it, because rollback needs it.
 
    ```bash
    docker compose images
@@ -51,6 +53,14 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
    sudo cp deploy/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy
    ```
 
+   Check that the reload worked before going on:
+
+   ```bash
+   curl -sI https://kilian-au.fr/about
+   ```
+
+   It must show a `302` to `/portfolio/about`. If it doesn't, stop here and do not run the next step. The old container is still running behind Caddy, so fix the reload or restore the backup.
+
 7. Straight away, swap the container.
 
    ```bash
@@ -60,15 +70,18 @@ These steps move the portfolio to `kilian-au.fr/portfolio/` behind Caddy.
 8. Check on both `kilian-au.fr` and `www.kilian-au.fr`, including `http://` to `https://`:
    - `/` redirects to `/portfolio/`.
    - `/portfolio/`, `/portfolio/about` and a project page load with images and fonts.
-   - `/about` redirects.
+   - `/about` redirects with a 302.
+   - `curl -sI https://kilian-au.fr/portfolio/` shows `no-cache, no-store, must-revalidate`.
    - `/robots.txt` and `/sitemap.xml` return 200.
 
 ## Rollback
 
+This is the reverse of the going-live order, because the old Caddy must never sit in front of the new container.
+
 ```bash
-sudo cp /etc/caddy/Caddyfile.pre-subpath /etc/caddy/Caddyfile && sudo systemctl reload caddy
 docker tag portfolio:pre-subpath <image>
 docker compose up -d --no-build
+sudo cp /etc/caddy/Caddyfile.pre-subpath /etc/caddy/Caddyfile && sudo systemctl reload caddy
 ```
 
 ## After a few stable days
