@@ -66,7 +66,7 @@ export class Landing {
     { id: 1, label: 'Projets', action: () => this.router.navigate(['/projects']) },
     this.aboutItem,
   ];
-  /** The feed has no carousel to scroll to. */
+  /** The feed already shows every project. */
   readonly feedNavItems: NavItem[] = [this.aboutItem];
 
   private readonly mobileQuery = window.matchMedia(MOBILE_QUERY);

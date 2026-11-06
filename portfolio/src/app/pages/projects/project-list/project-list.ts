@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,6 +7,7 @@ import { BentoNavbar, NavItem } from '../../../components/bentos/bento-navbar/be
 import { ProjectService } from '../../../services/projects/project';
 
 const MAX_TAGS = 3;
+const MAX_FIT_CARDS = 5;
 
 interface ProjectCard {
   slug: string;
@@ -64,4 +65,7 @@ export class ProjectList {
         }),
       ),
   );
+
+  /** Five cards fill two rows exactly; more fall back to the scrolling layout. */
+  readonly fitsViewport = computed(() => (this.projects()?.length ?? 0) <= MAX_FIT_CARDS);
 }

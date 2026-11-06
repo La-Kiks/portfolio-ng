@@ -1,4 +1,4 @@
-<div class="project-list-root bg-page min-h-screen flex flex-col">
+<div class="project-list-root bg-page min-h-screen flex flex-col" [class.project-list-fit]="fitsViewport()">
     <div class="project-list-layout px-4 md:px-6 py-4 md:py-6">
         <app-bento-navbar title="Kilian Audroin" [navItems]="navItems"></app-bento-navbar>
 
@@ -13,7 +13,7 @@
                 <a [routerLink]="['/projects', card.slug]" class="project-card bento-card"
                     [class.project-card-featured]="first">
                     <div class="project-image bento-frame">
-                        <img [ngSrc]="card.image" fill [priority]="first" [alt]="card.title" class="object-cover" />
+                        <img [ngSrc]="card.image" fill [priority]="first" alt="" class="object-cover" />
                     </div>
                     <h2 class="project-title">{{ card.title }}</h2>
                     <p class="project-description">{{ card.description }}</p>

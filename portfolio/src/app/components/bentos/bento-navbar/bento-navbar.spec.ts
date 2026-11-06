@@ -54,8 +54,11 @@ describe('BentoNavbar', () => {
       { id: 2, label: 'À propos' },
     ]);
     fixture.detectChanges();
+    const current = fixture.nativeElement.querySelector('[aria-current="page"]');
+    expect(current.tagName).toBe('SPAN');
+    expect(current.classList).toContain('navbar-button-current');
     const buttons = fixture.nativeElement.querySelectorAll('button');
-    expect(buttons[0].getAttribute('aria-current')).toBe('page');
-    expect(buttons[1].getAttribute('aria-current')).toBeNull();
+    expect(buttons.length).toBe(1);
+    expect(buttons[0].getAttribute('aria-current')).toBeNull();
   });
 });

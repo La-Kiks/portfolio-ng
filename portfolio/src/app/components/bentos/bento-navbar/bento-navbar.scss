@@ -19,7 +19,12 @@
   color: var(--color-ink-hover);
 }
 
+.navbar-button-current:hover {
+  color: var(--color-ink);
+}
+
 .navbar-button-current {
+  cursor: default;
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 0.25em;
@@ -34,6 +39,18 @@
 }
 
 @media (max-width: 599px) {
+  .navbar-row {
+    gap: 0.5rem;
+  }
+
+  .navbar-items {
+    gap: 0.25rem;
+  }
+
+  .navbar-button-current {
+    padding-inline: 0;
+  }
+
   .navbar-title {
     font-size: 1.25rem;
   }

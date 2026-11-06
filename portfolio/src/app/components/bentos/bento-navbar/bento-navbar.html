@@ -1,13 +1,16 @@
 <nav class="bento-card w-full px-5 py-3 md:px-6 md:py-4">
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="navbar-row flex flex-wrap items-center justify-between gap-4">
         <a routerLink="/" class="navbar-title">{{ title() }}</a>
-        <div class="flex items-center gap-2.5">
+        <div class="navbar-items flex items-center gap-2.5">
             @for (item of navItems(); track item.id) {
+            @if (item.current) {
+            <span class="navbar-button navbar-button-current" aria-current="page">{{ item.label }}</span>
+            } @else {
             <button type="button" (click)="item.action?.()" class="navbar-button"
-                [class.navbar-button-primary]="item.primary" [class.navbar-button-current]="item.current"
-                [attr.aria-current]="item.current ? 'page' : null">
+                [class.navbar-button-primary]="item.primary">
                 {{ item.label }}
             </button>
+            }
             }
         </div>
     </div>

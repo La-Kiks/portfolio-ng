@@ -74,4 +74,36 @@ describe('ProjectList', () => {
     const fixture = setup(throwError(() => new Error('network')));
     expect(fixture.nativeElement.textContent).toContain('Impossible de charger les projets');
   });
+
+  it('marks only the first card as featured', () => {
+    const fixture = setup();
+    const cards = fixture.nativeElement.querySelectorAll('a.project-card');
+    expect(cards[0].classList).toContain('project-card-featured');
+    expect(cards[1].classList).not.toContain('project-card-featured');
+  });
+
+  it('uses the fit layout only up to five projects', () => {
+    const make = (n: number): Project[] =>
+      Array.from({ length: n }, (_, i) => ({
+        id: `${i}`,
+        slug: `p${i}`,
+        title: `P${i}`,
+        description: 'd',
+        images: ['images/x.webp'],
+      }));
+    const five = setup(of(make(5)));
+    expect(five.nativeElement.querySelector('.project-list-root').classList).toContain(
+      'project-list-fit',
+    );
+    TestBed.resetTestingModule();
+    const six = setup(of(make(6)));
+    expect(six.nativeElement.querySelector('.project-list-root').classList).not.toContain(
+      'project-list-fit',
+    );
+  });
+
+  it('gives card images an empty alt', () => {
+    const fixture = setup();
+    expect(fixture.nativeElement.querySelector('a.project-card img').getAttribute('alt')).toBe('');
+  });
 });
