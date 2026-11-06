@@ -1,10 +1,77 @@
 @import 'tailwindcss';
 
-@theme {
+@theme static {
+  --color-page: #ffd966;
+  --color-surface: #fffdf7;
+  --color-ink: #1a1712;
+  --color-ink-soft: #4a4234;
+  --color-ink-hover: #5a4a00;
+  --color-accent: #ffd966;
+  --color-accent-pale: #fff1c2;
+  --color-accent-muted: #e3c766;
+  --color-photo: #dce6f2;
+
+  /* Legacy tokens: removed once every template has migrated */
   --color-primary: #ffd966;
   --color-secondary: #fff9e6;
   --color-background: #1a1300;
   --color-text: #1a1300;
 
-  --font-family-primary: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary:
+    'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@utility bento-card {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  border-radius: 1.375rem;
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+@utility bento-card-ink {
+  background-color: var(--color-ink);
+  color: var(--color-accent);
+  border: 2px solid var(--color-ink);
+  border-radius: 1.375rem;
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+@utility bento-frame {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-accent-pale);
+  border: 2px solid var(--color-ink);
+  border-radius: 1.375rem;
+  box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--color-ink);
+  color: var(--color-accent);
+  border: 2px solid var(--color-ink);
+  border-radius: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@utility btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--color-accent);
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  border-radius: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
 }
