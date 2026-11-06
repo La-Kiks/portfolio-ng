@@ -25,3 +25,18 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/*
+ * Global on purpose. In a component stylesheet Angular renames the keyframes but misses
+ * `animation:` when it is the first declaration of a rule inside @media in minified CSS,
+ * so the production build ends up pointing at a name that doesn't exist.
+ */
+@keyframes bento-enter {
+  from {
+    transform: translate(var(--enter-x, 0), var(--enter-y, 0));
+    opacity: var(--enter-opacity, 1);
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

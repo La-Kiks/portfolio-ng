@@ -80,18 +80,8 @@
 /* ============================================================
    Entrance animation (tablet + desktop, first landing view only)
    Totals must match DESKTOP_ENTRANCE_MS (1680) / TABLET_ENTRANCE_MS (1300) in landing.ts
+   The bento-enter keyframes live in styles.scss: see the note there.
    ============================================================ */
-@keyframes bento-enter {
-  from {
-    transform: translate(var(--enter-x, 0), var(--enter-y, 0));
-    opacity: var(--enter-opacity, 1);
-  }
-  to {
-    transform: none;
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .landing-root.entering {
     overflow: clip;
