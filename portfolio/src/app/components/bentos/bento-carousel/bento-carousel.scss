@@ -9,6 +9,16 @@
   letter-spacing: -0.03em;
 }
 
+.carousel-all {
+  font-weight: 500;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.carousel-all:hover {
+  text-decoration: underline;
+}
+
 .carousel-arrow {
   display: flex;
   align-items: center;
