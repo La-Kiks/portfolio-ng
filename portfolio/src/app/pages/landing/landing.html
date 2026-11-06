@@ -1,31 +1,29 @@
 <app-loader></app-loader>
 
 @if (isMobile()) {
-<app-mobile-feed [navItems]="navItems"></app-mobile-feed>
+<app-mobile-feed [navItems]="feedNavItems"></app-mobile-feed>
 } @else {
 <div
-    class="landing-root bg-background min-h-screen md:h-screen flex flex-col"
+    class="landing-root bg-page min-h-screen lg:h-screen flex flex-col"
     [class.entrance]="playEntrance"
     [class.entering]="entering()"
     [class.ready]="ready()">
-    <div class="landing-grid px-4 md:px-6 py-4 md:py-6 m-0">
-        <app-bento-navbar class="grid-navbar" title="KILIAN AUDROIN" [navItems]="navItems"></app-bento-navbar>
+    <main class="landing-grid px-4 md:px-6 py-4 md:py-6 m-0">
+        <app-bento-navbar class="grid-navbar" title="Kilian Audroin" [navItems]="navItems"></app-bento-navbar>
 
         <app-bento-profile-picture class="grid-profile" imageUrl="/images/profile-pic-ki-small.webp"
-            altText="My profile picture"></app-bento-profile-picture>
+            altText="Portrait de Kilian Audroin"></app-bento-profile-picture>
 
-        <app-bento-title-description class="grid-title title-description" title="Web developer"
-            description="Développeur full-stack, j'accompagne vos projets web en Symfony/PHP ou .NET/Angular. Curieux et exigeant, je livre un code fiable et évolutif."></app-bento-title-description>
+        <app-bento-title class="grid-title-only" title="Web developer"></app-bento-title>
 
-
-
-        <app-bento-title class="grid-title-only title-only" title="Web developer"></app-bento-title>
-        <app-bento-description class="grid-description-only description-only"
-            description="Développeur full-stack, j'accompagne vos projets web en Symfony/PHP ou .NET/Angular. Curieux et exigeant, je livre un code fiable et évolutif."></app-bento-description>
+        <app-bento-description class="grid-description-only">
+            Développeur full-stack, j'accompagne vos projets web en <mark>Symfony/PHP</mark> ou
+            <mark>.NET/Angular</mark>. Curieux et exigeant, je livre un code fiable et évolutif.
+        </app-bento-description>
 
         <app-bento-carousel class="grid-carousel"></app-bento-carousel>
 
         <app-bento-social class="grid-social"></app-bento-social>
-    </div>
+    </main>
 </div>
 }

@@ -4,6 +4,7 @@ export interface NavItem {
   id: number;
   label: string;
   action?: () => void;
+  primary?: boolean;
 }
 
 @Component({

@@ -1,13 +1,8 @@
 .landing-grid {
   box-sizing: border-box;
   display: grid;
-  gap: 1rem;
-}
-
-/* Mobile layout */
-.landing-grid {
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: auto auto auto auto auto;
+  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
     'navbar navbar'
     'title-only profile'
@@ -16,56 +11,21 @@
     'social social';
 }
 
-.title-only,
-.description-only {
-  display: block;
-}
-
-.title-description {
-  display: none;
-}
-
-/* Tablet layout */
-@media (min-width: 600px) {
-  .title-only,
-  .description-only {
-    display: none;
-  }
-
-  .title-description {
-    display: block;
-  }
-
-  .landing-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto auto auto auto;
-    gap: 1.5rem;
-    grid-template-areas:
-      'navbar navbar'
-      'title profile'
-      'carousel carousel'
-      'social social';
-  }
+.landing-grid mark {
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-accent);
+  color: var(--color-ink);
 }
 
 /* Desktop layout - max-width scales with the fluid root size (styles.scss) */
 @media (min-width: 1024px) {
-  .title-only,
-  .description-only {
-    display: block;
-  }
-
-  .title-description {
-    display: none;
-  }
-
   .landing-grid {
     margin: 0 auto auto auto;
     justify-content: center;
     max-width: 90rem;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: repeat(4, auto);
-    gap: 1.5rem;
     grid-template-areas:
       'navbar navbar navbar navbar'
       'title-only profile carousel carousel'
@@ -98,10 +58,6 @@
 
 .grid-profile {
   grid-area: profile;
-}
-
-.grid-title {
-  grid-area: title;
 }
 
 .grid-title-only {
@@ -149,7 +105,8 @@
   @media (min-width: 600px) and (max-width: 1023px) {
     .landing-root.entrance {
       .grid-navbar,
-      .grid-title,
+      .grid-title-only,
+      .grid-description-only,
       .grid-profile,
       .grid-carousel,
       .grid-social {
@@ -162,9 +119,14 @@
         --enter-delay: 0ms;
       }
 
-      .grid-title {
+      .grid-title-only {
         --enter-x: -40px;
         --enter-delay: 270ms;
+      }
+
+      .grid-description-only {
+        --enter-x: -40px;
+        --enter-delay: 330ms;
       }
 
       .grid-profile {

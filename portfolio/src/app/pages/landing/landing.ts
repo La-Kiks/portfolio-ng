@@ -11,7 +11,6 @@ import { Loader, MOBILE_QUERY } from '../../components/loader/loader';
 import { MobileFeed } from '../../components/mobile-feed/mobile-feed';
 import { BentoNavbar, NavItem } from '../../components/bentos/bento-navbar/bento-navbar';
 import { BentoCarousel } from '../../components/bentos/bento-carousel/bento-carousel';
-import { BentoTitleDescription } from '../../components/bentos/bento-title-description/bento-title-description';
 import { BentoTitle } from '../../components/bentos/bento-title/bento-title';
 import { BentoDescription } from '../../components/bentos/bento-description/bento-description';
 import { BentoProfilePicture } from '../../components/bentos/bento-profile-picture/bento-profile-picture';
@@ -42,7 +41,6 @@ function entranceDuration(): number {
     Loader,
     BentoNavbar,
     BentoCarousel,
-    BentoTitleDescription,
     BentoTitle,
     BentoDescription,
     BentoProfilePicture,
@@ -57,9 +55,19 @@ export class Landing {
   private readonly router = inject(Router);
   private readonly host: HTMLElement = inject(ElementRef).nativeElement;
 
+  private readonly aboutItem: NavItem = {
+    id: 2,
+    label: 'À propos',
+    primary: true,
+    action: () => this.router.navigate(['/about']),
+  };
+
   readonly navItems: NavItem[] = [
-    { id: 1, label: 'À PROPOS', action: () => this.router.navigate(['/about']) },
+    { id: 1, label: 'Projets', action: () => this.scrollToProjects() },
+    this.aboutItem,
   ];
+  /** The feed has no carousel to scroll to. */
+  readonly feedNavItems: NavItem[] = [this.aboutItem];
 
   private readonly mobileQuery = window.matchMedia(MOBILE_QUERY);
   /** Below 600px the landing page is the snap feed instead of the bento grid. */
@@ -112,6 +120,13 @@ export class Landing {
       stopListening();
       timers.forEach(clearTimeout);
     });
+  }
+
+  private scrollToProjects(): void {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.host
+      .querySelector('.grid-carousel')
+      ?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
   private heroImagesLoaded(): boolean {

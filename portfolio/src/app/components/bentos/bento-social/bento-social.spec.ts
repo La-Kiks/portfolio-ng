@@ -24,4 +24,12 @@ describe('BentoSocial', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelectorAll('a').length).toBe(4);
   });
+
+  it('renders the first link as the dark card and the others as light cards', () => {
+    fixture.detectChanges();
+    const links = fixture.nativeElement.querySelectorAll('a');
+    expect(links[0].classList).toContain('bento-card-ink');
+    expect(links[1].classList).toContain('bento-card');
+    expect(links[1].classList).not.toContain('bento-card-ink');
+  });
 });

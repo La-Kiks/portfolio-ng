@@ -1,32 +1,43 @@
-.social-button {
-  flex: 1;
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
 }
 
-.social-button {
-  flex-basis: calc(50% - 0.5rem);
-  max-width: calc(50% - 0.5rem);
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 150ms ease;
 }
 
-@media (min-width: 768px) {
-  .social-button {
-    flex-basis: auto;
-    width: calc(25% - 1.5rem);
-  }
+.social-link:hover {
+  transform: translate(-2px, -2px);
 }
 
-/* Desktop */
+.social-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 @media (min-width: 1024px) {
-  .social-button {
-    flex-basis: auto;
-    width: calc(25% - 1.5rem);
+  .social-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .social-link {
+    padding: 1rem 1.5rem;
   }
 }
 
-.social-button:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.social-icon {
-  display: block;
-  line-height: 1;
+@media (prefers-reduced-motion: reduce) {
+  .social-link {
+    transition: none;
+  }
 }

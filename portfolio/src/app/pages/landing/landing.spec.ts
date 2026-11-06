@@ -196,4 +196,31 @@ describe('Landing', () => {
     fixture.destroy();
     expect(removeListener).toHaveBeenCalledWith('change', changeListeners[0]);
   });
+
+  it('has a single h1 on desktop', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelectorAll('h1').length).toBe(1);
+  });
+
+  it('scrolls to the carousel from the Projets item', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    const carousel = fixture.nativeElement.querySelector('.grid-carousel') as HTMLElement;
+    const scrollIntoView = vi.fn();
+    carousel.scrollIntoView = scrollIntoView;
+
+    fixture.componentInstance.navItems.find((item) => item.label === 'Projets')?.action?.();
+
+    // stubViewport matches any query without a width, so reduced motion is on here.
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+  });
+
+  it('gives the feed the About item only', () => {
+    stubViewport(390);
+    const fixture = TestBed.createComponent(Landing);
+    expect(fixture.componentInstance.feedNavItems.map((item) => item.label)).toEqual(['À propos']);
+  });
 });

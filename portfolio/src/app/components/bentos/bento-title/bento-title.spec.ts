@@ -19,4 +19,10 @@ describe('BentoTitle', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('renders the title as the page heading', () => {
+    fixture.componentRef.setInput('title', 'Web developer');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('h1').textContent).toContain('Web developer');
+  });
 });

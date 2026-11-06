@@ -1,5 +1,24 @@
+.title-card {
+  min-height: 23.75rem;
+}
+
 .title {
-  font-size: clamp(1.5rem, 5vw, 3rem);
-  line-height: 1.2;
   margin: 0;
+  font-size: clamp(2.75rem, 7vw, 3.5rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: 3.5rem;
+  }
+}
+
+/* Desktop that fits the viewport: the grid decides the height */
+@media (min-width: 1024px) and (min-height: 650px) {
+  .title-card {
+    min-height: 0;
+  }
 }

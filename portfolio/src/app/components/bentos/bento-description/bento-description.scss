@@ -1,8 +1,7 @@
 .description {
-  font-size: clamp(0.875rem, 2vw, 1.125rem);
-  line-height: 1.6;
   margin: 0;
-  min-height: 5.625rem;
-  text-align: left;
-  align-content: center;
+  font-size: clamp(1.125rem, 2.6vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
 }

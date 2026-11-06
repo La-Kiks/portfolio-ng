@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-bento-description',
@@ -7,6 +7,4 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   styleUrl: './bento-description.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BentoDescription {
-  readonly description = input('Description');
-}
+export class BentoDescription {}
