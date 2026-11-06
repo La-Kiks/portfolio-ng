@@ -21,4 +21,9 @@ describe('About', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('links back to the home page in French', () => {
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain("← Retour à l'accueil");
+  });
 });
