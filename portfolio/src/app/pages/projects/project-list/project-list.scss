@@ -95,6 +95,18 @@
   .project-card-featured .project-image {
     aspect-ratio: 21 / 9;
   }
+
+  /*
+   * Featured fills row 1, so card n sits in cell n + 1: an even-numbered last card
+   * starts a row alone and widens to close the hole.
+   */
+  .project-card:last-child:nth-child(even) {
+    grid-column: span 2;
+  }
+
+  .project-card:last-child:nth-child(even) .project-image {
+    aspect-ratio: 21 / 9;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -102,12 +114,34 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .project-card-featured .project-image {
+  .project-card-featured .project-image,
+  .project-card:last-child:nth-child(even) .project-image {
     aspect-ratio: 16 / 9;
   }
 
+  .project-card:last-child:nth-child(even) {
+    grid-column: auto;
+  }
+
+  /*
+   * Row 1 is featured (2 cols) + card 2; later rows hold 3 cards. Two cards left over
+   * (4, 7… cards): the first spans 2, mirroring row 1. One left over (3, 6…): it spans 3.
+   */
+  .project-card:nth-child(3n):nth-last-child(2) {
+    grid-column: span 2;
+  }
+
+  .project-card:nth-child(3n):last-child {
+    grid-column: span 3;
+  }
+
+  .project-card:nth-child(3n):last-child .project-image {
+    aspect-ratio: 21 / 9;
+  }
+
   /* Fills the height of the wide card beside it */
-  .project-card-featured + .project-card .project-image {
+  .project-card-featured + .project-card .project-image,
+  .project-card:nth-child(3n):nth-last-child(2) + .project-card .project-image {
     flex: 1 0 auto;
   }
 }
