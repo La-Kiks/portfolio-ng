@@ -202,7 +202,10 @@ export class MobileFeed {
       if (!video.muted && error instanceof DOMException && error.name === 'NotAllowedError') {
         this.sound.mute();
         video.muted = true;
-        video.play().catch(() => undefined);
+        // The user may have scrolled on while play() was pending: never revive a stale reel.
+        if (this.reels()[this.activeIndex() - 1]?.nativeElement === video) {
+          video.play().catch(() => undefined);
+        }
       }
     });
   }

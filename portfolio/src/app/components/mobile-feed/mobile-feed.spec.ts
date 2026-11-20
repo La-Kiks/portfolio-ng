@@ -285,6 +285,21 @@ describe('MobileFeed', () => {
     ).toBe('false');
   });
 
+  it('does not replay a reel whose unmuted play is rejected after scrolling on', async () => {
+    const fixture = await setup();
+    fixture.componentInstance.toggleSound();
+    media.play.mockRejectedValueOnce(new DOMException('', 'NotAllowedError'));
+    report(fixture, 1, 1);
+    report(fixture, 2, 1);
+    await flushPromises();
+    fixture.detectChanges();
+
+    const contexts = media.play.mock.contexts;
+    expect(contexts.filter((context) => context === reel(fixture, 1)).length).toBe(1);
+    expect(contexts).toContain(reel(fixture, 2));
+    expect(TestBed.inject(FeedSound).on()).toBe(false);
+  });
+
   it('keeps the sound on when play is merely interrupted', async () => {
     const fixture = await setup();
     fixture.componentInstance.toggleSound();
