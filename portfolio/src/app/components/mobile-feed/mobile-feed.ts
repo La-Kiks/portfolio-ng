@@ -90,8 +90,11 @@ export class MobileFeed {
     source: this.activeIndex,
     computation: () => null,
   });
-  /** True once the intro screen is less than half visible. */
-  readonly pastIntro = signal(false);
+  /** The sound button only makes sense where a reel is playing. */
+  readonly onProjectScreen = computed(() => {
+    const index = this.activeIndex();
+    return !this.loadError() && index >= 1 && index <= this.projects().length;
+  });
 
   readonly sound = inject(FeedSound);
 
@@ -146,7 +149,6 @@ export class MobileFeed {
           behavior: 'auto',
         });
         this.activeIndex.set(index);
-        this.pastIntro.set(true);
       }
     });
     inject(DestroyRef).onDestroy(() => {
@@ -163,6 +165,19 @@ export class MobileFeed {
   reelPreload(screen: number): 'metadata' | 'none' {
     const active = this.activeIndex();
     return screen === active || screen === active + 1 ? 'metadata' : 'none';
+  }
+
+  /** Applied inside the tap itself: browsers only accept unmuting from a user gesture. */
+  toggleSound(): void {
+    const active = this.activeReel();
+    if (this.sound.on() && active?.muted) {
+      // Sound is wanted but the autoplay fallback silenced this reel: the tap unlocks it.
+      this.disarmGesture?.();
+      this.setMuted(active, false);
+      return;
+    }
+    this.sound.toggle();
+    this.applySound();
   }
 
   /** Native mute (or volume at zero) on the active reel is the user's sound choice. */
@@ -258,9 +273,6 @@ export class MobileFeed {
     for (const entry of entries) {
       const index = Number((entry.target as HTMLElement).dataset['screen']);
       const visible = entry.intersectionRatio >= 0.5;
-      if (index === 0) {
-        this.pastIntro.set(!visible);
-      }
       if (visible) {
         this.activeIndex.set(index);
       }

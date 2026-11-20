@@ -52,9 +52,12 @@
     </section>
 </main>
 
-<a routerLink="/about" class="about-fab" [class.visible]="pastIntro()" aria-label="À propos">
-    <i class="fa-solid fa-user" aria-hidden="true"></i>
-</a>
+<!-- Sound shortcut for every reel; mirrors the native mute through FeedSound -->
+<button type="button" class="sound-toggle" [class.visible]="onProjectScreen()" aria-label="Son"
+    [attr.aria-pressed]="sound.on()" (click)="toggleSound()">
+    <i class="fa-solid" [class.fa-volume-high]="sound.on()" [class.fa-volume-xmark]="!sound.on()"
+        aria-hidden="true"></i>
+</button>
 
 <div class="indicator" aria-hidden="true">
     @for (i of dots(); track i) {

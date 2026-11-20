@@ -156,7 +156,8 @@
   cursor: pointer;
 }
 
-.about-fab {
+/* Top-right over the frame; 2.75rem keeps the tap target at 44px */
+.sound-toggle {
   position: fixed;
   top: 1rem;
   right: 1rem;
@@ -168,8 +169,11 @@
   height: 2.75rem;
   border: 2px solid var(--color-ink);
   border-radius: 50%;
+  padding: 0;
   background-color: var(--color-ink);
   color: var(--color-accent);
+  font-size: 1rem;
+  cursor: pointer;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -178,7 +182,16 @@
     visibility 200ms;
 }
 
-.about-fab.visible {
+.sound-toggle[aria-pressed='false'] {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.sound-toggle:focus-visible {
+  outline-color: var(--color-accent);
+}
+
+.sound-toggle.visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -213,7 +226,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-fab,
+  .sound-toggle,
   .indicator span {
     transition: none;
   }

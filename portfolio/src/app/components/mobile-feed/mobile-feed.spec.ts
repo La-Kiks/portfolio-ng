@@ -122,17 +122,75 @@ describe('MobileFeed', () => {
     expect(rows[1].getAttribute('rel')).toBe('noopener noreferrer');
   });
 
-  it('shows the About button only once the intro leaves the screen', async () => {
+  function soundToggle(fixture: { nativeElement: HTMLElement }): HTMLButtonElement {
+    return el(fixture).querySelector('.sound-toggle') as HTMLButtonElement;
+  }
+
+  it('has no floating About button', async () => {
     const fixture = await setup();
-    const fab = (): HTMLElement => el(fixture).querySelector('.about-fab') as HTMLElement;
-    expect(fab().getAttribute('href')).toBe('/about');
-    expect(fab().classList).not.toContain('visible');
+    expect(el(fixture).querySelector('.about-fab')).toBeNull();
+  });
 
-    report(fixture, 0, 0);
-    expect(fab().classList).toContain('visible');
+  it('shows the sound button only on project screens', async () => {
+    const fixture = await setup();
+    expect(el(fixture).querySelectorAll('.sound-toggle').length).toBe(1);
+    expect(soundToggle(fixture).classList).not.toContain('visible');
 
-    report(fixture, 0, 1);
-    expect(fab().classList).not.toContain('visible');
+    report(fixture, 1, 1);
+    expect(soundToggle(fixture).classList).toContain('visible');
+
+    report(fixture, 3, 1);
+    expect(soundToggle(fixture).classList).not.toContain('visible');
+  });
+
+  it('sound button toggles the sound of every reel', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const button = soundToggle(fixture);
+    expect(button.getAttribute('type')).toBe('button');
+    expect(button.getAttribute('aria-label')).toBe('Son');
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(button.querySelector('i')?.classList).toContain('fa-volume-high');
+
+    button.click();
+    fixture.detectChanges();
+    expect(TestBed.inject(FeedSound).on()).toBe(false);
+    expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(button.querySelector('i')?.classList).toContain('fa-volume-xmark');
+    for (const video of Array.from(el(fixture).querySelectorAll('video'))) {
+      expect(video.muted).toBe(true);
+    }
+
+    button.click();
+    fixture.detectChanges();
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    for (const video of Array.from(el(fixture).querySelectorAll('video'))) {
+      expect(video.muted).toBe(false);
+    }
+  });
+
+  it('sound button unlocks a reel the autoplay fallback muted', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+    soundToggle(fixture).click();
+    fixture.detectChanges();
+    expect(reel(fixture, 1).muted).toBe(false);
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+    expect(soundToggle(fixture).getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('sound button follows the native mute', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+
+    reel(fixture, 1).muted = true;
+    fixture.detectChanges();
+    expect(soundToggle(fixture).getAttribute('aria-pressed')).toBe('false');
+
+    reel(fixture, 1).muted = false;
+    fixture.detectChanges();
+    expect(soundToggle(fixture).getAttribute('aria-pressed')).toBe('true');
   });
 
   it('highlights the indicator dot of the screen in view', async () => {
@@ -147,11 +205,7 @@ describe('MobileFeed', () => {
 
   it('uses the visibility ratio, not mere intersection', async () => {
     const fixture = await setup();
-    const fab = (): HTMLElement => el(fixture).querySelector('.about-fab') as HTMLElement;
     const dots = (): NodeListOf<HTMLElement> => el(fixture).querySelectorAll('.indicator span');
-
-    report(fixture, 0, 0.3, true);
-    expect(fab().classList).toContain('visible');
 
     report(fixture, 1, 0.3, true);
     expect(dots()[1].classList).not.toContain('active');
@@ -240,14 +294,14 @@ describe('MobileFeed', () => {
     expect(reel(fixture, 3).getAttribute('preload')).toBe('none');
   });
 
-  it('reels have native controls and no custom buttons', async () => {
+  it('reels have native controls and no per-reel buttons', async () => {
     const fixture = await setup();
     const videos = Array.from(el(fixture).querySelectorAll('.feed video'));
     expect(videos.length).toBe(2);
     for (const video of videos) {
       expect(video.hasAttribute('controls')).toBe(true);
     }
-    expect(el(fixture).querySelector('.sound-toggle')).toBeNull();
+    expect(el(fixture).querySelector('.screen-frame button')).toBeNull();
     expect(el(fixture).querySelector('.reel-play-toggle')).toBeNull();
   });
 
@@ -458,7 +512,6 @@ describe('MobileFeed', () => {
       const fixture = await setup(of(PROJECTS), 2);
       expect(scrollTo).toHaveBeenCalledWith({ top: 200, behavior: 'auto' });
       expect(fixture.componentInstance.activeIndex()).toBe(2);
-      expect(fixture.componentInstance.pastIntro()).toBe(true);
     } finally {
       offsetTop.mockRestore();
       delete (HTMLElement.prototype as { scrollTo?: unknown }).scrollTo;
