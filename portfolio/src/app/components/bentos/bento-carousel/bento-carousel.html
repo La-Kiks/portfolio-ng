@@ -25,8 +25,16 @@
     <!-- Mouse shortcut only: the "Voir le projet" link below is the accessible route -->
     <a [routerLink]="project.route" class="carousel-media bento-frame" tabindex="-1" aria-hidden="true"
         (mouseenter)="playPreview()" (mouseleave)="stopPreview()">
-        <video #preview [muted]="true" loop playsinline preload="none" [poster]="project.poster"
-            [src]="project.video" class="carousel-video"></video>
+        <!-- Static priority per NgOptimizedImage instance: slide 0 is the LCP candidate -->
+        @if (currentIndex() === 0) {
+        <img [ngSrc]="project.poster" fill alt="" priority class="carousel-poster object-cover" />
+        } @else {
+        <img [ngSrc]="project.poster" fill alt="" class="carousel-poster object-cover" />
+        }
+        <!-- Stays transparent until frames arrive, so the poster shows instead of a black box -->
+        <video #preview [muted]="true" loop playsinline preload="none" [src]="project.video"
+            class="carousel-video" [class.playing]="previewPlaying()"
+            (playing)="previewPlaying.set(true)"></video>
         <span class="carousel-play-hint" aria-hidden="true">
             <i class="fa-solid fa-play"></i>
         </span>

@@ -8,6 +8,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Project, ProjectService } from '../../../services/projects/project';
 
@@ -22,7 +23,7 @@ export interface CarouselProject {
 
 @Component({
   selector: 'app-bento-carousel',
-  imports: [RouterLink],
+  imports: [NgOptimizedImage, RouterLink],
   templateUrl: './bento-carousel.html',
   styleUrl: './bento-carousel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +35,8 @@ export class BentoCarousel implements OnInit {
   readonly currentIndex = signal(0);
   readonly isLoading = signal(true);
   readonly hasError = signal(false);
+  /** True once the hover loop renders frames; until then the poster image shows through. */
+  readonly previewPlaying = signal(false);
 
   private readonly preview = viewChild<ElementRef<HTMLVideoElement>>('preview');
 
@@ -104,6 +107,7 @@ export class BentoCarousel implements OnInit {
   stopPreview(): void {
     const video = this.preview()?.nativeElement;
     if (!video) return;
+    this.previewPlaying.set(false);
     video.pause();
     video.currentTime = 0;
   }

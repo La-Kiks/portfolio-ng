@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { vi } from 'vitest';
 import { Landing } from './landing';
+import { makeProject } from '../../../testing/project-fixture';
 
 let changeListeners: ((event: { matches: boolean }) => void)[] = [];
 let removeListener = vi.fn();
@@ -50,6 +51,7 @@ describe('Landing', () => {
   });
 
   afterEach(() => {
+    TestBed.resetTestingModule();
     vi.useRealTimers();
     vi.unstubAllGlobals();
   });
@@ -76,14 +78,15 @@ describe('Landing', () => {
     expect(second.componentInstance.entering()).toBe(false);
   });
 
-  /** Mark the hero images complete and fire a load event (jsdom never loads images). */
-  function loadHeroImages(fixture: { nativeElement: HTMLElement }): void {
+  /**
+   * Serve the projects so the real carousel renders its poster <img>, then mark the hero
+   * images complete and fire a load event (jsdom never loads images).
+   */
+  function loadHeroImages(fixture: { nativeElement: HTMLElement; detectChanges(): void }): void {
+    TestBed.inject(HttpTestingController).expectOne('files/projects.json').flush([makeProject()]);
+    fixture.detectChanges();
     const host = fixture.nativeElement;
-    let carouselImg = host.querySelector<HTMLImageElement>('.grid-carousel img');
-    if (!carouselImg) {
-      carouselImg = document.createElement('img');
-      host.querySelector('.grid-carousel')!.appendChild(carouselImg);
-    }
+    const carouselImg = host.querySelector<HTMLImageElement>('.grid-carousel img')!;
     const profileImg = host.querySelector<HTMLImageElement>('.grid-profile img')!;
     for (const img of [profileImg, carouselImg]) {
       Object.defineProperty(img, 'complete', { configurable: true, value: true });
@@ -102,6 +105,16 @@ describe('Landing', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.ready()).toBe(true);
     expect(root(fixture).classList).toContain('ready');
+  });
+
+  it('waits on the carousel poster image the real carousel renders', () => {
+    stubViewport(1280);
+    const fixture = TestBed.createComponent(Landing);
+    fixture.detectChanges();
+    TestBed.inject(HttpTestingController).expectOne('files/projects.json').flush([makeProject()]);
+    fixture.detectChanges();
+    const poster = fixture.nativeElement.querySelector('.grid-carousel img');
+    expect(poster?.getAttribute('src')).toBe(makeProject().video.posterLandscape);
   });
 
   it('starts anyway after 1200ms if the hero images are slow', () => {

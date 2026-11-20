@@ -5,12 +5,29 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BentoCarousel } from './bento-carousel';
 import { makeProject } from '../../../../testing/project-fixture';
+import { Project } from '../../../services/projects/project';
 import { stubMatchMedia, stubMedia } from '../../../../testing/media-stubs';
 
+/** Distinct media per slide so wrong slide wiring is detectable. */
+function slide(id: string, slug: string, title: string, description: string): Project {
+  const base = makeProject();
+  return makeProject({
+    id,
+    slug,
+    title,
+    description,
+    video: {
+      ...base.video,
+      landscapeLoop: `videos/${slug}/landscape-loop.mp4`,
+      posterLandscape: `videos/${slug}/landscape.webp`,
+    },
+  });
+}
+
 const PROJECTS = [
-  makeProject({ id: '1', slug: 'one', title: 'One', description: 'First', images: ['/img/1.webp'] }),
-  makeProject({ id: '2', slug: 'two', title: 'Two', description: 'Second', images: ['/img/2.webp'] }),
-  makeProject({ id: '3', slug: 'three', title: 'Three', description: 'Third', images: ['/img/3.webp'] }),
+  slide('1', 'one', 'One', 'First'),
+  slide('2', 'two', 'Two', 'Second'),
+  slide('3', 'three', 'Three', 'Third'),
 ];
 
 describe('BentoCarousel', () => {
@@ -35,6 +52,7 @@ describe('BentoCarousel', () => {
   });
 
   afterEach(() => {
+    TestBed.resetTestingModule();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
@@ -83,8 +101,23 @@ describe('BentoCarousel', () => {
     component.goToSlide(2);
     expect(() => fixture.detectChanges()).not.toThrow();
     const video: HTMLVideoElement = fixture.nativeElement.querySelector('video');
-    expect(video.getAttribute('poster')).toBe('videos/demo/landscape.webp');
+    const poster: HTMLImageElement = fixture.nativeElement.querySelector('.carousel-media img');
+    expect(video.getAttribute('src')).toBe('videos/three/landscape-loop.mp4');
+    expect(poster.getAttribute('src')).toBe('videos/three/landscape.webp');
     expect(component.currentProject()?.title).toBe('Three');
+  });
+
+  it('renders the poster as an image under the video, high priority on slide 0 only', () => {
+    flushProjects();
+    const poster = (): HTMLImageElement => fixture.nativeElement.querySelector('.carousel-media img');
+    expect(poster().getAttribute('src')).toBe('videos/one/landscape.webp');
+    expect(poster().getAttribute('fetchpriority')).toBe('high');
+    expect(fixture.nativeElement.querySelector('video').hasAttribute('poster')).toBe(false);
+
+    component.goToSlide(1);
+    fixture.detectChanges();
+    expect(poster().getAttribute('src')).toBe('videos/two/landscape.webp');
+    expect(poster().getAttribute('fetchpriority')).not.toBe('high');
   });
 
   it('shows a visible error message when loading fails', () => {
@@ -120,9 +153,24 @@ describe('BentoCarousel', () => {
       flushProjects();
       media$().dispatchEvent(new Event('mouseenter'));
       expect(media.play).toHaveBeenCalledTimes(1);
-      expect(video().getAttribute('src')).toMatch(/landscape-loop\.mp4$/);
+      expect(video().getAttribute('src')).toBe('videos/one/landscape-loop.mp4');
       expect(video().muted).toBe(true);
-      expect(video().getAttribute('poster')).toMatch(/landscape\.webp$/);
+    });
+
+    it('reveals the video only once it is playing, and hides it again on stop', () => {
+      flushProjects();
+      expect(video().classList).not.toContain('playing');
+      media$().dispatchEvent(new Event('mouseenter'));
+      fixture.detectChanges();
+      expect(video().classList).not.toContain('playing');
+
+      video().dispatchEvent(new Event('playing'));
+      fixture.detectChanges();
+      expect(video().classList).toContain('playing');
+
+      media$().dispatchEvent(new Event('mouseleave'));
+      fixture.detectChanges();
+      expect(video().classList).not.toContain('playing');
     });
 
     it('pauses and rewinds on mouseleave', () => {
