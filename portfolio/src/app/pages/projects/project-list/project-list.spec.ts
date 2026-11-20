@@ -39,24 +39,17 @@ function setup(projects$: Observable<Project[]> = of(PROJECTS)) {
 }
 
 describe('ProjectList', () => {
-  it('renders one linked card per project with an image', () => {
+  it('renders one linked card per project', () => {
     const fixture = setup();
     const cards = fixture.nativeElement.querySelectorAll('a.project-card');
-    expect(cards.length).toBe(2);
+    expect(cards.length).toBe(3);
     expect(cards[0].getAttribute('href')).toBe('/projects/alpha');
     expect(cards[1].getAttribute('href')).toBe('/projects/beta');
-    expect(fixture.nativeElement.textContent).not.toContain('Gamma');
+    expect(cards[2].getAttribute('href')).toBe('/projects/gamma');
   });
 
-  it('prefers the wide image and falls back to the first one', () => {
-    const fixture = setup();
-    const images = fixture.nativeElement.querySelectorAll('a.project-card img');
-    expect(images[0].getAttribute('src')).toContain('a-wide.webp');
-    expect(images[1].getAttribute('src')).toContain('b.webp');
-  });
-
-  it('gives the card beside the wide first card its square image', () => {
-    const twoImages = (id: string): Project =>
+  it("uses each project's landscape poster as card image", () => {
+    const withPoster = (id: string): Project =>
       makeProject({
         id,
         slug: id,
@@ -64,11 +57,10 @@ describe('ProjectList', () => {
         description: id,
         images: [`images/${id}-square.webp`, `images/${id}-wide.webp`],
       });
-    const fixture = setup(of([twoImages('a'), twoImages('b'), twoImages('c')]));
+    const fixture = setup(of([withPoster('a'), withPoster('b')]));
     const images = fixture.nativeElement.querySelectorAll('a.project-card img');
-    expect(images[0].getAttribute('src')).toContain('a-wide.webp');
-    expect(images[1].getAttribute('src')).toContain('b-square.webp');
-    expect(images[2].getAttribute('src')).toContain('c-wide.webp');
+    expect(images[0].getAttribute('src')).toMatch(/landscape\.webp$/);
+    expect(images[1].getAttribute('src')).toMatch(/landscape\.webp$/);
   });
 
   it('shows at most three stack tags', () => {

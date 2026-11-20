@@ -8,11 +8,6 @@ import { ProjectService } from '../../../services/projects/project';
 
 const MAX_TAGS = 3;
 
-/** The card beside the wide first card is almost square, so a wide image would crop badly. */
-function cardImage(images: string[], index: number): string {
-  return index === 1 ? images[0] : (images[1] ?? images[0]);
-}
-
 interface ProjectCard {
   slug: string;
   title: string;
@@ -49,15 +44,13 @@ export class ProjectList {
       .getAllProjects()
       .pipe(
         map((projects): ProjectCard[] =>
-          projects
-            .filter((project) => project.images.length > 0)
-            .map((project, index) => ({
-              slug: project.slug,
-              title: project.title,
-              description: project.description,
-              image: cardImage(project.images, index),
-              tags: (project.stack ?? []).slice(0, MAX_TAGS),
-            })),
+          projects.map((project) => ({
+            slug: project.slug,
+            title: project.title,
+            description: project.description,
+            image: project.video.posterLandscape,
+            tags: (project.stack ?? []).slice(0, MAX_TAGS),
+          })),
         ),
         catchError(() => {
           this.loadError.set(true);
