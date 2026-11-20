@@ -50,7 +50,8 @@
   cursor: pointer;
 }
 
-.reel-play-hint {
+/* Play icon while paused; fades out during playback but stays focusable (and shows on focus) */
+.reel-play-toggle {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -59,18 +60,24 @@
   justify-content: center;
   width: 3.5rem;
   height: 3.5rem;
-  padding-left: 0.1875rem;
+  padding: 0 0 0 0.1875rem;
+  border: none;
   border-radius: 50%;
   background-color: var(--color-ink);
   color: var(--color-surface);
   font-size: 1.25rem;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  cursor: pointer;
   transition: opacity 200ms ease;
 }
 
-.reel-play-hint.off {
+.reel-play-toggle.off {
   opacity: 0;
+}
+
+.reel-play-toggle:focus-visible {
+  opacity: 1;
+  outline-color: var(--color-accent);
 }
 
 /* Top-right of the frame, below the fixed .about-fab that shares that corner */
@@ -263,7 +270,7 @@
 @media (prefers-reduced-motion: reduce) {
   .about-fab,
   .indicator span,
-  .reel-play-hint {
+  .reel-play-toggle {
     transition: none;
   }
 }

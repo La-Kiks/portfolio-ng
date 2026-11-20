@@ -247,7 +247,7 @@ describe('MobileFeed', () => {
     const fixture = await setup();
     const button = el(fixture).querySelector('.sound-toggle') as HTMLButtonElement;
     expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(button.getAttribute('aria-label')).toBe('Activer le son');
+    expect(button.getAttribute('aria-label')).toBe('Son');
     expect(button.querySelector('i')?.classList).toContain('fa-volume-xmark');
 
     button.click();
@@ -257,7 +257,7 @@ describe('MobileFeed', () => {
     }
     for (const toggle of Array.from(el(fixture).querySelectorAll('.sound-toggle'))) {
       expect(toggle.getAttribute('aria-pressed')).toBe('true');
-      expect(toggle.getAttribute('aria-label')).toBe('Couper le son');
+      expect(toggle.getAttribute('aria-label')).toBe('Son');
     }
     expect(button.querySelector('i')?.classList).toContain('fa-volume-high');
   });
@@ -358,19 +358,43 @@ describe('MobileFeed', () => {
     expect(video.paused).toBe(true);
   });
 
-  it('shows a play hint while the reel is paused', async () => {
+  it('play/pause button toggles the reel and names the next action', async () => {
+    const paused = new WeakMap<HTMLMediaElement, boolean>();
+    vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(function (
+      this: HTMLMediaElement,
+    ) {
+      return paused.get(this) ?? true;
+    });
+    media.play.mockImplementation(function (this: HTMLMediaElement) {
+      paused.set(this, false);
+      this.dispatchEvent(new Event('play'));
+      return Promise.resolve();
+    });
+    media.pause.mockImplementation(function (this: HTMLMediaElement) {
+      paused.set(this, true);
+      this.dispatchEvent(new Event('pause'));
+    });
+    stubReducedMotion(true);
     const fixture = await setup();
-    const hint = (): Element | null =>
-      el(fixture).querySelector('[data-screen="1"] .reel-play-hint');
-    expect(hint()?.classList).not.toContain('off');
+    report(fixture, 1, 1);
+    const button = (): HTMLButtonElement =>
+      el(fixture).querySelector('[data-screen="1"] .reel-play-toggle') as HTMLButtonElement;
+    expect(button().tagName).toBe('BUTTON');
+    expect(button().getAttribute('type')).toBe('button');
+    expect(button().getAttribute('aria-label')).toBe('Lire la vidéo');
+    expect(button().classList).not.toContain('off');
 
-    reel(fixture, 1).dispatchEvent(new Event('play'));
+    button().click();
     fixture.detectChanges();
-    expect(hint()?.classList).toContain('off');
+    expect(reel(fixture, 1).paused).toBe(false);
+    expect(button().getAttribute('aria-label')).toBe('Mettre en pause');
+    expect(button().classList).toContain('off');
 
-    reel(fixture, 1).dispatchEvent(new Event('pause'));
+    button().click();
     fixture.detectChanges();
-    expect(hint()?.classList).not.toContain('off');
+    expect(reel(fixture, 1).paused).toBe(true);
+    expect(button().getAttribute('aria-label')).toBe('Lire la vidéo');
+    expect(button().classList).not.toContain('off');
   });
 
   it('pauses every reel when leaving the feed', async () => {
