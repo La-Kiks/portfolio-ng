@@ -2,7 +2,7 @@
 <app-project-loader (loadingComplete)="onProjectLoaderComplete()"></app-project-loader>
 }
 
-<div class="bg-page min-h-screen p-4 md:p-6">
+<div class="bg-page min-h-screen px-4 py-4 md:px-6 md:py-6">
     @if (projectState$ | async; as state) {
 
         <!-- Loading State -->
@@ -20,128 +20,114 @@
         }
 
         <!-- Project Content -->
-        @if (state.project && !state.isLoading) {
-        <div class="mx-auto" style="max-width: 1440px;">
+        @if (state.project; as project) {
+        <main class="detail-layout">
 
-            <!-- Back Button -->
-            <a routerLink="/" class="text-ink font-medium hover:underline mb-6 md:text-xl cursor-pointer inline-block">← Retour à l'accueil</a>
+            <a routerLink="/" class="detail-back">← Retour à l'accueil</a>
 
-            <!-- Project Hero -->
-            <div class="bento-frame mb-8">
-                <img [src]="state.project.images[1]" [alt]="state.project.title" class="w-full h-96 object-cover" />
-            </div>
-
-            <!-- Project Info -->
-            <div class="mb-8">
-                <div class="bento-card-ink p-6 md:p-8 mb-6">
-                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-                        {{ state.project.title }}
-                    </h1>
-
-                    <p class="text-lg text-surface">
-                        {{ state.project.description }}
-                    </p>
+            <!-- Title card: links sit top-right on desktop, under the text on mobile -->
+            <header class="detail-header bento-card-ink">
+                <div class="detail-intro">
+                    <h1 class="detail-title">{{ project.title }}</h1>
+                    <p class="detail-description">{{ project.description }}</p>
                 </div>
 
-                <!-- Context Section -->
-                @if (state.project.context) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Contexte</h3>
-                    <p class="text-ink-soft leading-relaxed">
-                        {{ state.project.context }}
-                    </p>
-                </div>
-                }
-
-                <!-- Objectives Section -->
-                @if (state.project.objectives) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Objectifs</h3>
-                    <p class="text-ink-soft leading-relaxed">
-                        {{ state.project.objectives }}
-                    </p>
-                </div>
-                }
-
-                <!-- Technologies Stack -->
-                @if (state.project.stack && state.project.stack.length > 0) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Stack Technique</h3>
-                    <div class="flex flex-wrap gap-2">
-                        @for (tech of state.project.stack; track tech) {
-                        <span class="bg-accent-pale border-2 border-ink px-4 py-2 rounded-lg text-sm font-medium">
-                            {{ tech }}
-                        </span>
-                        }
-                    </div>
-                </div>
-                }
-
-                <!-- Skills Developed -->
-                @if (state.project.skills && state.project.skills.length > 0) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Compétences Développées</h3>
-                    <ul class="list-disc list-inside text-ink-soft space-y-2">
-                        @for (skill of state.project.skills; track skill) {
-                        <li>{{ skill }}</li>
-                        }
-                    </ul>
-                </div>
-                }
-
-                <!-- Results Section -->
-                @if (state.project.results) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Résultats et Impact</h3>
-                    <p class="text-ink-soft leading-relaxed">
-                        {{ state.project.results }}
-                    </p>
-                </div>
-                }
-
-                <!-- Improvements Section -->
-                @if (state.project.improvements && state.project.improvements.length > 0) {
-                <div class="bento-card mb-6 p-6">
-                    <h3 class="text-xl font-semibold mb-3">Perspectives d'Amélioration</h3>
-                    <ul class="list-disc list-inside text-ink-soft space-y-2">
-                        @for (improvement of state.project.improvements; track improvement) {
-                        <li>{{ improvement }}</li>
-                        }
-                    </ul>
-                </div>
-                }
-
-                <div class="flex flex-wrap gap-4">
-                    <!-- Project Link -->
-                    @if (state.project.link) {
-                    <a [href]="state.project.link" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                @if (project.link || project.github) {
+                <div class="detail-actions">
+                    @if (project.link) {
+                    <a [href]="project.link" target="_blank" rel="noopener noreferrer" class="btn-secondary">
                         Voir le projet <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
                     </a>
                     }
-
-                    <!-- Github Link -->
-                    @if (state.project.github) {
-                    <a [href]="state.project.github" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                    @if (project.github) {
+                    <a [href]="project.github" target="_blank" rel="noopener noreferrer"
+                        class="btn-primary detail-btn-outline">
                         Voir le code <i class="fa-solid fa-arrow-right -rotate-45" aria-hidden="true"></i>
                     </a>
                     }
                 </div>
+                }
+            </header>
+
+            <!-- Video hero: vertical cut on mobile, landscape elsewhere -->
+            <div class="detail-video bento-frame" [class.detail-video-vertical]="isMobile()">
+                <video [src]="isMobile() ? project.video.vertical : project.video.landscape"
+                    [poster]="isMobile() ? project.video.posterVertical : project.video.posterLandscape"
+                    controls playsinline preload="metadata"
+                    [attr.aria-label]="'Vidéo de présentation — ' + project.title"></video>
             </div>
 
-            <!-- Additional Images Gallery -->
-            @if (state.project.images.length > 1) {
-            <div class="mb-8">
-                <h3 class="text-xl font-semibold text-ink mb-4">Galerie du Projet</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @for (image of state.project.images.slice(1); track image) {
-                    <div class="bento-frame">
-                        <img [src]="image" [alt]="state.project.title" class="w-full object-cover h-64" />
-                    </div>
+            <!-- Details: two columns from md -->
+            <div class="detail-grid">
+                <div class="detail-column">
+                    @if (project.context) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Contexte</h2>
+                        <p class="detail-text">{{ project.context }}</p>
+                    </section>
+                    }
+                    @if (project.objectives) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Objectifs</h2>
+                        <p class="detail-text">{{ project.objectives }}</p>
+                    </section>
+                    }
+                    @if (project.results) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Résultats</h2>
+                        <p class="detail-text">{{ project.results }}</p>
+                    </section>
+                    }
+                </div>
+
+                <div class="detail-column">
+                    @if (project.stack?.length) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Stack technique</h2>
+                        <ul class="detail-chips">
+                            @for (tech of project.stack; track tech) {
+                            <li class="detail-chip">{{ tech }}</li>
+                            }
+                        </ul>
+                    </section>
+                    }
+                    @if (project.skills?.length) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Compétences</h2>
+                        <ul class="detail-list">
+                            @for (skill of project.skills; track skill) {
+                            <li>{{ skill }}</li>
+                            }
+                        </ul>
+                    </section>
+                    }
+                    @if (project.improvements?.length) {
+                    <section class="detail-card bento-card">
+                        <h2 class="detail-card-title">Pistes d'amélioration</h2>
+                        <ul class="detail-list">
+                            @for (improvement of project.improvements; track improvement) {
+                            <li>{{ improvement }}</li>
+                            }
+                        </ul>
+                    </section>
                     }
                 </div>
             </div>
+
+            <!-- Gallery -->
+            @if (state.gallery.length > 0) {
+            <section class="detail-gallery">
+                <h2 class="detail-gallery-title">Galerie</h2>
+                <div class="detail-gallery-grid">
+                    @for (image of state.gallery; track image.src) {
+                    <a [href]="image.src" target="_blank" rel="noopener" class="detail-capture bento-frame">
+                        <img [ngSrc]="image.src" fill [alt]="image.alt" class="object-cover" />
+                    </a>
+                    }
+                </div>
+            </section>
             }
-        </div>
+        </main>
         }
     }
 </div>
