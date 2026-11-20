@@ -92,8 +92,6 @@ export class MobileFeed {
   });
   /** True once the intro screen is less than half visible. */
   readonly pastIntro = signal(false);
-  /** Screen whose reel is currently playing, if any. */
-  readonly playingScreen = signal<number | null>(null);
 
   readonly sound = inject(FeedSound);
 
@@ -105,6 +103,10 @@ export class MobileFeed {
   private readonly autoplay = isAutoplayAllowed();
   private readonly position = inject(FeedPosition);
   private observer?: IntersectionObserver;
+  /** Reels muted by the autoplay fallback: their next volumechange is not the user's doing. */
+  private readonly fallbackMuted = new WeakSet<HTMLVideoElement>();
+  /** Removes the one-shot "unmute on first gesture" listeners, while they are armed. */
+  private disarmGesture?: () => void;
 
   constructor() {
     // Re-observe whenever the set of screens changes (projects arrive after the first render).
@@ -146,6 +148,7 @@ export class MobileFeed {
     });
     inject(DestroyRef).onDestroy(() => {
       this.observer?.disconnect();
+      this.disarmGesture?.();
       this.position.index = this.activeIndex();
       for (const reel of this.reels()) {
         reel.nativeElement.pause();
@@ -159,27 +162,11 @@ export class MobileFeed {
     return screen === active || screen === active + 1 ? 'metadata' : 'none';
   }
 
-  toggleSound(): void {
-    this.sound.toggle();
-    // Apply within the tap itself: browsers only accept unmuting from a user gesture.
-    const muted = !this.sound.on();
-    for (const reel of this.reels()) {
-      reel.nativeElement.muted = muted;
-    }
-  }
-
-  togglePlayback(screen: number): void {
-    const video = this.reels()[screen - 1]?.nativeElement;
-    if (!video) return;
-    if (video.paused) {
-      this.play(video);
-    } else {
-      video.pause();
-    }
-  }
-
-  onReelPause(screen: number): void {
-    this.playingScreen.update((playing) => (playing === screen ? null : playing));
+  /** Native mute (or volume at zero) on the active reel is the user's sound choice. */
+  onVolumeChange(event: Event): void {
+    const video = event.target as HTMLVideoElement;
+    if (this.fallbackMuted.delete(video) || video !== this.activeReel()) return;
+    this.sound.set(!(video.muted || video.volume === 0));
   }
 
   toggleDescription(index: number): void {
@@ -195,19 +182,57 @@ export class MobileFeed {
     this.feed().nativeElement.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   }
 
-  /** Unmuted play() can be refused (no user gesture yet): fall back to muted playback. */
+  private activeReel(): HTMLVideoElement | undefined {
+    return this.reels()[this.activeIndex() - 1]?.nativeElement;
+  }
+
+  /**
+   * Unmuted play() is refused until the user's first tap/key (a scroll does not count):
+   * play muted meanwhile, keep the sound intent, and unmute on that first gesture.
+   */
   private play(video: HTMLVideoElement): void {
     video.play().catch((error: unknown) => {
       // Other rejections (pause() interrupting play()) just leave the poster in place.
       if (!video.muted && error instanceof DOMException && error.name === 'NotAllowedError') {
-        this.sound.mute();
+        this.fallbackMuted.add(video);
         video.muted = true;
+        this.armUnmuteOnGesture();
         // The user may have scrolled on while play() was pending: never revive a stale reel.
-        if (this.reels()[this.activeIndex() - 1]?.nativeElement === video) {
+        if (this.activeReel() === video) {
           video.play().catch(() => undefined);
         }
       }
     });
+  }
+
+  /**
+   * One-shot: the first click or key press in the feed unmutes the active reel, inside that
+   * gesture as browsers require. Bubble phase, so a tap on the native mute button has already
+   * been applied (and is not undone) by the time this runs.
+   */
+  private armUnmuteOnGesture(): void {
+    if (this.disarmGesture) return;
+    const feed = this.feed().nativeElement;
+    const onGesture = (event: Event): void => {
+      this.disarmGesture?.();
+      const video = this.activeReel();
+      if (!video || !this.sound.on()) return;
+      video.muted = false;
+      // A gesture on the reel itself belongs to its native controls (e.g. pause): don't override it.
+      if (event.target !== video) {
+        this.play(video);
+      }
+    };
+    const events = ['click', 'keydown'] as const;
+    for (const type of events) {
+      feed.addEventListener(type, onGesture);
+    }
+    this.disarmGesture = () => {
+      for (const type of events) {
+        feed.removeEventListener(type, onGesture);
+      }
+      this.disarmGesture = undefined;
+    };
   }
 
   private onIntersect(entries: IntersectionObserverEntry[]): void {

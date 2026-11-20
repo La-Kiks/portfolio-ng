@@ -228,7 +228,7 @@ describe('MobileFeed', () => {
     expect(media.play.mock.contexts).toEqual([reel(fixture, 2)]);
   });
 
-  it('videos start muted with preload none, active and next get metadata', async () => {
+  it('videos have preload none, active and next get metadata', async () => {
     const three = [
       ...PROJECTS,
       makeProject({ id: '3', slug: 'gamma', title: 'Gamma', description: 'Third' }),
@@ -238,56 +238,134 @@ describe('MobileFeed', () => {
     expect(reel(fixture, 1).getAttribute('preload')).toBe('metadata');
     expect(reel(fixture, 2).getAttribute('preload')).toBe('metadata');
     expect(reel(fixture, 3).getAttribute('preload')).toBe('none');
-    for (const screen of [1, 2, 3]) {
-      expect(reel(fixture, screen).muted).toBe(true);
-    }
   });
 
-  it('sound button unmutes every feed video', async () => {
+  it('reels have native controls and no custom buttons', async () => {
     const fixture = await setup();
-    const button = el(fixture).querySelector('.sound-toggle') as HTMLButtonElement;
-    expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(button.getAttribute('aria-label')).toBe('Son');
-    expect(button.querySelector('i')?.classList).toContain('fa-volume-xmark');
-
-    button.click();
-    fixture.detectChanges();
-    for (const video of Array.from(el(fixture).querySelectorAll('video'))) {
-      expect(video.muted).toBe(false);
+    const videos = Array.from(el(fixture).querySelectorAll('.feed video'));
+    expect(videos.length).toBe(2);
+    for (const video of videos) {
+      expect(video.hasAttribute('controls')).toBe(true);
     }
-    for (const toggle of Array.from(el(fixture).querySelectorAll('.sound-toggle'))) {
-      expect(toggle.getAttribute('aria-pressed')).toBe('true');
-      expect(toggle.getAttribute('aria-label')).toBe('Son');
-    }
-    expect(button.querySelector('i')?.classList).toContain('fa-volume-high');
+    expect(el(fixture).querySelector('.sound-toggle')).toBeNull();
+    expect(el(fixture).querySelector('.reel-play-toggle')).toBeNull();
   });
 
-  it('falls back to muted when unmuted play is rejected', async () => {
+  it('active reel plays unmuted by default', async () => {
     const fixture = await setup();
     report(fixture, 1, 1);
-    fixture.componentInstance.toggleSound();
-    fixture.detectChanges();
-    const sound = TestBed.inject(FeedSound);
-    expect(sound.on()).toBe(true);
+    expect(reel(fixture, 1).muted).toBe(false);
+    expect(media.play.mock.contexts).toContain(reel(fixture, 1));
+  });
 
-    media.play.mockClear();
+  /** Activate screen 1 with its unmuted play() refused, as before any user gesture. */
+  async function blockedAutoplay(fixture: Awaited<ReturnType<typeof setup>>): Promise<void> {
     media.play.mockRejectedValueOnce(new DOMException('', 'NotAllowedError'));
-    report(fixture, 2, 1);
+    report(fixture, 1, 1);
     await flushPromises();
     fixture.detectChanges();
+  }
 
-    const video = reel(fixture, 2);
+  it('blocked unmuted autoplay plays muted but keeps the intent', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+
+    const video = reel(fixture, 1);
     expect(video.muted).toBe(true);
     expect(media.play.mock.contexts).toEqual([video, video]);
-    expect(sound.on()).toBe(false);
-    expect(
-      (el(fixture).querySelector('.sound-toggle') as HTMLElement).getAttribute('aria-pressed'),
-    ).toBe('false');
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+  });
+
+  it('fallback muting does not count as a user mute', async () => {
+    const fixture = await setup();
+    const video = reel(fixture, 1);
+    const changes = vi.fn();
+    video.addEventListener('volumechange', changes);
+    await blockedAutoplay(fixture);
+
+    // jsdom fires volumechange on the fallback's own `muted = true`.
+    expect(changes).toHaveBeenCalledTimes(1);
+    expect(video.muted).toBe(true);
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+  });
+
+  it('first tap in the feed unmutes the active reel', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+    const video = reel(fixture, 1);
+    const feed = el(fixture).querySelector('.feed') as HTMLElement;
+
+    feed.click();
+    expect(video.muted).toBe(false);
+
+    // One-shot: a later tap leaves the reel alone.
+    video.muted = true;
+    media.play.mockClear();
+    feed.click();
+    expect(video.muted).toBe(true);
+    expect(media.play).not.toHaveBeenCalled();
+  });
+
+  it('a key press also unmutes the active reel', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+    const feed = el(fixture).querySelector('.feed') as HTMLElement;
+
+    feed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+    expect(reel(fixture, 1).muted).toBe(false);
+  });
+
+  it('tapping after the user muted keeps the reel muted', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+    TestBed.inject(FeedSound).set(false);
+    fixture.detectChanges();
+
+    (el(fixture).querySelector('.feed') as HTMLElement).click();
+    expect(reel(fixture, 1).muted).toBe(true);
+  });
+
+  it('user mute is remembered', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const video = reel(fixture, 1);
+
+    video.muted = true;
+    video.dispatchEvent(new Event('volumechange'));
+    fixture.detectChanges();
+    expect(TestBed.inject(FeedSound).on()).toBe(false);
+
+    report(fixture, 2, 1);
+    expect(reel(fixture, 2).muted).toBe(true);
+  });
+
+  it('volume at zero counts as a mute', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const video = reel(fixture, 1);
+
+    video.volume = 0;
+    video.dispatchEvent(new Event('volumechange'));
+    expect(TestBed.inject(FeedSound).on()).toBe(false);
+  });
+
+  it('user unmute restores sound', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const video = reel(fixture, 1);
+    video.muted = true;
+    video.dispatchEvent(new Event('volumechange'));
+    fixture.detectChanges();
+
+    video.muted = false;
+    video.dispatchEvent(new Event('volumechange'));
+    fixture.detectChanges();
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+    expect(reel(fixture, 2).muted).toBe(false);
   });
 
   it('does not replay a reel whose unmuted play is rejected after scrolling on', async () => {
     const fixture = await setup();
-    fixture.componentInstance.toggleSound();
     media.play.mockRejectedValueOnce(new DOMException('', 'NotAllowedError'));
     report(fixture, 1, 1);
     report(fixture, 2, 1);
@@ -297,12 +375,11 @@ describe('MobileFeed', () => {
     const contexts = media.play.mock.contexts;
     expect(contexts.filter((context) => context === reel(fixture, 1)).length).toBe(1);
     expect(contexts).toContain(reel(fixture, 2));
-    expect(TestBed.inject(FeedSound).on()).toBe(false);
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
   });
 
-  it('keeps the sound on when play is merely interrupted', async () => {
+  it('stays unmuted when play is merely interrupted', async () => {
     const fixture = await setup();
-    fixture.componentInstance.toggleSound();
     media.play.mockRejectedValueOnce(new DOMException('', 'AbortError'));
     report(fixture, 1, 1);
     await flushPromises();
@@ -329,72 +406,6 @@ describe('MobileFeed', () => {
     } finally {
       delete (navigator as { connection?: unknown }).connection;
     }
-  });
-
-  it('tapping the video toggles play/pause', async () => {
-    const paused = new WeakMap<HTMLMediaElement, boolean>();
-    vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(function (
-      this: HTMLMediaElement,
-    ) {
-      return paused.get(this) ?? true;
-    });
-    media.play.mockImplementation(function (this: HTMLMediaElement) {
-      paused.set(this, false);
-      return Promise.resolve();
-    });
-    media.pause.mockImplementation(function (this: HTMLMediaElement) {
-      paused.set(this, true);
-    });
-    stubReducedMotion(true);
-    const fixture = await setup();
-    report(fixture, 1, 1);
-    const video = reel(fixture, 1);
-    expect(video.paused).toBe(true);
-
-    video.click();
-    expect(video.paused).toBe(false);
-
-    video.click();
-    expect(video.paused).toBe(true);
-  });
-
-  it('play/pause button toggles the reel and names the next action', async () => {
-    const paused = new WeakMap<HTMLMediaElement, boolean>();
-    vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(function (
-      this: HTMLMediaElement,
-    ) {
-      return paused.get(this) ?? true;
-    });
-    media.play.mockImplementation(function (this: HTMLMediaElement) {
-      paused.set(this, false);
-      this.dispatchEvent(new Event('play'));
-      return Promise.resolve();
-    });
-    media.pause.mockImplementation(function (this: HTMLMediaElement) {
-      paused.set(this, true);
-      this.dispatchEvent(new Event('pause'));
-    });
-    stubReducedMotion(true);
-    const fixture = await setup();
-    report(fixture, 1, 1);
-    const button = (): HTMLButtonElement =>
-      el(fixture).querySelector('[data-screen="1"] .reel-play-toggle') as HTMLButtonElement;
-    expect(button().tagName).toBe('BUTTON');
-    expect(button().getAttribute('type')).toBe('button');
-    expect(button().getAttribute('aria-label')).toBe('Lire la vidéo');
-    expect(button().classList).not.toContain('off');
-
-    button().click();
-    fixture.detectChanges();
-    expect(reel(fixture, 1).paused).toBe(false);
-    expect(button().getAttribute('aria-label')).toBe('Mettre en pause');
-    expect(button().classList).toContain('off');
-
-    button().click();
-    fixture.detectChanges();
-    expect(reel(fixture, 1).paused).toBe(true);
-    expect(button().getAttribute('aria-label')).toBe('Lire la vidéo');
-    expect(button().classList).not.toContain('off');
   });
 
   it('pauses every reel when leaving the feed', async () => {

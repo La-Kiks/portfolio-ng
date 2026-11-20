@@ -20,20 +20,10 @@
     @for (project of projects(); track project.slug; let i = $index) {
     <section #screen class="screen" [attr.data-screen]="i + 1">
         <div class="bento-frame screen-frame">
-            <!-- Tap to play/pause like a reel; the button below is the keyboard/screen-reader route -->
-            <video #reel class="reel" playsinline loop [muted]="!sound.on()" [attr.preload]="reelPreload(i + 1)"
-                [poster]="project.poster" [src]="project.video" (click)="togglePlayback(i + 1)"
-                (play)="playingScreen.set(i + 1)" (pause)="onReelPause(i + 1)"></video>
-            <button type="button" class="reel-play-toggle" [class.off]="playingScreen() === i + 1"
-                [attr.aria-label]="playingScreen() === i + 1 ? 'Mettre en pause' : 'Lire la vidéo'"
-                (click)="togglePlayback(i + 1)">
-                <i class="fa-solid fa-play" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="sound-toggle" aria-label="Son" [attr.aria-pressed]="sound.on()"
-                (click)="toggleSound()">
-                <i class="fa-solid" [class.fa-volume-high]="sound.on()" [class.fa-volume-xmark]="!sound.on()"
-                    aria-hidden="true"></i>
-            </button>
+            <!-- Native controls (play/pause, seek, volume, fullscreen); muted follows the sound intent -->
+            <video #reel class="reel" controls playsinline loop [muted]="!sound.on()"
+                [attr.preload]="reelPreload(i + 1)" [poster]="project.poster" [src]="project.video"
+                (volumechange)="onVolumeChange($event)"></video>
         </div>
         <div class="bento-card screen-card">
             <h2 class="screen-title">{{ project.title }}</h2>

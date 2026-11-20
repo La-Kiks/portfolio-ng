@@ -47,61 +47,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  cursor: pointer;
-}
-
-/* Play icon while paused; fades out during playback but stays focusable (and shows on focus) */
-.reel-play-toggle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  padding: 0 0 0 0.1875rem;
-  border: none;
-  border-radius: 50%;
-  background-color: var(--color-ink);
-  color: var(--color-surface);
-  font-size: 1.25rem;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  transition: opacity 200ms ease;
-}
-
-.reel-play-toggle.off {
-  opacity: 0;
-}
-
-.reel-play-toggle:focus-visible {
-  opacity: 1;
-  outline-color: var(--color-accent);
-}
-
-/* Top-right of the frame, below the fixed .about-fab that shares that corner */
-.sound-toggle {
-  position: absolute;
-  top: 3.25rem;
-  right: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  border: 2px solid var(--color-ink);
-  border-radius: 50%;
-  background-color: var(--color-surface);
-  color: var(--color-ink);
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.sound-toggle[aria-pressed='true'] {
-  background-color: var(--color-ink);
-  color: var(--color-accent);
 }
 
 .screen-card {
@@ -269,8 +214,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .about-fab,
-  .indicator span,
-  .reel-play-toggle {
+  .indicator span {
     transition: none;
   }
 }
