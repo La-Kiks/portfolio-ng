@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Project, ProjectService } from '../../../services/projects/project';
 
@@ -7,13 +15,14 @@ export interface CarouselProject {
   id: string;
   title: string;
   description: string;
-  image: string;
+  poster: string;
+  video: string;
   route: string;
 }
 
 @Component({
   selector: 'app-bento-carousel',
-  imports: [NgOptimizedImage, RouterLink],
+  imports: [RouterLink],
   templateUrl: './bento-carousel.html',
   styleUrl: './bento-carousel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +34,8 @@ export class BentoCarousel implements OnInit {
   readonly currentIndex = signal(0);
   readonly isLoading = signal(true);
   readonly hasError = signal(false);
+
+  private readonly preview = viewChild<ElementRef<HTMLVideoElement>>('preview');
 
   readonly currentProject = computed<CarouselProject | undefined>(
     () => this.projects()[this.currentIndex()],
@@ -38,12 +49,13 @@ export class BentoCarousel implements OnInit {
             id: project.id,
             title: project.title,
             description: project.description,
-            image: project.images[0],
+            poster: project.video.posterLandscape,
+            video: project.video.landscapeLoop,
             route: `/projects/${project.slug}`,
           })),
         );
         this.isLoading.set(false);
-        this.warmUpImages();
+        this.warmUpPosters();
       },
       error: () => {
         this.isLoading.set(false);
@@ -53,29 +65,46 @@ export class BentoCarousel implements OnInit {
   }
 
   // Browser pre-fetches the non-visible slides at low priority so swapping feels instant.
-  private warmUpImages(): void {
+  private warmUpPosters(): void {
     this.projects()
       .slice(1)
       .forEach(project => {
         const img = new Image();
         img.fetchPriority = 'low';
-        img.src = project.image;
+        img.src = project.poster;
       });
   }
 
   previousProject(): void {
     const count = this.projects().length;
     if (count === 0) return;
+    this.stopPreview();
     this.currentIndex.update(index => (index - 1 + count) % count);
   }
 
   nextProject(): void {
     const count = this.projects().length;
     if (count === 0) return;
+    this.stopPreview();
     this.currentIndex.update(index => (index + 1) % count);
   }
 
   goToSlide(index: number): void {
+    this.stopPreview();
     this.currentIndex.set(index);
+  }
+
+  playPreview(): void {
+    const video = this.preview()?.nativeElement;
+    if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // play() rejects when interrupted by pause() or blocked by the browser: the poster stays.
+    video.play().catch(() => undefined);
+  }
+
+  stopPreview(): void {
+    const video = this.preview()?.nativeElement;
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
   }
 }

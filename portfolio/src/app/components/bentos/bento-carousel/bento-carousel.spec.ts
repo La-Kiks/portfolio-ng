@@ -1,9 +1,11 @@
+import { vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BentoCarousel } from './bento-carousel';
 import { makeProject } from '../../../../testing/project-fixture';
+import { stubMatchMedia, stubMedia } from '../../../../testing/media-stubs';
 
 const PROJECTS = [
   makeProject({ id: '1', slug: 'one', title: 'One', description: 'First', images: ['/img/1.webp'] }),
@@ -16,7 +18,11 @@ describe('BentoCarousel', () => {
   let fixture: ComponentFixture<BentoCarousel>;
   let httpMock: HttpTestingController;
 
+  let media: ReturnType<typeof stubMedia>;
+
   beforeEach(async () => {
+    media = stubMedia();
+    stubMatchMedia(() => false);
     await TestBed.configureTestingModule({
       imports: [BentoCarousel],
       providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
@@ -26,6 +32,11 @@ describe('BentoCarousel', () => {
     fixture = TestBed.createComponent(BentoCarousel);
     component = fixture.componentInstance;
     fixture.detectChanges(); // ngOnInit -> load
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   function flushProjects(): void {
@@ -71,8 +82,9 @@ describe('BentoCarousel', () => {
     expect(() => fixture.detectChanges()).not.toThrow();
     component.goToSlide(2);
     expect(() => fixture.detectChanges()).not.toThrow();
-    const img: HTMLImageElement = fixture.nativeElement.querySelector('img');
-    expect(img.alt).toBe('Three');
+    const video: HTMLVideoElement = fixture.nativeElement.querySelector('video');
+    expect(video.getAttribute('poster')).toBe('videos/demo/landscape.webp');
+    expect(component.currentProject()?.title).toBe('Three');
   });
 
   it('shows a visible error message when loading fails', () => {
@@ -98,5 +110,45 @@ describe('BentoCarousel', () => {
     expect(link.getAttribute('href')).toBe('/projects/one');
     expect(link.getAttribute('tabindex')).toBe('-1');
     expect(link.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  describe('hover preview', () => {
+    const media$ = (): HTMLElement => fixture.nativeElement.querySelector('.carousel-media');
+    const video = (): HTMLVideoElement => fixture.nativeElement.querySelector('video');
+
+    it("plays the current slide's loop on mouseenter", () => {
+      flushProjects();
+      media$().dispatchEvent(new Event('mouseenter'));
+      expect(media.play).toHaveBeenCalledTimes(1);
+      expect(video().getAttribute('src')).toMatch(/landscape-loop\.mp4$/);
+      expect(video().muted).toBe(true);
+      expect(video().getAttribute('poster')).toMatch(/landscape\.webp$/);
+    });
+
+    it('pauses and rewinds on mouseleave', () => {
+      flushProjects();
+      media$().dispatchEvent(new Event('mouseenter'));
+      video().currentTime = 3;
+      media$().dispatchEvent(new Event('mouseleave'));
+      expect(media.pause).toHaveBeenCalled();
+      expect(video().currentTime).toBe(0);
+    });
+
+    it('stops the previous video when the slide changes', () => {
+      flushProjects();
+      media$().dispatchEvent(new Event('mouseenter'));
+      media.pause.mockClear();
+      fixture.nativeElement.querySelector('[aria-label="Projet suivant"]').click();
+      fixture.detectChanges();
+      expect(media.pause).toHaveBeenCalled();
+      expect(media.play).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not play when reduced motion is preferred', () => {
+      stubMatchMedia(q => q.includes('reduce'));
+      flushProjects();
+      media$().dispatchEvent(new Event('mouseenter'));
+      expect(media.play).not.toHaveBeenCalled();
+    });
   });
 });
