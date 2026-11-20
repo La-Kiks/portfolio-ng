@@ -103,8 +103,11 @@ export class MobileFeed {
   private readonly autoplay = isAutoplayAllowed();
   private readonly position = inject(FeedPosition);
   private observer?: IntersectionObserver;
-  /** Reels muted by the autoplay fallback: their next volumechange is not the user's doing. */
-  private readonly fallbackMuted = new WeakSet<HTMLVideoElement>();
+  /**
+   * The muted state the feed itself last gave each reel. A volumechange that leaves a reel in
+   * that state is our own doing (browsers queue the event, so it may arrive late), not the user's.
+   */
+  private readonly assignedMuted = new WeakMap<HTMLVideoElement, boolean>();
   /** Removes the one-shot "unmute on first gesture" listeners, while they are armed. */
   private disarmGesture?: () => void;
 
@@ -165,8 +168,23 @@ export class MobileFeed {
   /** Native mute (or volume at zero) on the active reel is the user's sound choice. */
   onVolumeChange(event: Event): void {
     const video = event.target as HTMLVideoElement;
-    if (this.fallbackMuted.delete(video) || video !== this.activeReel()) return;
+    if (video !== this.activeReel()) return;
+    if (video.muted === this.assignedMuted.get(video) && video.volume > 0) return;
     this.sound.set(!(video.muted || video.volume === 0));
+    this.applySound();
+  }
+
+  /** Bring every reel in line with the sound intent. */
+  private applySound(): void {
+    const muted = !this.sound.on();
+    for (const reel of this.reels()) {
+      this.setMuted(reel.nativeElement, muted);
+    }
+  }
+
+  private setMuted(video: HTMLVideoElement, muted: boolean): void {
+    this.assignedMuted.set(video, muted);
+    video.muted = muted;
   }
 
   toggleDescription(index: number): void {
@@ -191,11 +209,12 @@ export class MobileFeed {
    * play muted meanwhile, keep the sound intent, and unmute on that first gesture.
    */
   private play(video: HTMLVideoElement): void {
+    // The fallback may have muted this reel earlier: follow the current intent again.
+    this.setMuted(video, !this.sound.on());
     video.play().catch((error: unknown) => {
       // Other rejections (pause() interrupting play()) just leave the poster in place.
       if (!video.muted && error instanceof DOMException && error.name === 'NotAllowedError') {
-        this.fallbackMuted.add(video);
-        video.muted = true;
+        this.setMuted(video, true);
         this.armUnmuteOnGesture();
         // The user may have scrolled on while play() was pending: never revive a stale reel.
         if (this.activeReel() === video) {
@@ -217,7 +236,7 @@ export class MobileFeed {
       this.disarmGesture?.();
       const video = this.activeReel();
       if (!video || !this.sound.on()) return;
-      video.muted = false;
+      this.setMuted(video, false);
       // A gesture on the reel itself belongs to its native controls (e.g. pause): don't override it.
       if (event.target !== video) {
         this.play(video);

@@ -287,6 +287,27 @@ describe('MobileFeed', () => {
     expect(changes).toHaveBeenCalledTimes(1);
     expect(video.muted).toBe(true);
     expect(TestBed.inject(FeedSound).on()).toBe(true);
+
+    // Browsers queue volumechange: a late echo of the pre-play sync is not a user mute either.
+    video.dispatchEvent(new Event('volumechange'));
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+  });
+
+  it('reels muted by the fallback get their sound back once it is unlocked', async () => {
+    const fixture = await setup();
+    await blockedAutoplay(fixture);
+    media.play.mockRejectedValueOnce(new DOMException('', 'NotAllowedError'));
+    report(fixture, 2, 1);
+    await flushPromises();
+    expect(reel(fixture, 1).muted).toBe(true);
+    expect(reel(fixture, 2).muted).toBe(true);
+
+    (el(fixture).querySelector('.feed') as HTMLElement).click();
+    expect(reel(fixture, 2).muted).toBe(false);
+
+    report(fixture, 1, 1);
+    expect(reel(fixture, 1).muted).toBe(false);
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
   });
 
   it('first tap in the feed unmutes the active reel', async () => {
@@ -295,8 +316,10 @@ describe('MobileFeed', () => {
     const video = reel(fixture, 1);
     const feed = el(fixture).querySelector('.feed') as HTMLElement;
 
+    media.play.mockClear();
     feed.click();
     expect(video.muted).toBe(false);
+    expect(media.play.mock.contexts).toContain(video);
 
     // One-shot: a later tap leaves the reel alone.
     video.muted = true;
