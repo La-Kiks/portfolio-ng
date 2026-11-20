@@ -20,7 +20,18 @@
     @for (project of projects(); track project.slug; let i = $index) {
     <section #screen class="screen" [attr.data-screen]="i + 1">
         <div class="bento-frame screen-frame">
-            <img [ngSrc]="project.image" fill loading="eager" [alt]="project.title" class="screen-image" />
+            <!-- Tap to play/pause like a reel; the title below and "Voir le projet" carry the content -->
+            <video #reel class="reel" playsinline loop [muted]="!sound.on()" [attr.preload]="reelPreload(i + 1)"
+                [poster]="project.poster" [src]="project.video" (click)="togglePlayback(i + 1)"
+                (play)="playingScreen.set(i + 1)" (pause)="onReelPause(i + 1)"></video>
+            <span class="reel-play-hint" [class.off]="playingScreen() === i + 1" aria-hidden="true">
+                <i class="fa-solid fa-play"></i>
+            </span>
+            <button type="button" class="sound-toggle" [attr.aria-pressed]="sound.on()"
+                [attr.aria-label]="sound.on() ? 'Couper le son' : 'Activer le son'" (click)="toggleSound()">
+                <i class="fa-solid" [class.fa-volume-high]="sound.on()" [class.fa-volume-xmark]="!sound.on()"
+                    aria-hidden="true"></i>
+            </button>
         </div>
         <div class="bento-card screen-card">
             <h2 class="screen-title">{{ project.title }}</h2>

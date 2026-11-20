@@ -6,6 +6,8 @@ import { MobileFeed } from './mobile-feed';
 import { Project, ProjectService } from '../../services/projects/project';
 import { makeProject } from '../../../testing/project-fixture';
 import { FeedPosition } from '../../services/feed-position/feed-position';
+import { FeedSound } from '../../services/feed-sound/feed-sound';
+import { stubMedia } from '../../../testing/media-stubs';
 
 const PROJECTS: Project[] = [
   makeProject({ id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['images/a.webp'] }),
@@ -70,14 +72,30 @@ function report(
   fixture.detectChanges();
 }
 
+function reel(fixture: { nativeElement: HTMLElement }, screen: number): HTMLVideoElement {
+  return el(fixture).querySelector(`[data-screen="${screen}"] video`) as HTMLVideoElement;
+}
+
+function flushPromises(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve));
+}
+
 describe('MobileFeed', () => {
+  let media: ReturnType<typeof stubMedia>;
+
   beforeEach(() => {
     observers = [];
     vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver);
     stubReducedMotion(false);
+    media = stubMedia();
   });
 
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    // Destroy the feed (it pauses its reels) while play/pause are still stubbed.
+    TestBed.resetTestingModule();
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
 
   it('renders intro, one screen per project, then contact', async () => {
     const fixture = await setup();
@@ -166,20 +184,6 @@ describe('MobileFeed', () => {
     expect(latest.disconnect).toHaveBeenCalled();
   });
 
-  it('skips projects without an image', async () => {
-    const noImage = makeProject({
-      id: '3',
-      slug: 'gamma',
-      title: 'Gamma',
-      description: 'Third',
-      images: [],
-    });
-    const fixture = await setup(of([PROJECTS[0], noImage]));
-    const screens = el(fixture).querySelectorAll('.screen');
-    expect(screens.length).toBe(3);
-    expect(el(fixture).textContent).not.toContain('Gamma');
-  });
-
   it('shows a single error screen when projects fail to load', async () => {
     const fixture = await setup(throwError(() => new Error('network')));
     const screens = el(fixture).querySelectorAll('.screen');
@@ -201,12 +205,167 @@ describe('MobileFeed', () => {
     expect(scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'auto' });
   });
 
-  it('loads project images eagerly', async () => {
+  it('shows each project as a vertical reel over its poster', async () => {
     const fixture = await setup();
-    const images = el(fixture).querySelectorAll('[data-screen="1"] img, [data-screen="2"] img');
-    expect(images.length).toBe(2);
-    for (const img of Array.from(images)) {
-      expect(img.getAttribute('loading')).toBe('eager');
+    const video = reel(fixture, 1);
+    expect(video.getAttribute('src')).toBe('videos/demo/vertical.mp4');
+    expect(video.getAttribute('poster')).toBe('videos/demo/vertical.webp');
+    expect(video.hasAttribute('playsinline')).toBe(true);
+    expect(video.loop).toBe(true);
+    expect(el(fixture).querySelector('[data-screen="1"] img')).toBeNull();
+  });
+
+  it("plays only the active screen's video", async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    expect(media.play.mock.contexts).toContain(reel(fixture, 1));
+    expect(media.play.mock.contexts).not.toContain(reel(fixture, 2));
+
+    media.play.mockClear();
+    media.pause.mockClear();
+    report(fixture, 2, 1);
+    expect(media.pause.mock.contexts).toContain(reel(fixture, 1));
+    expect(media.play.mock.contexts).toEqual([reel(fixture, 2)]);
+  });
+
+  it('videos start muted with preload none, active and next get metadata', async () => {
+    const three = [
+      ...PROJECTS,
+      makeProject({ id: '3', slug: 'gamma', title: 'Gamma', description: 'Third' }),
+    ];
+    const fixture = await setup(of(three));
+    report(fixture, 1, 1);
+    expect(reel(fixture, 1).getAttribute('preload')).toBe('metadata');
+    expect(reel(fixture, 2).getAttribute('preload')).toBe('metadata');
+    expect(reel(fixture, 3).getAttribute('preload')).toBe('none');
+    for (const screen of [1, 2, 3]) {
+      expect(reel(fixture, screen).muted).toBe(true);
+    }
+  });
+
+  it('sound button unmutes every feed video', async () => {
+    const fixture = await setup();
+    const button = el(fixture).querySelector('.sound-toggle') as HTMLButtonElement;
+    expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(button.getAttribute('aria-label')).toBe('Activer le son');
+    expect(button.querySelector('i')?.classList).toContain('fa-volume-xmark');
+
+    button.click();
+    fixture.detectChanges();
+    for (const video of Array.from(el(fixture).querySelectorAll('video'))) {
+      expect(video.muted).toBe(false);
+    }
+    for (const toggle of Array.from(el(fixture).querySelectorAll('.sound-toggle'))) {
+      expect(toggle.getAttribute('aria-pressed')).toBe('true');
+      expect(toggle.getAttribute('aria-label')).toBe('Couper le son');
+    }
+    expect(button.querySelector('i')?.classList).toContain('fa-volume-high');
+  });
+
+  it('falls back to muted when unmuted play is rejected', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    fixture.componentInstance.toggleSound();
+    fixture.detectChanges();
+    const sound = TestBed.inject(FeedSound);
+    expect(sound.on()).toBe(true);
+
+    media.play.mockClear();
+    media.play.mockRejectedValueOnce(new DOMException('', 'NotAllowedError'));
+    report(fixture, 2, 1);
+    await flushPromises();
+    fixture.detectChanges();
+
+    const video = reel(fixture, 2);
+    expect(video.muted).toBe(true);
+    expect(media.play.mock.contexts).toEqual([video, video]);
+    expect(sound.on()).toBe(false);
+    expect(
+      (el(fixture).querySelector('.sound-toggle') as HTMLElement).getAttribute('aria-pressed'),
+    ).toBe('false');
+  });
+
+  it('keeps the sound on when play is merely interrupted', async () => {
+    const fixture = await setup();
+    fixture.componentInstance.toggleSound();
+    media.play.mockRejectedValueOnce(new DOMException('', 'AbortError'));
+    report(fixture, 1, 1);
+    await flushPromises();
+    expect(TestBed.inject(FeedSound).on()).toBe(true);
+    expect(reel(fixture, 1).muted).toBe(false);
+  });
+
+  it('no autoplay with reduced motion', async () => {
+    stubReducedMotion(true);
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    expect(media.play).not.toHaveBeenCalled();
+  });
+
+  it('no autoplay when the connection asks to save data', async () => {
+    Object.defineProperty(navigator, 'connection', {
+      configurable: true,
+      value: { saveData: true },
+    });
+    try {
+      const fixture = await setup();
+      report(fixture, 1, 1);
+      expect(media.play).not.toHaveBeenCalled();
+    } finally {
+      delete (navigator as { connection?: unknown }).connection;
+    }
+  });
+
+  it('tapping the video toggles play/pause', async () => {
+    const paused = new WeakMap<HTMLMediaElement, boolean>();
+    vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(function (
+      this: HTMLMediaElement,
+    ) {
+      return paused.get(this) ?? true;
+    });
+    media.play.mockImplementation(function (this: HTMLMediaElement) {
+      paused.set(this, false);
+      return Promise.resolve();
+    });
+    media.pause.mockImplementation(function (this: HTMLMediaElement) {
+      paused.set(this, true);
+    });
+    stubReducedMotion(true);
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const video = reel(fixture, 1);
+    expect(video.paused).toBe(true);
+
+    video.click();
+    expect(video.paused).toBe(false);
+
+    video.click();
+    expect(video.paused).toBe(true);
+  });
+
+  it('shows a play hint while the reel is paused', async () => {
+    const fixture = await setup();
+    const hint = (): Element | null =>
+      el(fixture).querySelector('[data-screen="1"] .reel-play-hint');
+    expect(hint()?.classList).not.toContain('off');
+
+    reel(fixture, 1).dispatchEvent(new Event('play'));
+    fixture.detectChanges();
+    expect(hint()?.classList).toContain('off');
+
+    reel(fixture, 1).dispatchEvent(new Event('pause'));
+    fixture.detectChanges();
+    expect(hint()?.classList).not.toContain('off');
+  });
+
+  it('pauses every reel when leaving the feed', async () => {
+    const fixture = await setup();
+    report(fixture, 1, 1);
+    const videos = Array.from(el(fixture).querySelectorAll('video'));
+    media.pause.mockClear();
+    fixture.destroy();
+    for (const video of videos) {
+      expect(media.pause.mock.contexts).toContain(video);
     }
   });
 
