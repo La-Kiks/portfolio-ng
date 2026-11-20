@@ -127,6 +127,12 @@ export class MobileFeed {
         this.observer.observe(screen.nativeElement);
       }
     });
+    // New reels start in the current sound state: a fresh <video> is unmuted by default, and
+    // without autoplay nothing else would sync it before the user presses the native play.
+    afterRenderEffect(() => {
+      this.reels();
+      untracked(() => this.applySound());
+    });
     // The active screen's reel plays, every other one pauses.
     afterRenderEffect(() => {
       const active = this.activeIndex();

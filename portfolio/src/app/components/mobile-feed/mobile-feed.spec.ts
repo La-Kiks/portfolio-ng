@@ -180,6 +180,24 @@ describe('MobileFeed', () => {
     expect(soundToggle(fixture).getAttribute('aria-pressed')).toBe('true');
   });
 
+  it('reels start in the current sound state, without autoplay too', async () => {
+    stubReducedMotion(true);
+    const subject = new Subject<Project[]>();
+    const fixture = await setup(subject);
+    // Sound already off (e.g. muted before visiting a project page) when the reels are created.
+    TestBed.inject(FeedSound).set(false);
+
+    subject.next(PROJECTS);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const videos = Array.from(el(fixture).querySelectorAll('video'));
+    expect(videos.length).toBe(2);
+    for (const video of videos) {
+      expect(video.muted).toBe(true);
+    }
+    expect(media.play).not.toHaveBeenCalled();
+  });
+
   it('sound button follows the native mute', async () => {
     const fixture = await setup();
     report(fixture, 1, 1);

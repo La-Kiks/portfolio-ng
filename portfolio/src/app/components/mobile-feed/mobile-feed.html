@@ -20,8 +20,9 @@
     @for (project of projects(); track project.slug; let i = $index) {
     <section #screen class="screen" [attr.data-screen]="i + 1">
         <div class="bento-frame screen-frame">
-            <!-- Native controls (play/pause, seek, volume, fullscreen); muted is synced to the sound intent in code -->
-            <video #reel class="reel" controls playsinline loop [attr.preload]="reelPreload(i + 1)" [poster]="project.poster" [src]="project.video"
+            <!-- Native controls (play/pause, seek, volume, fullscreen); muted is synced in code -->
+            <video #reel class="reel" controls playsinline loop [attr.preload]="reelPreload(i + 1)"
+                [poster]="project.poster" [src]="project.video"
                 (volumechange)="onVolumeChange($event)"></video>
         </div>
         <div class="bento-card screen-card">
