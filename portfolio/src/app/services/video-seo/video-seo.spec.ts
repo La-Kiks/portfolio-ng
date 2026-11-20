@@ -17,7 +17,15 @@ describe('VideoSeo', () => {
 
   afterEach(() => {
     seo.clear();
+    document.head.querySelectorAll('link[rel="canonical"]').forEach((link) => link.remove());
+    TestBed.resetTestingModule();
   });
+
+  function canonicalHrefs(): (string | null)[] {
+    return Array.from(document.head.querySelectorAll('link[rel="canonical"]')).map((link) =>
+      link.getAttribute('href'),
+    );
+  }
 
   it('apply writes one VideoObject', () => {
     seo.apply(makeProject({ title: 'Sport Event', description: 'Une plateforme sportive' }));
@@ -61,5 +69,32 @@ describe('VideoSeo', () => {
     expect(document.querySelector(SCRIPT_SELECTOR)).toBeNull();
     expect(metaContent('meta[property="og:image"]')).toBe(fallback);
     expect(metaContent('meta[name="twitter:image"]')).toBe(fallback);
+  });
+
+  it('apply points canonical and og:url at the project page', () => {
+    const existing = document.createElement('link');
+    existing.rel = 'canonical';
+    existing.href = SITE_URL;
+    document.head.appendChild(existing);
+
+    seo.apply(makeProject({ slug: 'sport-event' }));
+
+    const projectUrl = SITE_URL + 'projects/sport-event';
+    expect(canonicalHrefs()).toEqual([projectUrl]);
+    expect(metaContent('meta[property="og:url"]')).toBe(projectUrl);
+  });
+
+  it('apply creates the canonical link when the page has none', () => {
+    seo.apply(makeProject({ slug: 'sport-event' }));
+
+    expect(canonicalHrefs()).toEqual([SITE_URL + 'projects/sport-event']);
+  });
+
+  it('clear restores canonical and og:url to the site root', () => {
+    seo.apply(makeProject({ slug: 'sport-event' }));
+    seo.clear();
+
+    expect(canonicalHrefs()).toEqual([SITE_URL]);
+    expect(metaContent('meta[property="og:url"]')).toBe(SITE_URL);
   });
 });
