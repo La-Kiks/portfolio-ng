@@ -4,11 +4,12 @@ import { Subject, of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { MobileFeed } from './mobile-feed';
 import { Project, ProjectService } from '../../services/projects/project';
+import { makeProject } from '../../../testing/project-fixture';
 import { FeedPosition } from '../../services/feed-position/feed-position';
 
 const PROJECTS: Project[] = [
-  { id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['images/a.webp'] },
-  { id: '2', slug: 'beta', title: 'Beta', description: 'Second', images: ['images/b.webp'] },
+  makeProject({ id: '1', slug: 'alpha', title: 'Alpha', description: 'First', images: ['images/a.webp'] }),
+  makeProject({ id: '2', slug: 'beta', title: 'Beta', description: 'Second', images: ['images/b.webp'] }),
 ];
 
 let observerCallback: IntersectionObserverCallback;
@@ -166,13 +167,13 @@ describe('MobileFeed', () => {
   });
 
   it('skips projects without an image', async () => {
-    const noImage: Project = {
+    const noImage = makeProject({
       id: '3',
       slug: 'gamma',
       title: 'Gamma',
       description: 'Third',
       images: [],
-    };
+    });
     const fixture = await setup(of([PROJECTS[0], noImage]));
     const screens = el(fixture).querySelectorAll('.screen');
     expect(screens.length).toBe(3);

@@ -2,10 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Project, ProjectService } from './project';
+import { makeProject } from '../../../testing/project-fixture';
 
 const PROJECTS: Project[] = [
-  { id: '1', slug: 'sport-event', title: 'Sport Event', description: 'Desc 1', images: ['/img/1.webp'] },
-  { id: '2', slug: 'menu-maker', title: 'Menu Maker', description: 'Desc 2', images: ['/img/2.webp'] },
+  makeProject({ id: '1', slug: 'sport-event', title: 'Sport Event', description: 'Desc 1' }),
+  makeProject({ id: '2', slug: 'menu-maker', title: 'Menu Maker', description: 'Desc 2' }),
 ];
 
 describe('ProjectService', () => {
@@ -36,6 +37,13 @@ describe('ProjectService', () => {
     service.getProjectBySlug('menu-maker').subscribe(p => (result = p));
     httpMock.expectOne('files/projects.json').flush(PROJECTS);
     expect(result?.title).toBe('Menu Maker');
+  });
+
+  it('exposes the video of a project by slug', () => {
+    let result: Project | undefined;
+    service.getProjectBySlug('a').subscribe(p => (result = p));
+    httpMock.expectOne('files/projects.json').flush([makeProject({ slug: 'a' })]);
+    expect(result?.video.posterLandscape).toBe('videos/demo/landscape.webp');
   });
 
   it('returns undefined for an unknown slug', () => {

@@ -2,6 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, shareReplay } from 'rxjs';
 
+export interface ProjectVideo {
+  landscape: string;
+  landscapeLoop: string;
+  vertical: string;
+  posterLandscape: string;
+  posterVertical: string;
+  duration: string; // ISO 8601
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -15,6 +24,7 @@ export interface Project {
   results?: string;
   improvements?: string[];
   images: string[];
+  video: ProjectVideo;
   link?: string;
   github?: string;
 }

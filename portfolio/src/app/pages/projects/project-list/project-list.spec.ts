@@ -4,18 +4,25 @@ import { vi } from 'vitest';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { ProjectList } from './project-list';
 import { Project, ProjectService } from '../../../services/projects/project';
+import { makeProject } from '../../../../testing/project-fixture';
 
 const PROJECTS: Project[] = [
-  {
+  makeProject({
     id: '1',
     slug: 'alpha',
     title: 'Alpha',
     description: 'First',
     images: ['images/a-square.webp', 'images/a-wide.webp'],
     stack: ['Angular', '.NET', 'Stripe', 'Docker'],
-  },
-  { id: '2', slug: 'beta', title: 'Beta', description: 'Second', images: ['images/b.webp'] },
-  { id: '3', slug: 'gamma', title: 'Gamma', description: 'Third', images: [] },
+  }),
+  makeProject({
+    id: '2',
+    slug: 'beta',
+    title: 'Beta',
+    description: 'Second',
+    images: ['images/b.webp'],
+  }),
+  makeProject({ id: '3', slug: 'gamma', title: 'Gamma', description: 'Third', images: [] }),
 ];
 
 function setup(projects$: Observable<Project[]> = of(PROJECTS)) {
@@ -49,13 +56,14 @@ describe('ProjectList', () => {
   });
 
   it('gives the card beside the wide first card its square image', () => {
-    const twoImages = (id: string): Project => ({
-      id,
-      slug: id,
-      title: id,
-      description: id,
-      images: [`images/${id}-square.webp`, `images/${id}-wide.webp`],
-    });
+    const twoImages = (id: string): Project =>
+      makeProject({
+        id,
+        slug: id,
+        title: id,
+        description: id,
+        images: [`images/${id}-square.webp`, `images/${id}-wide.webp`],
+      });
     const fixture = setup(of([twoImages('a'), twoImages('b'), twoImages('c')]));
     const images = fixture.nativeElement.querySelectorAll('a.project-card img');
     expect(images[0].getAttribute('src')).toContain('a-wide.webp');

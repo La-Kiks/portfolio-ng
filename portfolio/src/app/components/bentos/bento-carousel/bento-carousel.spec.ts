@@ -3,11 +3,12 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { BentoCarousel } from './bento-carousel';
+import { makeProject } from '../../../../testing/project-fixture';
 
 const PROJECTS = [
-  { id: '1', slug: 'one', title: 'One', description: 'First', images: ['/img/1.webp'] },
-  { id: '2', slug: 'two', title: 'Two', description: 'Second', images: ['/img/2.webp'] },
-  { id: '3', slug: 'three', title: 'Three', description: 'Third', images: ['/img/3.webp'] },
+  makeProject({ id: '1', slug: 'one', title: 'One', description: 'First', images: ['/img/1.webp'] }),
+  makeProject({ id: '2', slug: 'two', title: 'Two', description: 'Second', images: ['/img/2.webp'] }),
+  makeProject({ id: '3', slug: 'three', title: 'Three', description: 'Third', images: ['/img/3.webp'] }),
 ];
 
 describe('BentoCarousel', () => {

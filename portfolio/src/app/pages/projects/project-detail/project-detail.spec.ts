@@ -5,15 +5,16 @@ import { of } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ProjectDetail } from './project-detail';
+import { makeProject } from '../../../../testing/project-fixture';
 
 const PROJECTS = [
-  {
+  makeProject({
     id: '1',
     slug: 'sport-event',
     title: 'Sport Event',
     description: 'Une plateforme sportive',
     images: ['/a.webp', '/b.webp'],
-  },
+  }),
 ];
 
 describe('ProjectDetail', () => {

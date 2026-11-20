@@ -2,189 +2,171 @@
     {
         "id": "1",
         "slug": "sport-event",
-        "title": "Sport Event",
-        "description": "Plateforme de gestion d'inscriptions à une compétition avec système de paiement sécurisé",
-        "context": "Développement d'une plateforme web permettant de gérer l'inscription à une compétition sportive inspirée de Hyrox, avec un parcours utilisateur complet jusqu'au paiement.",
-        "objectives": "Concevoir un système d'inscription en équipe (2 participants), gérer différents formats de compétition et sécuriser le processus de paiement en ligne.",
+        "title": "Sport Challenge Police 54",
+        "description": "Inscription en duo à une compétition type Hyrox, avec paiement Stripe et espace d'administration",
+        "context": "Site d'inscription d'une compétition sportive par équipes de deux, inspirée de Hyrox : les participants s'inscrivent, paient en ligne, puis l'organisateur suit les équipes depuis un panneau d'administration.",
+        "objectives": "Concevoir un parcours d'inscription en trois étapes jusqu'au paiement Stripe Checkout, donner aux participants un espace pour gérer leur équipe et outiller l'organisateur, le tout déployable en une commande avec Docker Compose.",
         "stack": [
             "Angular",
-            ".NET",
-            "Stripe API",
-            "Webhooks",
-            "REST API"
+            "ASP.NET Core",
+            "Entity Framework Core",
+            "SQL Server",
+            "Stripe",
+            "Docker"
         ],
         "skills": [
-            "Création d'API REST",
-            "Gestion de formulaires complexes",
-            "Intégration de paiement sécurisé",
-            "Communication front-back",
-            "Gestion des événements asynchrones (webhooks)"
+            "API REST en C# (contrôleurs, services, EF Core)",
+            "Paiement sécurisé avec Stripe Checkout et webhooks",
+            "Authentification JWT et rôles",
+            "Envoi d'e-mails d'activation avec Mailgun",
+            "Tests d'intégration xUnit",
+            "Conteneurisation avec Docker Compose"
         ],
-        "results": "Mise en place d'un parcours utilisateur fluide de l'inscription au paiement, avec création dynamique d'équipes et validation automatique des transactions.",
+        "results": "Un formulaire d'inscription en 3 étapes suivi du paiement Stripe, un espace participant (/mon-equipe) activé par e-mail pour consulter et modifier son équipe, et un panneau d'administration (équipes, joueurs, statut de paiement). Les migrations s'appliquent automatiquement au démarrage et la suite de tests tourne sur une base SQL Server éphémère.",
         "improvements": [
-            "Ajouter un tableau de bord administrateur",
+            "Ajouter des notifications pour le suivi des inscriptions",
             "Améliorer la gestion des erreurs de paiement",
-            "Enrichir l'expérience utilisateur (notifications, suivi des inscriptions)"
+            "Prévoir d'autres formats de compétition"
         ],
         "images": [
-            "images/projects/HyroxPolice-square1.webp",
-            "images/projects/HyroxPoliceAc.webp",
-            "images/projects/HyroxPoliceFormat.webp",
-            "images/projects/HyroxPoliceForms.webp"
+            "images/sport-event/01-accueil.webp",
+            "images/sport-event/01b-accueil-haut-de-page.webp",
+            "images/sport-event/02-inscription.webp",
+            "images/sport-event/03-mon-equipe.webp"
         ],
+        "video": {
+            "landscape": "videos/sport-event/landscape.mp4",
+            "landscapeLoop": "videos/sport-event/landscape-loop.mp4",
+            "vertical": "videos/sport-event/vertical.mp4",
+            "posterLandscape": "videos/sport-event/landscape.webp",
+            "posterVertical": "videos/sport-event/vertical.webp",
+            "duration": "PT20S"
+        },
         "link": "https://sport-challenge-police-54.fr/",
         "github": "https://github.com/La-Kiks/sven-event-one"
     },
     {
         "id": "2",
-        "slug": "portfolio",
-        "title": "Portfolio",
-        "description": "Portfolio développeur moderne au design Bento mettant en valeur projets et compétences",
-        "context": "Conception de mon portfolio de développeur web avec un design moderne de type Bento, visant à présenter mes projets et compétences de manière claire et interactive.",
-        "objectives": "Créer une interface fluide et modulable, valoriser mes réalisations et anticiper des évolutions futures comme l'ajout d'un blog, d'un formulaire de contact ou de fonctionnalités liées à une activité freelance.",
+        "slug": "ps5kitsune",
+        "title": "PS5Kitsune",
+        "description": "Installateur et lanceur de bureau qui automatise l'installation d'AnyPS5 sous Windows et Linux",
+        "context": "PS5Kitsune automatise la procédure manuelle d'AnyPS5, le projet qui relie des exécutables PS5 en programmes natifs Windows et Linux. Projet tiers, non affilié à AnyPS5 : il télécharge AnyPS5 depuis son dépôt officiel uniquement.",
+        "objectives": "Vérifier que le PC peut faire tourner AnyPS5, l'installer sans droits administrateur ni modification du système, puis permettre d'ajouter, convertir et lancer des jeux depuis une interface claire ou en ligne de commande.",
         "stack": [
-            "Angular",
-            "Tailwind CSS",
-            "TypeScript",
-            "Routing",
-            "JSON"
+            "C#",
+            ".NET 10",
+            "Avalonia",
+            "CLI",
+            "AppImage"
         ],
         "skills": [
-            "Structuration d'une application front-end",
-            "Gestion du routing",
-            "Création de composants modulaires",
-            "Génération dynamique de contenu",
-            "Design Bento"
+            "Application de bureau multiplateforme avec Avalonia",
+            "Vérifications système (CPU, Vulkan, mémoire, disque)",
+            "Installation depuis une release ou compilation depuis les sources",
+            "Bibliothèque de jeux et diagnostic des plantages",
+            "Outil en ligne de commande",
+            "Packaging : .exe Windows et AppImage Linux, thèmes clair et sombre"
         ],
-        "results": "Mise en ligne d'un portfolio évolutif, facilement maintenable, permettant d'ajouter ou modifier des projets sans refonte complète du site.",
+        "results": "Une application qui installe AnyPS5 en quelques écrans, convertit et lance les jeux ajoutés, et explique les erreurs connues avec le correctif adapté. Elle est livrée en .exe unique sous Windows et en AppImage sous Linux, avec un thème clair ou sombre et une utilisation possible au clavier.",
         "improvements": [
-            "Intégration d'un backend en .NET",
-            "Connexion à une API pour dynamiser les contenus",
-            "Ajout d'un formulaire de contact",
-            "Intégration d'un blog",
-            "Fonctionnalités de paiement pour activité freelance"
+            "Étendre le mode compilation à Linux",
+            "Enrichir le catalogue d'erreurs diagnostiquées",
+            "Suivre les évolutions d'AnyPS5"
         ],
         "images": [
-            "images/projects/C-Portfolio-Landing-square.webp",
-            "images/projects/C-Portfolio-Landing.webp",
-            "images/projects/C-Portfolio-Projects.webp",
-            "images/projects/C-Portfolio-About.webp"
+            "images/ps5kitsune/01-system-check.webp",
+            "images/ps5kitsune/02-library-running.webp",
+            "images/ps5kitsune/03-crash-diagnosis.webp"
         ],
-        "link": "https://kilian-au.fr/portfolio/",
-        "github": "https://github.com/La-Kiks/portfolio-ng"
+        "video": {
+            "landscape": "videos/ps5kitsune/landscape.mp4",
+            "landscapeLoop": "videos/ps5kitsune/landscape-loop.mp4",
+            "vertical": "videos/ps5kitsune/vertical.mp4",
+            "posterLandscape": "videos/ps5kitsune/landscape.webp",
+            "posterVertical": "videos/ps5kitsune/vertical.webp",
+            "duration": "PT25S"
+        },
+        "link": "https://github.com/La-Kiks/PS5Kitsune/releases/latest",
+        "github": "https://github.com/La-Kiks/PS5Kitsune"
     },
     {
         "id": "3",
-        "slug": "debug-optimisation",
-        "title": "Debug & Optimisation",
-        "description": "Optimisation de site web axée sur le SEO, l’accessibilité et les performances",
-        "context": "Intervention sur un site existant présentant des lacunes en SEO, accessibilité et stabilité fonctionnelle, avec un impact direct sur sa visibilité et son expérience utilisateur.",
-        "objectives": "Optimiser le référencement naturel, corriger les problèmes d'accessibilité, implémenter des données structurées et débugger les fonctionnalités critiques du site.",
+        "slug": "pr-description",
+        "title": "pr-description",
+        "description": "Skill Claude Code qui rédige le titre et la description d'une pull request à partir du diff",
+        "context": "Un skill (plugin) pour Claude Code qui écrit les titres et descriptions de pull requests à partir du diff de la branche, avec un gabarit fixe : Pourquoi, Ce qui change, Validation et preuves, Retour arrière.",
+        "objectives": "Obtenir des descriptions de PR cohérentes et honnêtes : l'agent ne coche une étape de validation que s'il l'a réellement exécutée, et justifie chaque case laissée vide.",
         "stack": [
-            "HTML5",
-            "CSS3",
-            "JavaScript",
-            "Lighthouse",
-            "Wave",
-            "Rich Results Test",
-            "Schema.org"
+            "Claude Code",
+            "Plugin",
+            "Markdown",
+            "Git",
+            "GitHub CLI"
         ],
         "skills": [
-            "Audit technique",
-            "Optimisation SEO (balises, contenu, référencement local)",
-            "Amélioration de l'accessibilité",
-            "Debugging front-end",
-            "Implémentation de données structurées",
-            "Validation des rich snippets"
+            "Conception d'un skill et d'un plugin Claude Code",
+            "Rédaction de gabarits et de consignes pour un agent",
+            "Détection du gabarit de PR du dépôt",
+            "Gestion de paramètres locaux (signature, co-auteur)",
+            "Distribution via un marketplace de plugins"
         ],
-        "results": "Amélioration des scores SEO et accessibilité, validation des rich snippets, correction des erreurs détectées par Wave et stabilisation des fonctionnalités clés du site.",
+        "results": "Un plugin installable en deux commandes, qui utilise le gabarit propre au dépôt s'il existe et respecte les règles d'attribution du projet (signature, co-auteur) choisies une seule fois, avec une description toujours alignée sur ce qui a été validé.",
         "improvements": [
-            "Approfondir l'optimisation des performances (Core Web Vitals)",
-            "Automatiser certains contrôles SEO",
-            "Renforcer la stratégie de contenu et de maillage interne",
-            "Mettre en place un monitoring continu des métriques SEO"
+            "Ajouter d'autres gabarits de PR",
+            "Adapter la sortie à d'autres plateformes que GitHub"
         ],
         "images": [
-            "images/projects/Debug-Lighthouse-square.webp",
-            "images/projects/Debug-Landing.webp",
-            "images/projects/Debug-Lighthouse.webp",
-            "images/projects/Debug-Wave.webp"
+            "images/pr-description/01-workflow.webp",
+            "images/pr-description/02-validation.webp",
+            "images/pr-description/03-install.webp"
         ],
-        "link": "https://la-kiks.github.io/debug-and-optimize-photograph-website/",
-        "github": "https://github.com/La-Kiks/debug-and-optimize-photograph-website"
+        "video": {
+            "landscape": "videos/pr-description/landscape.mp4",
+            "landscapeLoop": "videos/pr-description/landscape-loop.mp4",
+            "vertical": "videos/pr-description/vertical.mp4",
+            "posterLandscape": "videos/pr-description/landscape.webp",
+            "posterVertical": "videos/pr-description/vertical.webp",
+            "duration": "PT20S"
+        },
+        "github": "https://github.com/La-Kiks/pr-description"
     },
     {
         "id": "4",
-        "slug": "antibug-solutions",
-        "title": "Antibug Solutions",
-        "description": "Optimisation d’une application métier réduisant les requêtes et la charge de données",
-        "context": "Mission freelance réalisée via Malt pour améliorer les performances et la maintenabilité d'une application métier présentant des lenteurs importantes et une dette technique.",
-        "objectives": "Réduire drastiquement le temps de chargement, corriger les problèmes de requêtes SQL inefficaces, moderniser le framework et ajouter de nouvelles fonctionnalités utiles.",
+        "slug": "vente-sites",
+        "title": "Vente de sites web",
+        "description": "Site vitrine pour vendre mes créations de sites : offres, estimateur de prix, réalisations et FAQ",
+        "context": "Site vitrine de mon activité de freelance, conçu pour présenter mes offres de création de sites web et aider un client à se projeter avant de me contacter.",
+        "objectives": "Présenter clairement les offres, permettre d'estimer un prix en direct, mettre en avant les réalisations et la méthode de travail, et répondre aux questions fréquentes.",
         "stack": [
-            "Symfony 5.4",
-            "SQL",
-            "DataTables (server-side)",
-            "Hostinger"
+            "Angular",
+            "SCSS",
+            "TypeScript",
+            "Docker"
         ],
         "skills": [
-            "Optimisation des performances backend",
-            "Résolution du problème N+1",
-            "Gestion avancée des requêtes SQL",
-            "Refactorisation de code",
-            "Migration de version d'un framework"
+            "Intégration d'une maquette responsive en Angular et SCSS",
+            "Calculateur de prix interactif",
+            "Structuration du contenu commercial (offres, méthode, FAQ)",
+            "Conteneurisation avec Docker"
         ],
-        "results": "Passage de plus de 6000 requêtes à 2, réduction de la charge de données de ~400 Mo à ~4 Mo, amélioration significative de la fluidité et ajout d'un système de filtrage mensuel des factures.",
+        "results": "Un site à page unique qui présente les offres, un estimateur de prix en direct, une vitrine de réalisations, ma méthode et une FAQ. Il sera mis en ligne prochainement.",
         "improvements": [
-            "Mettre en place du cache applicatif",
-            "Renforcer les tests automatisés",
-            "Poursuivre l'optimisation globale des performances",
-            "Améliorer l'architecture générale de l'application"
+            "Brancher un formulaire de contact sur un backend .NET",
+            "Ajouter de nouvelles réalisations au fil des projets"
         ],
         "images": [
-            "images/projects/Antibug-square.webp",
-            "images/projects/Antibug-1280x720.webp"
+            "images/vente-sites/01-accueil.webp",
+            "images/vente-sites/02-offres.webp",
+            "images/vente-sites/03-estimateur.webp"
         ],
-        "link": "",
-        "github": ""
-    },
-    {
-        "id": "5",
-        "slug": "menu-maker",
-        "title": "Menu Maker",
-        "description": "Application de création et diffusion de menus avec gestion d'équipe et export multicanal",
-        "context": "Projet mené en tant que chef de projet visant à concevoir une application de création et diffusion de menus à partir des besoins client, des user stories et d'une veille technologique structurée.",
-        "objectives": "Centraliser la création de menus, faciliter leur export (PDF, impression, réseaux sociaux, plateformes comme Deliveroo) et organiser efficacement le travail d'une équipe de développeurs via une méthodologie Agile.",
-        "stack": [
-            "Node.js",
-            "Express",
-            "PostgreSQL",
-            "React",
-            "Vite",
-            "Tailwind CSS"
-        ],
-        "skills": [
-            "Gestion de projet (Kanban, Scrum)",
-            "Rédaction de spécifications techniques",
-            "Conception d'API REST",
-            "Gestion des médias (AWS S3)",
-            "Génération de PDF dynamiques",
-            "Création d'interfaces interactives (drag & drop)",
-            "Méthodologie Agile"
-        ],
-        "results": "Mise en place d'une architecture complète et cohérente, d'un workflow d'équipe structuré et d'une application permettant la création et la diffusion simplifiée de menus avec exports multiples.",
-        "improvements": [
-            "Ajouter des fonctionnalités collaboratives temps réel",
-            "Optimiser les performances de génération PDF",
-            "Enrichir les options de personnalisation des menus",
-            "Implémenter un système de templates prédéfinis"
-        ],
-        "images": [
-            "images/projects/MenuMakerLandingSquare.webp",
-            "images/projects/MenuMakerLanding.webp",
-            "images/projects/MenuMakerDashboard.webp",
-            "images/projects/MenuMakerMenu.webp"
-        ],
-        "link": "https://www.figma.com/design/Q6NEUPqwz1U3HFaCaVoF7N/Maquette-desktop---Menu-Maker-by-Qwenta?node-id=0-1&p=f&t=JeTH6o1WReoBwQWV-0",
-        "github": ""
+        "video": {
+            "landscape": "videos/vente-sites/landscape.mp4",
+            "landscapeLoop": "videos/vente-sites/landscape-loop.mp4",
+            "vertical": "videos/vente-sites/vertical.mp4",
+            "posterLandscape": "videos/vente-sites/landscape.webp",
+            "posterVertical": "videos/vente-sites/vertical.webp",
+            "duration": "PT21S"
+        },
+        "link": "https://kilian-au.fr/"
     }
 ]
