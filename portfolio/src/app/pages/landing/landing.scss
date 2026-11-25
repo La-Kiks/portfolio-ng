@@ -136,7 +136,7 @@
     }
   }
 
-  /* Desktop: slides from off-screen, no fade */
+  /* Desktop: slides, no fade. Text bentos start inside the viewport so Chrome sees an LCP candidate */
   @media (min-width: 1024px) {
     .landing-root.entrance {
       .grid-navbar,
@@ -149,12 +149,17 @@
       }
 
       .grid-navbar {
-        --enter-y: -100vh;
+        --enter-y: -60px;
         --enter-delay: 0ms;
       }
 
       .grid-title-only,
-      .grid-description-only,
+      .grid-description-only {
+        --enter-x: -80px;
+      }
+
+      /* Image bentos (profile, carousel) come from off-screen: their images load out of
+         sight and can't be the LCP, which falls on the text bentos already in the viewport */
       .grid-profile {
         --enter-x: -100vw;
       }
@@ -178,7 +183,7 @@
       }
 
       .grid-social {
-        --enter-y: 100vh;
+        --enter-y: 60px;
         --enter-delay: 780ms;
       }
     }
